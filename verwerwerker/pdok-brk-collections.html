@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  body { font-family: var(--text-family-default, sans-serif); color: var(--content-color-primary); margin: 0; padding: var(--spacing-m, 12px); font-size: 13px; }
+  h3 { margin: 0 0 var(--spacing-s, 8px) 0; font-size: 14px; color: var(--content-color-primary); }
+  .subtitle { color: var(--content-color-secondary); font-size: 12px; margin-bottom: var(--spacing-m, 12px); }
+  .card { border: 1px solid var(--border-color-default, #ddd); border-radius: 6px; padding: var(--spacing-m, 12px); margin-bottom: var(--spacing-s, 8px); }
+  .card-header { display: flex; align-items: center; gap: var(--spacing-s, 8px); margin-bottom: 4px; }
+  .badge { font-size: 11px; font-weight: 600; background: var(--background-color-brand, #FF6C37); color: #fff; padding: 2px 7px; border-radius: 3px; font-family: monospace; letter-spacing: 0.3px; white-space: nowrap; }
+  .badge.highlight { background: var(--content-color-success, #2AA68A); }
+  .title { font-weight: 600; font-size: 13px; color: var(--content-color-primary); }
+  .desc { color: var(--content-color-secondary); font-size: 12px; line-height: 1.5; margin: 4px 0 6px 0; }
+  .endpoint { font-family: monospace; font-size: 11px; color: var(--content-color-brand, #FF6C37); background: var(--background-color-secondary, #f5f5f5); padding: 3px 6px; border-radius: 3px; word-break: break-all; }
+  .tags { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px; }
+  .tag { font-size: 10px; background: var(--background-color-tertiary, #eee); color: var(--content-color-secondary); padding: 1px 6px; border-radius: 10px; }
+  .crs-row { margin-top: 6px; font-size: 11px; color: var(--content-color-tertiary); }
+  .section-label { font-size: 10px; font-weight: 600; color: var(--content-color-tertiary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+</style>
+</head>
+<body>
+
+<h3>PDOK BRK Kadastrale Kaart — OGC API Collections</h3>
+<p class="subtitle">Base URL: <code>https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/collections</code> &nbsp;·&nbsp; Last updated: 2026-10-25 &nbsp;·&nbsp; License: CC BY 4.0</p>
+
+<div class="card">
+  <div class="card-header">
+    <span class="badge highlight">perceel</span>
+    <span class="title">Perceel</span>
+    <span style="margin-left:auto;font-size:11px;color:var(--content-color-success,#2AA68A);">✓ in use</span>
+  </div>
+  <div class="desc">Land parcels measured and registered by the Kadaster. Each parcel has a unique number and is bounded by cadastral boundary lines.</div>
+  <div class="section-label">Items endpoint</div>
+  <div class="endpoint">/collections/perceel/items</div>
+  <div class="tags"><span class="tag">Perceel</span><span class="tag">Kadastrale percelen</span><span class="tag">Kadastrale grens</span></div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="badge">kadastralegrens</span>
+    <span class="title">KadastraleGrens</span>
+  </div>
+  <div class="desc">Cadastral boundary lines between parcels as established by the Kadaster, based on survey measurements and legal documentation.</div>
+  <div class="section-label">Items endpoint</div>
+  <div class="endpoint">/collections/kadastralegrens/items</div>
+  <div class="tags"><span class="tag">Grens</span><span class="tag">Kadastrale grenzen</span><span class="tag">Kwaliteitslabel</span></div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="badge">bebouwing</span>
+    <span class="title">Bebouwing</span>
+  </div>
+  <div class="desc">Buildings layer — a selection of BGT (Large-Scale Topography) building footprints (panden) with status "bestaand".</div>
+  <div class="section-label">Items endpoint</div>
+  <div class="endpoint">/collections/bebouwing/items</div>
+  <div class="tags"><span class="tag">Bebouwing</span><span class="tag">Pand</span><span class="tag">BGT</span></div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="badge">openbareruimtenaam</span>
+    <span class="title">OpenbareRuimteNaam</span>
+  </div>
+  <div class="desc">Public space name labels from the BGT — roads and waterways with status "bestaand". Useful for map labelling.</div>
+  <div class="section-label">Items endpoint</div>
+  <div class="endpoint">/collections/openbareruimtenaam/items</div>
+  <div class="tags"><span class="tag">Openbareruimtenaam</span><span class="tag">Weg</span><span class="tag">Water</span><span class="tag">BGT</span></div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="badge">nummeraanduidingreeks</span>
+    <span class="title">Nummeraanduidingreeks</span>
+  </div>
+  <div class="desc">House number label series sourced from the BGT. Groups of address numbers associated with building footprints.</div>
+  <div class="section-label">Items endpoint</div>
+  <div class="endpoint">/collections/nummeraanduidingreeks/items</div>
+  <div class="tags"><span class="tag">Nummeraanduiding</span><span class="tag">Panden</span><span class="tag">BGT</span></div>
+</div>
+
+<div class="crs-row">All collections support: EPSG:28992 (RD New) &nbsp;·&nbsp; EPSG:3857 (Web Mercator) &nbsp;·&nbsp; EPSG:4258 (ETRS89) &nbsp;·&nbsp; CRS84 (WGS84) &nbsp;·&nbsp; Storage CRS: EPSG:28992</div>
+</body>
+</html>

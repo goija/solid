@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: var(--text-family-default, sans-serif); color: var(--content-color-primary); margin: 0; padding: var(--spacing-m, 12px); font-size: 13px; }
+  h3 { margin: 0 0 2px 0; font-size: 14px; }
+  .subtitle { color: var(--content-color-secondary); font-size: 11px; margin-bottom: var(--spacing-m, 12px); }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { background: var(--background-color-secondary, #f5f5f5); text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; color: var(--content-color-secondary); padding: 7px 10px; border-bottom: 2px solid var(--border-color-default, #ddd); }
+  tbody tr:hover { background: var(--background-color-secondary, #f5f5f5); }
+  td { padding: 6px 10px; border-bottom: 1px solid var(--border-color-default, #eee); vertical-align: top; font-size: 12px; }
+  .prop { font-family: monospace; font-size: 11px; color: var(--content-color-primary); font-weight: 600; }
+  .badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 3px; white-space: nowrap; }
+  .type-string  { background: #dbeafe; color: #1e40af; }
+  .type-integer { background: #dcfce7; color: #166534; }
+  .type-number  { background: #fef9c3; color: #854d0e; }
+  .type-geometry{ background: #f3e8ff; color: #6b21a8; }
+  .type-uuid    { background: #ffe4e6; color: #9f1239; }
+  .type-datetime{ background: #ffedd5; color: #9a3412; }
+  .tag-req { font-size: 9px; background: var(--content-color-error, #e74c3c); color: #fff; padding: 1px 5px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
+  .tag-geo { font-size: 9px; background: var(--content-color-brand, #FF6C37); color: #fff; padding: 1px 5px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
+  .tag-ro  { font-size: 9px; background: var(--content-color-secondary, #888); color: #fff; padding: 1px 5px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
+  .desc { color: var(--content-color-secondary); font-size: 11px; }
+  .group-header td { background: var(--background-color-tertiary, #f0f0f0); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--content-color-tertiary); padding: 4px 10px; }
+  .scroll { max-height: 480px; overflow-y: auto; }
+</style>
+</head>
+<body>
+<h3>Perceel — Feature Schema</h3>
+<p class="subtitle">GET /collections/perceel/schema · JSON Schema 2020-12 · 21 properties</p>
+
+<div class="scroll">
+<table>
+  <thead>
+    <tr>
+      <th style="width:38%">Property</th>
+      <th style="width:22%">Type / Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr class="group-header"><td colspan="3">Identity</td></tr>
+    <tr>
+      <td><span class="prop">id</span><span class="tag-req">required</span><span class="tag-ro">readOnly</span></td>
+      <td><span class="badge type-uuid">string · uuid</span></td>
+      <td class="desc">Unique stable feature identifier (UUID). Should always refer to the same feature over time.</td>
+    </tr>
+    <tr>
+      <td><span class="prop">identificatie_lokaal_id</span></td>
+      <td><span class="badge type-string">string</span></td>
+      <td class="desc">Local BRK identifier for this parcel.</td>
+    </tr>
+    <tr>
+      <td><span class="prop">identificatie_namespace</span></td>
+      <td><span class="badge type-string">string</span></td>
+      <td class="desc">Namespace qualifying the local identifier.</td>
+    </tr>
+    <tr>
+      <td><span class="prop">volgnummer</span></td>
+      <td><span class="badge type-integer">integer</span></td>
+      <td class="desc">Sequence number of the feature version.</td>
+    </tr>
+
+    <tr class="group-header"><td colspan="3">Geometry</td></tr>
+    <tr>
+      <td><span class="prop">geometry</span><span class="tag-geo">primary</span></td>
+      <td><span class="badge type-geometry">geometry-multipolygon</span></td>
+      <td class="desc">Parcel boundary as a MultiPolygon. Stored in EPSG:28992 (RD New).</td>
+    </tr>
+    <tr>
+      <td><span class="prop">perceelnummer_rotatie</span></td>
+      <td><span class="badge type-number">number · double</span></td>
+      <td class="desc">Rotation angle for rendering the parcel number label on a map.</td>
+    </tr>
+    <tr>
+      <td><span class="prop">perceelnummer_verschuiving_delta_x</span></td>
+      <td><span class="badge type-number">number · double</span></td>
+      <td class="desc">X offset for the parcel number label position.</td>
+    </tr>
+    <tr>
+      <td><span class="prop">perceelnummer_verschuiving_delta_y</span></td>
+      <td><span class="badge type-number">number · double</span></td>
+      <td class="desc">Y offset for the parcel number label position.</td>
+    </tr>
+
+    <tr class="group-header"><td colspan="3">Cadastral Location</td></tr>
+    <tr>
+      <td><span class="prop">kadastrale_gemeente_code</span></td>
+      <td><span class="badge type-string">string</span></td>
+      <td class="desc">Code of the cadastral municipality (kadastrale gemeente).</td>
+    </tr>
+    <tr>
+      <td><span class="prop">kadastrale_gemeente_waarde</span></td>
+      <td><span class="badge type-string">string</span></td>
+      <td class="desc">Human-readable name of the cadastral municipality.</td>
+    </tr>
+    <tr>
+      <td><span class="prop">akr_kadastrale_gemeente_code_code</span></td>
+      <td><span class="badge type-string">string</span></td>
+      <td class="desc">AKR system code for the cadastral municipality.</td>
+    </tr>
+    <tr>
+      <td><span class="prop">akr_kadastrale_gemeente_code_waarde</span></td>
+      <td><span class="badge type-string">string</span></td>
+      <td class="desc">AKR system label for the cadastral municipality.</td>
+    </tr>
+    <tr>
+      <td><span class="prop">sectie</span></td>
+      <td><span class="badge type-string">string</span></td>
+      <td class="desc">Cadastral section letter (e.g. "M", "A").</td>
+    </tr>
+    <tr>
+      <td><span class="prop">perceelnummer</span></td>
+      <td><span class="badge type-integer">integer</span></td>
+      <td class="desc">Parcel number within the section.</td>
+    </tr>
+
+    <tr class="group-header"><td colspan="3">Area / Size</td></tr>
+    <tr>
+      <td><span class="prop">kadastrale_grootte_waarde</span></td>
+      <td><span class="badge type-number">number · double</span></td>
+      <td class="desc">Cadastral area size (in m²).</td>
+    </tr>
+    <tr>
+      <td><span class="prop">soort_grootte_code</span></td>
+      <td><span class="badge type-string">string</span></td>
+      <td class="desc">Code indicating whether the size is measured or estimated.</td>
+    </tr>
+    <tr>
+      <td><span class="prop">soort_grootte_waarde</span></td>
+      <td><span class="badge type-string">string</span></td>
+      <td class="desc">Label for the size type (e.g. "Vastgesteld").</td>
+    </tr>
+
+    <tr class="group-header"><td colspan="3">Validity &amp; Status</td></tr>
+    <tr>
+      <td><span class="prop">begin_geldigheid</span></td>
+      <td><span class="badge type-datetime">string · date-time</span></td>
+      <td class="desc">Start of the validity period for this version of the feature.</td>
+    </tr>
+    <tr>
+      <td><span class="prop">tijdstip_registratie</span></td>
+      <td><span class="badge type-datetime">string · date-time</span></td>
+      <td class="desc">Timestamp when this feature version was registered.</td>
+    </tr>
+    <tr>
+      <td><span class="prop">status_historie_code</span></td>
+      <td><span class="badge type-string">string</span></td>
+      <td class="desc">History status code (e.g. active, historical).</td>
+    </tr>
+    <tr>
+      <td><span class="prop">status_historie_waarde</span></td>
+      <td><span class="badge type-string">string</span></td>
+      <td class="desc">Human-readable label for the history status.</td>
+    </tr>
+
+  </tbody>
+</table>
+</div>
+</body>
+</html>

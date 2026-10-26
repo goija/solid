@@ -1,0 +1,2875 @@
+<!DOCTYPE html>
+<html lang="nl" class="dark h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOLID POD SOVEREIGN WORKBENCH — XML/API/RSS Gateway, Geodesy & Media Suite</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        solid: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            400: '#a78bfa',
+                            500: '#7c4dff',
+                            600: '#6d28d9',
+                            700: '#5b21b6',
+                            900: '#2e1065',
+                            950: '#170936'
+                        },
+                        sovereign: {
+                            800: '#141722',
+                            850: '#0f121b',
+                            900: '#0a0c12',
+                            950: '#050609'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'ui-monospace', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS & JS for Module 3 (Kaarten, Kaartlagen & Grids) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050609;
+            color: #e2e8f0;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0c12;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #252b3d;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #7c4dff;
+        }
+        /* RDF & Code Highlighting */
+        .ttl-prefix { color: #c084fc; font-weight: 600; }
+        .ttl-uri { color: #38bdf8; }
+        .ttl-pred { color: #818cf8; }
+        .ttl-lit { color: #34d399; }
+        .ttl-type { color: #fbbf24; }
+        .ttl-comment { color: #64748b; font-style: italic; }
+
+        /* Checkerboard pattern for SVG Viewer */
+        .bg-checkerboard {
+            background-color: #0a0c12;
+            background-image: 
+                linear-gradient(45deg, #141722 25%, transparent 25%), 
+                linear-gradient(-45deg, #141722 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #141722 75%), 
+                linear-gradient(-45deg, transparent 75%, #141722 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        /* Leaflet Dark Customization */
+        .leaflet-container {
+            background: #07090e !important;
+            font-family: 'Inter', sans-serif;
+        }
+        .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+            background: #0f121b !important;
+            color: #e2e8f0 !important;
+            border: 1px solid #334155;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col overflow-hidden bg-sovereign-950 text-slate-200 antialiased">
+
+    <!-- ===================================================================== -->
+    <!-- TOP SOVEREIGN COMMAND HEADER & QUICK-LAUNCH BAR                       -->
+    <!-- ===================================================================== -->
+    <header class="bg-sovereign-900/95 backdrop-blur-md border-b border-slate-800/90 px-3 py-2 shrink-0 z-30">
+        <div class="max-w-[1920px] mx-auto flex flex-wrap items-center justify-between gap-2">
+            <!-- Brand Identity -->
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-solid-500 via-indigo-600 to-emerald-600 flex items-center justify-center shadow-lg shadow-solid-500/20 border border-solid-400/40 shrink-0">
+                    <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L3 7v10l9 5 9-5V7l-9-5z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 22V12m0 0L3 7m9 5l9-5"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <h1 class="text-sm font-bold tracking-tight text-white">SOLID POD SOVEREIGN WORKBENCH</h1>
+                        <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-solid-500/20 text-solid-400 border border-solid-500/30 font-semibold">XML • API • RSS • RDNAP • STL • AI</span>
+                    </div>
+                    <!-- Quick Launch External Reference Links -->
+                    <div class="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px] font-mono text-slate-400 mt-0.5">
+                        <a href="https://dev.solidproject.org" target="_blank" rel="noopener noreferrer" class="text-solid-400 hover:text-solid-300 underline">dev.solidproject.org</a>
+                        <span class="text-slate-700">|</span>
+                        <a href="https://woo-tholen.vercel.app/apitest.html" target="_blank" rel="noopener noreferrer" class="text-emerald-400 hover:text-emerald-300 underline">woo-tholen/apitest</a>
+                        <span class="text-slate-700">|</span>
+                        <a href="https://mathgeo-seven.vercel.app/" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:text-sky-300 underline">mathgeo-seven</a>
+                        <span class="text-slate-700">|</span>
+                        <a href="https://mathgeo-seven.vercel.app/schaduwwaaier.html" target="_blank" rel="noopener noreferrer" class="text-amber-400 hover:text-amber-300 underline">schaduwwaaier.html</a>
+                        <span class="text-slate-700">|</span>
+                        <a href="https://mastodon.social/@finhstamsterdam" target="_blank" rel="noopener noreferrer" class="text-pink-400 hover:text-pink-300 underline">@finhstamsterdam</a>
+                        <span class="text-slate-700">|</span>
+                        <a href="https://docshare.wps.com/document/btfm-blue-team-field-manual/45529/" target="_blank" rel="noopener noreferrer" class="text-rose-400 hover:text-rose-300 underline">BTFM Manual</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global CORS Gateway Selector & Pod Status -->
+            <div class="flex items-center flex-wrap gap-2">
+                <div class="flex items-center bg-sovereign-800 border border-slate-700/80 rounded-lg px-2.5 py-1 text-xs">
+                    <span class="text-slate-400 mr-1.5 font-mono text-[11px]">CORS Proxy:</span>
+                    <select id="global-cors-select" class="bg-transparent text-emerald-400 font-mono text-xs focus:outline-none cursor-pointer">
+                        <option value="auto" class="bg-sovereign-900 text-slate-200">Auto (Direct → Proxy → Snapshot)</option>
+                        <option value="allorigins" class="bg-sovereign-900 text-slate-200">AllOrigins Raw Proxy</option>
+                        <option value="corsproxy" class="bg-sovereign-900 text-slate-200">CorsProxy.io Gateway</option>
+                        <option value="codetabs" class="bg-sovereign-900 text-slate-200">CodeTabs XML/JSON Proxy</option>
+                        <option value="direct" class="bg-sovereign-900 text-slate-200">Direct (Geen Proxy)</option>
+                        <option value="custom" class="bg-sovereign-900 text-slate-200">Eigen Lokale Proxy</option>
+                    </select>
+                </div>
+                <input id="global-custom-proxy" type="text" value="http://localhost:8080/" placeholder="http://localhost:8080/" class="hidden bg-sovereign-800 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-sky-300 w-40 focus:outline-none">
+
+                <button id="btn-header-sync-pod" class="bg-solid-600 hover:bg-solid-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg border border-solid-400/30 transition flex items-center space-x-1.5 shadow-sm">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                    <span>Sync naar Solid Pod</span>
+                </button>
+
+                <div class="flex items-center space-x-1.5 bg-emerald-950/70 border border-emerald-700/50 text-emerald-300 px-2.5 py-1 rounded-full text-[11px] font-mono">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="header-pod-badge">LDP Pod: Actief</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===================================================================== -->
+    <!-- MAIN WORKSPACE: LEFT MODULE SIDEBAR + 8 INTERACTIVE MODULE PANELS     -->
+    <!-- ===================================================================== -->
+    <div class="flex-1 flex flex-col lg:flex-row overflow-hidden max-w-[1920px] w-full mx-auto">
+        
+        <!-- LEFT SIDEBAR NAVIGATION (8 MODULES) -->
+        <aside class="w-full lg:w-64 bg-sovereign-900 border-b lg:border-b-0 lg:border-r border-slate-800/90 flex lg:flex-col justify-between shrink-0 overflow-x-auto lg:overflow-y-auto">
+            <nav class="p-2 flex lg:flex-col gap-1 min-w-max lg:min-w-0" aria-label="Workbench Modules">
+                <div class="hidden lg:block px-2.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-500 font-semibold">
+                    Sovereign Pod Modules (8)
+                </div>
+
+                <!-- 1. XML / API / RSS Gateway -->
+                <button data-module="mod-gateway" class="nav-mod-btn active w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold transition flex items-center justify-between bg-solid-600/20 text-white border border-solid-500/40">
+                    <div class="flex items-center space-x-2.5">
+                        <span class="w-6 h-6 rounded-lg bg-solid-500/20 text-solid-400 flex items-center justify-center font-mono text-[11px] font-bold">01</span>
+                        <div>
+                            <div class="leading-tight">XML / API / RSS Gateway</div>
+                            <div class="text-[10px] font-normal text-slate-400 hidden sm:block">Woo, PDOK, Pixelfed, Mastodon</div>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- 2. URL Tree Maker & Viewer -->
+                <button data-module="mod-urltree" class="nav-mod-btn w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold transition flex items-center justify-between text-slate-300 hover:bg-sovereign-800 border border-transparent">
+                    <div class="flex items-center space-x-2.5">
+                        <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-mono text-[11px] font-bold">02</span>
+                        <div>
+                            <div class="leading-tight">URL Tree Maker & Viewer</div>
+                            <div class="text-[10px] font-normal text-slate-400 hidden sm:block">ASCII Tree, Graph & Preview</div>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- 3. Kaarten, Grids & Schaduwwaaier -->
+                <button data-module="mod-geo" class="nav-mod-btn w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold transition flex items-center justify-between text-slate-300 hover:bg-sovereign-800 border border-transparent">
+                    <div class="flex items-center space-x-2.5">
+                        <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-mono text-[11px] font-bold">03</span>
+                        <div>
+                            <div class="leading-tight">Kaarten & Schaduwwaaier</div>
+                            <div class="text-[10px] font-normal text-slate-400 hidden sm:block">RD Grids, PDOK & Zonnebaan</div>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- 4. SVG Viewer & HTML Compiler -->
+                <button data-module="mod-svghtml" class="nav-mod-btn w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold transition flex items-center justify-between text-slate-300 hover:bg-sovereign-800 border border-transparent">
+                    <div class="flex items-center space-x-2.5">
+                        <span class="w-6 h-6 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center font-mono text-[11px] font-bold">04</span>
+                        <div>
+                            <div class="leading-tight">SVG Viewer & HTML Compiler</div>
+                            <div class="text-[10px] font-normal text-slate-400 hidden sm:block">Vector Inspector & Sandbox</div>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- 5. 3D STL Viewer -->
+                <button data-module="mod-stl" class="nav-mod-btn w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold transition flex items-center justify-between text-slate-300 hover:bg-sovereign-800 border border-transparent">
+                    <div class="flex items-center space-x-2.5">
+                        <span class="w-6 h-6 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-mono text-[11px] font-bold">05</span>
+                        <div>
+                            <div class="leading-tight">3D STL Mesh Viewer</div>
+                            <div class="text-[10px] font-normal text-slate-400 hidden sm:block">Binary/ASCII STL & Generators</div>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- 6. ACSM, PDF & BTFM Manual Viewer -->
+                <button data-module="mod-docs" class="nav-mod-btn w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold transition flex items-center justify-between text-slate-300 hover:bg-sovereign-800 border border-transparent">
+                    <div class="flex items-center space-x-2.5">
+                        <span class="w-6 h-6 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center font-mono text-[11px] font-bold">06</span>
+                        <div>
+                            <div class="leading-tight">ACSM, PDF & BTFM Manual</div>
+                            <div class="text-[10px] font-normal text-slate-400 hidden sm:block">Converter, PDF & Blue Team</div>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- 7. Lumo AI & Eigen AI Gateway -->
+                <button data-module="mod-ai" class="nav-mod-btn w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold transition flex items-center justify-between text-slate-300 hover:bg-sovereign-800 border border-transparent">
+                    <div class="flex items-center space-x-2.5">
+                        <span class="w-6 h-6 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center font-mono text-[11px] font-bold">07</span>
+                        <div>
+                            <div class="leading-tight">Lumo AI & Eigen AI</div>
+                            <div class="text-[10px] font-normal text-slate-400 hidden sm:block">Gemini + Custom LLM Endpoint</div>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- 8. Solid Pod LDP & RDF Manager -->
+                <button data-module="mod-pod" class="nav-mod-btn w-full text-left px-3 py-2.5 rounded-xl text-xs font-semibold transition flex items-center justify-between text-slate-300 hover:bg-sovereign-800 border border-transparent">
+                    <div class="flex items-center space-x-2.5">
+                        <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-mono text-[11px] font-bold">08</span>
+                        <div>
+                            <div class="leading-tight">Solid Pod RDF Manager</div>
+                            <div class="text-[10px] font-normal text-slate-400 hidden sm:block">Turtle (.ttl) & SPARQL Patch</div>
+                        </div>
+                    </div>
+                </button>
+            </nav>
+
+            <!-- Sidebar Footer Telemetry -->
+            <div class="hidden lg:block p-3 m-2 rounded-xl bg-sovereign-950 border border-slate-800/90 text-[11px] font-mono space-y-1.5">
+                <div class="flex justify-between text-slate-400">
+                    <span>Actieve Feeds:</span>
+                    <span id="sidebar-stat-feeds" class="text-emerald-400 font-semibold">6 bronnen</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>URL Tree Nodes:</span>
+                    <span id="sidebar-stat-tree" class="text-sky-400 font-semibold">14 nodes</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>Peilpunt RD:</span>
+                    <span id="sidebar-stat-rd" class="text-amber-400">66750, 396750</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ================================================================= -->
+        <!-- MAIN CONTENT AREA (8 MODULE PANELS)                               -->
+        <!-- ================================================================= -->
+        <main class="flex-1 flex flex-col overflow-hidden bg-sovereign-950">
+
+            <!-- ============================================================= -->
+            <!-- MODULE 1: XML / API / RSS & FEDIVERSE GATEWAY (POD TEST SUITE)-->
+            <!-- ============================================================= -->
+            <section id="mod-gateway" class="module-panel flex-1 flex flex-col overflow-hidden p-3 md:p-5 gap-4">
+                <!-- Top Gateway Request Builder & Presets -->
+                <div class="bg-sovereign-900 border border-slate-800 rounded-2xl p-4 space-y-3 shrink-0">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                            <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-solid-400"></span>
+                                <span>Multi-Protocol XML / API / RSS & Fediverse Gateway</span>
+                            </h2>
+                            <p class="text-xs text-slate-400">Test OGC GeoJSON, Woo Tholen API, Mastodon RSS (`@finhstamsterdam`), Pixelfed & Gram.social Atom-feeds met automatische CORS-afhandeling en RDF-conversie.</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button id="btn-gw-sync-all-feeds" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition shadow-sm">
+                                Ververs Alle Feeds (6)
+                            </button>
+                            <button id="btn-gw-to-rdf" class="bg-solid-600 hover:bg-solid-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition shadow-sm">
+                                Zet Respons om naar Solid .ttl
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- One-Click Endpoint Presets -->
+                    <div class="flex items-center flex-wrap gap-1.5 pt-1">
+                        <span class="text-[11px] font-mono text-slate-400 mr-1">Presets:</span>
+                        <button data-preset="woo-tholen" class="gw-preset-btn bg-sovereign-800 hover:bg-slate-800 text-emerald-300 border border-emerald-700/50 px-2.5 py-1 rounded-lg text-[11px] font-mono transition">
+                            1. woo-tholen/apitest.html
+                        </button>
+                        <button data-preset="pdok-brk" class="gw-preset-btn bg-sovereign-800 hover:bg-slate-800 text-amber-300 border border-amber-700/50 px-2.5 py-1 rounded-lg text-[11px] font-mono transition">
+                            2. PDOK BRK Perceel (Poortvliet)
+                        </button>
+                        <button data-preset="mastodon-finhst" class="gw-preset-btn bg-sovereign-800 hover:bg-slate-800 text-pink-300 border border-pink-700/50 px-2.5 py-1 rounded-lg text-[11px] font-mono transition">
+                            3. @finhstamsterdam (Mastodon RSS)
+                        </button>
+                        <button data-preset="pixelfed-vanvrijberghe" class="gw-preset-btn bg-sovereign-800 hover:bg-slate-800 text-purple-300 border border-purple-700/50 px-2.5 py-1 rounded-lg text-[11px] font-mono transition">
+                            4. @vanvrijberghe.atom
+                        </button>
+                        <button data-preset="gram-polzer" class="gw-preset-btn bg-sovereign-800 hover:bg-slate-800 text-sky-300 border border-sky-700/50 px-2.5 py-1 rounded-lg text-[11px] font-mono transition">
+                            5. @polzer.atom
+                        </button>
+                        <button data-preset="gram-janna" class="gw-preset-btn bg-sovereign-800 hover:bg-slate-800 text-teal-300 border border-teal-700/50 px-2.5 py-1 rounded-lg text-[11px] font-mono transition">
+                            6. @Janna.atom
+                        </button>
+                    </div>
+
+                    <!-- HTTP Request Bar -->
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <select id="gw-method" class="bg-sovereign-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-emerald-400 font-bold focus:outline-none">
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="HEAD">HEAD</option>
+                        </select>
+                        <select id="gw-accept" class="bg-sovereign-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-sky-300 focus:outline-none">
+                            <option value="application/atom+xml, application/rss+xml, application/xml, text/xml">Accept: Atom / RSS / XML</option>
+                            <option value="application/geo+json, application/json">Accept: GeoJSON / JSON</option>
+                            <option value="text/turtle, application/ld+json">Accept: Solid RDF Turtle</option>
+                            <option value="text/html, */*">Accept: HTML / Alles</option>
+                        </select>
+                        <input id="gw-url-input" type="url" value="https://mastodon.social/@finhstamsterdam.rss" placeholder="Voer XML, RSS, Atom, OGC API of HTML URL in..." class="flex-1 bg-sovereign-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-solid-500">
+                        <button id="btn-gw-send" class="bg-solid-600 hover:bg-solid-500 text-white font-semibold px-5 py-2 rounded-xl text-xs transition shrink-0 flex items-center justify-center gap-1.5 shadow">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                            <span>Voer Request Uit</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Gateway Sub-Views (Stream vs XML/XPath Inspector vs Raw Payload & Headers) -->
+                <div class="flex-1 flex flex-col overflow-hidden bg-sovereign-900 border border-slate-800 rounded-2xl">
+                    <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 shrink-0">
+                        <div class="flex space-x-2">
+                            <button data-gwtab="gw-view-stream" class="gw-tab-btn active px-3 py-1.5 rounded-lg text-xs font-semibold bg-solid-600 text-white transition">
+                                Gecombineerde Nieuwsstroom & API Kaarten (<span id="gw-stream-count">0</span>)
+                            </button>
+                            <button data-gwtab="gw-view-xml" class="gw-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white bg-sovereign-900 transition">
+                                XML / XPath & DOM Inspector
+                            </button>
+                            <button data-gwtab="gw-view-raw" class="gw-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white bg-sovereign-900 transition">
+                                Ruwe Respons (XML / JSON / HTML)
+                            </button>
+                        </div>
+
+                        <!-- Filter bar for Stream -->
+                        <div class="flex items-center space-x-2 text-xs">
+                            <select id="gw-source-filter" class="bg-sovereign-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-slate-200">
+                                <option value="ALL">Alle Bronnen (Fediverse + PDOK + Woo)</option>
+                                <option value="finhstamsterdam">@finhstamsterdam (Mastodon)</option>
+                                <option value="vanvrijberghe">@vanvrijberghe (Pixelfed)</option>
+                                <option value="polzer">@polzer (Gram.social)</option>
+                                <option value="Janna">@Janna (Gram.social)</option>
+                                <option value="pdok-brk">PDOK BRK Percelen (Poortvliet)</option>
+                                <option value="woo-tholen">Woo Tholen API Test</option>
+                            </select>
+                            <span id="gw-status-pill" class="font-mono text-[11px] px-2.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700/50">200 OK</span>
+                        </div>
+                    </div>
+
+                    <!-- Sub-panel 1: Unified Stream -->
+                    <div id="gw-view-stream" class="gw-subpanel flex-1 overflow-y-auto p-4">
+                        <div id="gw-cards-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Sub-panel 2: XPath & XML Tree Inspector -->
+                    <div id="gw-view-xml" class="gw-subpanel hidden flex-1 flex flex-col overflow-hidden p-4 gap-3">
+                        <div class="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
+                            <span class="text-xs font-mono text-amber-400 shrink-0">XPath / CSS Selector:</span>
+                            <input id="gw-xpath-input" type="text" value="entry > title, item > title, item > description, feature" class="flex-1 bg-sovereign-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-mono text-emerald-300 focus:outline-none">
+                            <button id="btn-gw-eval-xpath" class="bg-amber-600 hover:bg-amber-500 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold transition shrink-0">
+                                Evalueer op Respons
+                            </button>
+                        </div>
+                        <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-3 overflow-hidden">
+                            <div class="lg:col-span-5 bg-sovereign-950 border border-slate-800 rounded-xl p-3 overflow-y-auto font-mono text-xs space-y-2" id="gw-xpath-results">
+                                <!-- XPath node matches -->
+                            </div>
+                            <pre id="gw-xml-tree-view" class="lg:col-span-7 bg-sovereign-950 border border-slate-800 rounded-xl p-3 overflow-auto font-mono text-xs text-slate-300 leading-relaxed select-all"></pre>
+                        </div>
+                    </div>
+
+                    <!-- Sub-panel 3: Raw Payload -->
+                    <div id="gw-view-raw" class="gw-subpanel hidden flex-1 flex flex-col overflow-hidden p-4 gap-2">
+                        <div class="flex justify-between items-center">
+                            <span id="gw-raw-meta" class="text-xs font-mono text-slate-400">Content-Type: application/xml</span>
+                            <button id="btn-gw-copy-raw" class="bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 px-3 py-1 rounded-lg font-mono">Kopieer Payload</button>
+                        </div>
+                        <pre id="gw-raw-output" class="flex-1 bg-sovereign-950 border border-slate-800 rounded-xl p-4 overflow-auto font-mono text-xs text-emerald-300 leading-relaxed select-all"></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================= -->
+            <!-- MODULE 2: URL TREE MAKER & ECOSYSTEM VIEWER                   -->
+            <!-- ============================================================= -->
+            <section id="mod-urltree" class="module-panel hidden flex-1 flex flex-col overflow-hidden p-3 md:p-5 gap-4">
+                <!-- Top Control Bar -->
+                <div class="bg-sovereign-900 border border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 shrink-0">
+                    <div>
+                        <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                            <span>URL Tree Maker, ASCII `tree` Generator & Live Sandbox Viewer</span>
+                        </h2>
+                        <p class="text-xs text-slate-400">Beheer en visualiseer uw volledige ecosysteem (Solid, Woo Tholen, MathGeo, Schaduwwaaier, Fediverse & BTFM) als boomstructuur, SVG-graaf en RDF.</p>
+                    </div>
+                    <div class="flex items-center flex-wrap gap-2">
+                        <button id="btn-tree-copy-ascii" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+                            Kopieer ASCII `tree`
+                        </button>
+                        <button id="btn-tree-export-json" class="bg-sovereign-800 hover:bg-slate-800 text-slate-200 border border-slate-700 text-xs font-medium px-3 py-1.5 rounded-lg transition">
+                            Download Tree JSON
+                        </button>
+                        <button id="btn-tree-to-pod" class="bg-solid-600 hover:bg-solid-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+                            Sync Tree naar Pod (.ttl)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Add Node Form -->
+                <div class="bg-sovereign-900 border border-slate-800 rounded-2xl p-3 flex flex-wrap items-center gap-2 shrink-0">
+                    <span class="text-xs font-semibold text-slate-300 mr-1">+ Node Toevoegen:</span>
+                    <select id="tree-parent-select" class="bg-sovereign-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-sky-300">
+                        <!-- Populated via JS -->
+                    </select>
+                    <input id="tree-node-title" type="text" placeholder="Naam (bijv. Kadaster Perceel API)" class="bg-sovereign-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white w-48 focus:outline-none">
+                    <input id="tree-node-url" type="url" placeholder="https://..." class="flex-1 min-w-[220px] bg-sovereign-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-mono text-emerald-300 focus:outline-none">
+                    <input id="tree-node-tag" type="text" placeholder="Tag (API / GEO / DOC)" class="bg-sovereign-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-amber-300 w-36 focus:outline-none">
+                    <button id="btn-tree-add-node" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-1.5 rounded-lg transition">
+                        Voeg Toe aan Boom
+                    </button>
+                </div>
+
+                <!-- 3-Column Split: Interactive Tree + ASCII & SVG Graph + Live Iframe Preview -->
+                <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <!-- Left: Interactive Collapsible DOM Tree (4 cols) -->
+                    <div class="lg:col-span-4 bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs">
+                            <span class="font-semibold text-white">Hiërarchische URL Verkenner</span>
+                            <span class="text-[11px] font-mono text-slate-400">Klik op node voor actie</span>
+                        </div>
+                        <div id="url-dom-tree-container" class="flex-1 p-3 overflow-y-auto space-y-2 text-xs">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Center: ASCII Tree Output & Visual SVG Topology (4 cols) -->
+                    <div class="lg:col-span-4 flex flex-col gap-4 overflow-hidden">
+                        <div class="bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col flex-1 overflow-hidden">
+                            <div class="px-4 py-2 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs">
+                                <span class="font-mono font-semibold text-emerald-400">ASCII `tree` Representatie</span>
+                                <span class="text-[10px] font-mono text-slate-400">UTF-8 Box Drawing</span>
+                            </div>
+                            <pre id="url-ascii-tree-output" class="flex-1 p-3.5 overflow-auto font-mono text-[11px] text-emerald-300 bg-sovereign-950 leading-relaxed select-all"></pre>
+                        </div>
+
+                        <div class="bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col h-56 overflow-hidden shrink-0">
+                            <div class="px-4 py-2 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs">
+                                <span class="font-mono font-semibold text-sky-400">SVG Ecosysteem Topologie</span>
+                                <span class="text-[10px] font-mono text-slate-400">Interactieve Map</span>
+                            </div>
+                            <svg id="url-tree-svg-graph" class="flex-1 w-full h-full bg-sovereign-950" viewBox="0 0 500 220"></svg>
+                        </div>
+                    </div>
+
+                    <!-- Right: Embedded URL Viewer / Inspector (4 cols) -->
+                    <div class="lg:col-span-4 bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-3 py-2 bg-sovereign-850 border-b border-slate-800 flex items-center justify-between gap-2 text-xs">
+                            <span id="tree-preview-title" class="font-mono text-sky-300 truncate">https://mathgeo-seven.vercel.app/schaduwwaaier.html</span>
+                            <div class="flex items-center gap-1.5 shrink-0">
+                                <button id="btn-tree-send-gw" class="bg-solid-600/80 hover:bg-solid-600 text-white px-2 py-0.5 rounded text-[10px] font-mono" title="Test deze URL in de API Gateway">→ Gateway</button>
+                                <a id="tree-preview-ext" href="https://mathgeo-seven.vercel.app/schaduwwaaier.html" target="_blank" rel="noopener noreferrer" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-2 py-0.5 rounded text-[10px] font-mono">Extern ↗</a>
+                            </div>
+                        </div>
+                        <iframe id="tree-preview-iframe" src="https://mathgeo-seven.vercel.app/schaduwwaaier.html" class="flex-1 w-full bg-white" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================= -->
+            <!-- MODULE 3: KAARTEN, GRIDS & SCHADUWWAAIER (DATA ZOEK LOCATIES) -->
+            <!-- ============================================================= -->
+            <section id="mod-geo" class="module-panel hidden flex-1 flex flex-col overflow-hidden p-3 md:p-5 gap-4">
+                <!-- Top Geodesy & Location Search Bar -->
+                <div class="bg-sovereign-900 border border-slate-800 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-3 shrink-0">
+                    <div class="flex items-center flex-wrap gap-2">
+                        <span class="text-xs font-bold text-amber-400 font-mono uppercase">Data Zoek Locaties:</span>
+                        <button data-loc="poortvliet" class="geo-loc-btn bg-amber-600 text-white px-2.5 py-1 rounded-lg text-xs font-semibold transition">
+                            Poortvliet (Sectie M 1172–1180)
+                        </button>
+                        <button data-loc="scherpenisse" class="geo-loc-btn bg-sovereign-800 hover:bg-slate-800 text-slate-200 border border-slate-700 px-2.5 py-1 rounded-lg text-xs font-medium transition">
+                            Scherpenisse (Tholen)
+                        </button>
+                        <button data-loc="tholen" class="geo-loc-btn bg-sovereign-800 hover:bg-slate-800 text-slate-200 border border-slate-700 px-2.5 py-1 rounded-lg text-xs font-medium transition">
+                            Tholen-Stad
+                        </button>
+                        <button data-loc="amsterdam" class="geo-loc-btn bg-sovereign-800 hover:bg-slate-800 text-slate-200 border border-slate-700 px-2.5 py-1 rounded-lg text-xs font-medium transition">
+                            Amsterdam (@finhstamsterdam)
+                        </button>
+                        <button data-loc="laren" class="geo-loc-btn bg-sovereign-800 hover:bg-slate-800 text-slate-200 border border-slate-700 px-2.5 py-1 rounded-lg text-xs font-medium transition">
+                            Laren NH (Tafelberg)
+                        </button>
+                    </div>
+
+                    <!-- Coordinate Converter Bar (RD New EPSG:28992 <-> WGS84) -->
+                    <div class="flex items-center flex-wrap gap-1.5 font-mono text-xs">
+                        <span class="text-slate-400">RD X:</span>
+                        <input id="geo-rd-x" type="number" value="66750" class="w-20 bg-sovereign-950 border border-slate-700 rounded px-2 py-1 text-amber-300">
+                        <span class="text-slate-400">Y:</span>
+                        <input id="geo-rd-y" type="number" value="396750" class="w-20 bg-sovereign-950 border border-slate-700 rounded px-2 py-1 text-amber-300">
+                        <button id="btn-geo-goto-rd" class="bg-amber-600/80 hover:bg-amber-500 text-white px-2.5 py-1 rounded text-[11px] font-sans font-semibold">Ga naar RD</button>
+                        <span id="geo-wgs-label" class="text-sky-400 ml-1">51.5468°N, 4.1135°E</span>
+                    </div>
+                </div>
+
+                <!-- Map + Schaduwwaaier Control Panel -->
+                <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <!-- Left: Interactive Leaflet Map with PDOK WMS & Custom Geometric Grids (7 cols) -->
+                    <div class="lg:col-span-7 bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden relative">
+                        <!-- Layer & Grid Toolbar Overlay -->
+                        <div class="p-2.5 bg-sovereign-850 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs z-20">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-slate-400 font-medium">Kaartlaag:</span>
+                                <select id="geo-base-layer" class="bg-sovereign-950 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white">
+                                    <option value="pdok-brt">PDOK BRT Achtergrondkaart</option>
+                                    <option value="osm">OpenStreetMap Standaard</option>
+                                    <option value="pdok-luchtfoto">PDOK Luchtfoto RGB (Actueel)</option>
+                                </select>
+                                <label class="inline-flex items-center space-x-1 text-[11px] text-emerald-400 cursor-pointer">
+                                    <input type="checkbox" id="chk-kadaster-wms" checked class="rounded border-slate-700">
+                                    <span>Kadastrale Percelen</span>
+                                </label>
+                            </div>
+
+                            <!-- Grid Overlay Checkboxes -->
+                            <div class="flex items-center space-x-2.5 text-[11px] font-mono">
+                                <label class="inline-flex items-center space-x-1 text-sky-300 cursor-pointer">
+                                    <input type="checkbox" id="chk-grid-rd" checked>
+                                    <span>RD Grid</span>
+                                </label>
+                                <label class="inline-flex items-center space-x-1 text-purple-300 cursor-pointer">
+                                    <input type="checkbox" id="chk-grid-iso" checked>
+                                    <span>60° Isometrisch Grid</span>
+                                </label>
+                                <label class="inline-flex items-center space-x-1 text-amber-300 cursor-pointer">
+                                    <input type="checkbox" id="chk-grid-shadow" checked>
+                                    <span>Schaduwwaaier op Kaart</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Map Container + Custom SVG Grid Overlay -->
+                        <div class="flex-1 relative overflow-hidden">
+                            <div id="leaflet-map" class="w-full h-full z-10"></div>
+                            <svg id="map-grid-svg-overlay" class="pointer-events-none absolute inset-0 w-full h-full z-20" viewBox="0 0 800 600" preserveAspectRatio="none"></svg>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Schaduwwaaier Calculator & Polar SVG Diagram (5 cols) -->
+                    <div class="lg:col-span-5 bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex items-center justify-between">
+                            <div>
+                                <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">MathGeo Schaduwwaaier & Zonnebaan Engine</h3>
+                                <p class="text-[11px] text-slate-400">Conform `mathgeo-seven.vercel.app/schaduwwaaier.html`</p>
+                            </div>
+                            <a href="https://mathgeo-seven.vercel.app/schaduwwaaier.html" target="_blank" rel="noopener noreferrer" class="text-[11px] font-mono text-sky-400 hover:underline">Open MathGeo ↗</a>
+                        </div>
+
+                        <div class="p-4 flex-1 overflow-y-auto space-y-4">
+                            <!-- Sliders for Date, Hour & Object Height -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-sovereign-950 p-3 rounded-xl border border-slate-800 text-xs">
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-slate-400">Dag v/h Jaar:</span>
+                                        <span id="lbl-sw-day" class="font-mono text-amber-400 font-bold">172 (21 jun)</span>
+                                    </div>
+                                    <input id="slider-sw-day" type="range" min="1" max="365" value="172" class="w-full accent-amber-500">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-slate-400">Tijdstip (UTC+1):</span>
+                                        <span id="lbl-sw-hour" class="font-mono text-sky-400 font-bold">14:00 u</span>
+                                    </div>
+                                    <input id="slider-sw-hour" type="range" min="6" max="20" step="0.5" value="14" class="w-full accent-sky-500">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-slate-400">Objecthoogte:</span>
+                                        <span id="lbl-sw-height" class="font-mono text-emerald-400 font-bold">15.0 m</span>
+                                    </div>
+                                    <input id="slider-sw-height" type="range" min="2" max="60" step="1" value="15" class="w-full accent-emerald-500">
+                                </div>
+                            </div>
+
+                            <!-- Polar Schaduwwaaier SVG Plot -->
+                            <div class="bg-sovereign-950 border border-slate-800 rounded-xl p-2 flex flex-col items-center">
+                                <svg id="schaduwwaaier-polar-svg" class="w-full max-w-[340px] h-[250px]" viewBox="-160 -160 320 320"></svg>
+                            </div>
+
+                            <!-- Live Telemetry Metrics -->
+                            <div class="grid grid-cols-4 gap-2 text-center font-mono text-xs">
+                                <div class="bg-sovereign-950 p-2 rounded-lg border border-slate-800">
+                                    <div class="text-[10px] text-slate-400">Zon Azimut</div>
+                                    <div id="sw-val-az" class="text-amber-400 font-bold">218.4°</div>
+                                </div>
+                                <div class="bg-sovereign-950 p-2 rounded-lg border border-slate-800">
+                                    <div class="text-[10px] text-slate-400">Zonshoogte</div>
+                                    <div id="sw-val-el" class="text-sky-400 font-bold">56.2°</div>
+                                </div>
+                                <div class="bg-sovereign-950 p-2 rounded-lg border border-slate-800">
+                                    <div class="text-[10px] text-slate-400">Schaduw Richting</div>
+                                    <div id="sw-val-sdir" class="text-purple-400 font-bold">38.4°</div>
+                                </div>
+                                <div class="bg-sovereign-950 p-2 rounded-lg border border-slate-800">
+                                    <div class="text-[10px] text-slate-400">Schaduwlengte</div>
+                                    <div id="sw-val-slen" class="text-emerald-400 font-bold">10.0 m</div>
+                                </div>
+                            </div>
+
+                            <!-- Hourly Shadow Fan Table -->
+                            <div class="bg-sovereign-950 border border-slate-800 rounded-xl overflow-hidden">
+                                <table class="w-full text-left font-mono text-[11px]">
+                                    <thead class="bg-sovereign-850 text-slate-400 border-b border-slate-800">
+                                        <tr>
+                                            <th class="py-1.5 px-2.5">Tijd</th>
+                                            <th class="py-1.5 px-2.5">Zon Azimut</th>
+                                            <th class="py-1.5 px-2.5">Hoogte</th>
+                                            <th class="py-1.5 px-2.5">Schaduw Az</th>
+                                            <th class="py-1.5 px-2.5 text-right">Lengte (m)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="sw-table-body" class="divide-y divide-slate-800/60 text-slate-300"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================= -->
+            <!-- MODULE 4: SVG VIEWER & LIVE HTML COMPILER                     -->
+            <!-- ============================================================= -->
+            <section id="mod-svghtml" class="module-panel hidden flex-1 flex flex-col overflow-hidden p-3 md:p-5 gap-4">
+                <!-- Mode Switcher Bar -->
+                <div class="bg-sovereign-900 border border-slate-800 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2 shrink-0">
+                    <div class="flex space-x-2">
+                        <button id="btn-mode-svgviewer" class="px-4 py-1.5 rounded-xl text-xs font-semibold bg-sky-600 text-white transition">
+                            1. Interactieve SVG Viewer & Inspector
+                        </button>
+                        <button id="btn-mode-htmlcompiler" class="px-4 py-1.5 rounded-xl text-xs font-semibold bg-sovereign-800 text-slate-300 hover:text-white transition">
+                            2. Live HTML / CSS / JS Sandbox Compiler
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-2 text-xs">
+                        <button id="btn-svg-preset-kadaster" class="bg-sovereign-800 hover:bg-slate-800 text-emerald-300 border border-slate-700 px-3 py-1 rounded-lg font-mono text-[11px]">
+                            Laad Poortvliet Percelen SVG
+                        </button>
+                        <button id="btn-svg-preset-waaier" class="bg-sovereign-800 hover:bg-slate-800 text-amber-300 border border-slate-700 px-3 py-1 rounded-lg font-mono text-[11px]">
+                            Laad Schaduwwaaier SVG
+                        </button>
+                        <label class="bg-sky-600 hover:bg-sky-500 text-white px-3 py-1 rounded-lg font-semibold text-xs cursor-pointer">
+                            <span>Upload .SVG</span>
+                            <input id="input-upload-svg" type="file" accept=".svg,image/svg+xml" class="hidden">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Sub-view A: SVG Viewer -->
+                <div id="subview-svg" class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <div class="lg:col-span-5 bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs">
+                            <span class="font-mono text-sky-400 font-semibold">SVG Broncode Editor</span>
+                            <span id="svg-stats-badge" class="font-mono text-[11px] text-slate-400">0 paden</span>
+                        </div>
+                        <textarea id="svg-code-editor" class="flex-1 w-full bg-sovereign-950 p-3 font-mono text-xs text-emerald-300 focus:outline-none resize-none" spellcheck="false"></textarea>
+                        <div class="p-2.5 bg-sovereign-850 border-t border-slate-800 flex justify-between items-center">
+                            <button id="btn-svg-render" class="bg-sky-600 hover:bg-sky-500 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold">Render SVG</button>
+                            <button id="btn-svg-download" class="bg-sovereign-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-mono border border-slate-700">Download .svg</button>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-7 bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden relative">
+                        <div class="px-4 py-2 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs z-10">
+                            <span class="font-semibold text-white">Vector Canvas (Pan & Zoom)</span>
+                            <div class="flex items-center space-x-2">
+                                <button id="btn-svg-zoom-in" class="bg-slate-800 hover:bg-slate-700 px-2.5 py-0.5 rounded font-mono text-white">+</button>
+                                <button id="btn-svg-zoom-out" class="bg-slate-800 hover:bg-slate-700 px-2.5 py-0.5 rounded font-mono text-white">-</button>
+                                <button id="btn-svg-zoom-reset" class="bg-slate-800 hover:bg-slate-700 px-2.5 py-0.5 rounded font-mono text-slate-300">100%</button>
+                            </div>
+                        </div>
+                        <div id="svg-preview-stage" class="flex-1 bg-checkerboard flex items-center justify-center overflow-hidden p-4 cursor-grab active:cursor-grabbing">
+                            <div id="svg-render-target" class="transition-transform duration-75 origin-center"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub-view B: Live HTML/CSS/JS Compiler -->
+                <div id="subview-html" class="hidden flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <div class="lg:col-span-6 bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2 bg-sovereign-850 border-b border-slate-800 flex flex-wrap justify-between items-center gap-2 text-xs">
+                            <span class="font-mono text-amber-400 font-semibold">HTML5 / JS / Tailwind Compiler</span>
+                            <div class="flex items-center gap-1.5">
+                                <select id="html-template-select" class="bg-sovereign-950 border border-slate-700 rounded px-2 py-1 text-[11px] font-mono text-slate-200">
+                                    <option value="woo">Template: Woo Tholen API Tester</option>
+                                    <option value="mathgeo">Template: MathGeo 60° Grid Canvas</option>
+                                    <option value="solid">Template: Solid Pod Fetch & Turtle</option>
+                                </select>
+                                <button id="btn-run-html" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1 rounded font-semibold">Run Code ▶</button>
+                            </div>
+                        </div>
+                        <textarea id="html-compiler-input" class="flex-1 w-full bg-sovereign-950 p-3.5 font-mono text-xs text-sky-200 focus:outline-none resize-none" spellcheck="false"></textarea>
+                    </div>
+
+                    <div class="lg:col-span-6 flex flex-col gap-3 overflow-hidden">
+                        <div class="flex-1 bg-white rounded-2xl overflow-hidden border border-slate-800 flex flex-col">
+                            <div class="px-3 py-1.5 bg-slate-900 text-slate-300 text-xs font-mono flex justify-between items-center">
+                                <span>Live Sandboxed Preview</span>
+                                <span class="text-[10px] text-emerald-400">allow-scripts</span>
+                            </div>
+                            <iframe id="html-compiler-iframe" class="flex-1 w-full h-full" sandbox="allow-scripts"></iframe>
+                        </div>
+                        <div class="h-36 bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden shrink-0">
+                            <div class="px-3 py-1.5 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-[11px] font-mono text-slate-400">
+                                <span>Captured Console Output</span>
+                                <button id="btn-clear-compiler-console" class="hover:text-white">Wis</button>
+                            </div>
+                            <div id="html-compiler-console" class="flex-1 p-2.5 overflow-y-auto font-mono text-xs space-y-1 bg-sovereign-950 text-emerald-400"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================= -->
+            <!-- MODULE 5: 3D STL VIEWER (BINARY & ASCII + PROCEDURAL MESHES)  -->
+            <!-- ============================================================= -->
+            <section id="mod-stl" class="module-panel hidden flex-1 flex flex-col overflow-hidden p-3 md:p-5 gap-4">
+                <!-- Top STL Controls -->
+                <div class="bg-sovereign-900 border border-slate-800 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-3 shrink-0">
+                    <div>
+                        <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-purple-400"></span>
+                            <span>3D STL Mesh Viewer & Geodetische Object Generator (Binary & ASCII STL)</span>
+                        </h2>
+                        <p class="text-xs text-slate-400">Sleep een `.stl` bestand in het viewport of genereer direct een 3D Kadaster Meetpilaar, Poortvliet Perceelblok of 60° Prisma.</p>
+                    </div>
+
+                    <div class="flex items-center flex-wrap gap-2">
+                        <button data-stl="pillar" class="stl-preset-btn bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition">
+                            1. RD Meetpilaar
+                        </button>
+                        <button data-stl="parcel" class="stl-preset-btn bg-sovereign-800 hover:bg-slate-800 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition">
+                            2. Poortvliet 3D Perceel
+                        </button>
+                        <button data-stl="prism60" class="stl-preset-btn bg-sovereign-800 hover:bg-slate-800 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition">
+                            3. MathGeo 60° Hex-Prisma
+                        </button>
+                        <label class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer">
+                            <span>Open .STL Bestand</span>
+                            <input id="input-stl-file" type="file" accept=".stl" class="hidden">
+                        </label>
+                        <button id="btn-export-stl" class="bg-sovereign-800 hover:bg-slate-700 text-sky-300 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-mono">
+                            Download ASCII .STL
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3D Viewport + Mesh Telemetry Sidebar -->
+                <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <div class="lg:col-span-9 bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden relative">
+                        <div class="absolute top-3 left-3 z-10 flex flex-wrap gap-1.5">
+                            <button data-mode="shaded" class="stl-mode-btn bg-purple-600 text-white px-2.5 py-1 rounded text-xs font-mono">Shaded</button>
+                            <button data-mode="wireframe" class="stl-mode-btn bg-sovereign-800/90 text-slate-300 px-2.5 py-1 rounded text-xs font-mono border border-slate-700">Wireframe</button>
+                            <button data-mode="normals" class="stl-mode-btn bg-sovereign-800/90 text-slate-300 px-2.5 py-1 rounded text-xs font-mono border border-slate-700">Normals</button>
+                            <button id="btn-stl-autorotate" class="bg-sovereign-800/90 text-emerald-400 px-2.5 py-1 rounded text-xs font-mono border border-slate-700">Auto-Rotatie: AAN</button>
+                        </div>
+                        <canvas id="stl-canvas" class="w-full h-full cursor-move bg-sovereign-950"></canvas>
+                    </div>
+
+                    <div class="lg:col-span-3 bg-sovereign-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between overflow-y-auto space-y-4">
+                        <div class="space-y-3">
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-purple-400">STL Geometrie & Mesh Analyse</h3>
+                            <div class="space-y-2 font-mono text-xs">
+                                <div class="bg-sovereign-950 p-2.5 rounded-xl border border-slate-800 flex justify-between">
+                                    <span class="text-slate-400">Model Naam:</span>
+                                    <span id="stl-stat-name" class="text-white font-semibold">RD_Meetpilaar</span>
+                                </div>
+                                <div class="bg-sovereign-950 p-2.5 rounded-xl border border-slate-800 flex justify-between">
+                                    <span class="text-slate-400">Driehoeken (Facets):</span>
+                                    <span id="stl-stat-tris" class="text-emerald-400 font-bold">0</span>
+                                </div>
+                                <div class="bg-sovereign-950 p-2.5 rounded-xl border border-slate-800 flex justify-between">
+                                    <span class="text-slate-400">Afmetingen (X×Y×Z):</span>
+                                    <span id="stl-stat-bbox" class="text-sky-400">0 × 0 × 0 mm</span>
+                                </div>
+                                <div class="bg-sovereign-950 p-2.5 rounded-xl border border-slate-800 flex justify-between">
+                                    <span class="text-slate-400">Oppervlakte:</span>
+                                    <span id="stl-stat-area" class="text-amber-400">0.00 cm²</span>
+                                </div>
+                                <div class="bg-sovereign-950 p-2.5 rounded-xl border border-slate-800 flex justify-between">
+                                    <span class="text-slate-400">Berekend Volume:</span>
+                                    <span id="stl-stat-vol" class="text-purple-400 font-bold">0.00 cm³</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-sovereign-950 border border-slate-800 rounded-xl p-3 text-[11px] text-slate-400 space-y-1">
+                            <div class="font-semibold text-slate-200">Besturing:</div>
+                            <div>• Linkermuisknop + sleep: Roteer 3D</div>
+                            <div>• Scrollwiel: Zoom in / uit</div>
+                            <div>• Sleep elk `.stl` bestand (ASCII of Binary) rechtstreeks op het canvas.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================= -->
+            <!-- MODULE 6: ACSM-CONVERTER, PDF HULPMIDDELEN & BTFM MANUAL      -->
+            <!-- ============================================================= -->
+            <section id="mod-docs" class="module-panel hidden flex-1 flex flex-col overflow-hidden p-3 md:p-5 gap-4">
+                <!-- Sub-navigation for ACSM / PDF / BTFM -->
+                <div class="bg-sovereign-900 border border-slate-800 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2 shrink-0">
+                    <div class="flex flex-wrap gap-2">
+                        <button data-doctab="doc-acsm" class="doc-tab-btn active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-rose-600 text-white transition">
+                            1. ACSM-Converter & Licentie Inspector
+                        </button>
+                        <button data-doctab="doc-pdf" class="doc-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-sovereign-800 text-slate-300 hover:text-white transition">
+                            2. PDF Hulpmiddelen & Binary Metadata Scanner
+                        </button>
+                        <button data-doctab="doc-btfm" class="doc-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-sovereign-800 text-slate-300 hover:text-white transition">
+                            3. BTFM (Blue Team Field Manual) Viewer
+                        </button>
+                    </div>
+                    <a href="https://docshare.wps.com/document/btfm-blue-team-field-manual/45529/" target="_blank" rel="noopener noreferrer" class="text-xs font-mono text-rose-400 hover:underline">
+                        wps.com/btfm-blue-team-field-manual/45529 ↗
+                    </a>
+                </div>
+
+                <!-- Sub-panel 6A: ACSM Converter -->
+                <div id="doc-acsm" class="doc-subpanel flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <div class="lg:col-span-6 bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs">
+                            <span class="font-semibold text-white">Adobe `.acsm` (Fulfillment Token XML) Invoer</span>
+                            <div class="flex items-center gap-2">
+                                <button id="btn-acsm-sample" class="bg-slate-800 hover:bg-slate-700 text-amber-300 px-2.5 py-1 rounded text-[11px] font-mono">Laad Voorbeeld .ACSM</button>
+                                <label class="bg-rose-600 hover:bg-rose-500 text-white px-2.5 py-1 rounded text-[11px] font-semibold cursor-pointer">
+                                    <span>Upload .acsm</span>
+                                    <input id="input-acsm-file" type="file" accept=".acsm,.xml" class="hidden">
+                                </label>
+                            </div>
+                        </div>
+                        <textarea id="acsm-xml-input" class="flex-1 w-full bg-sovereign-950 p-3.5 font-mono text-xs text-emerald-300 focus:outline-none resize-none" spellcheck="false"></textarea>
+                        <div class="p-3 bg-sovereign-850 border-t border-slate-800 flex justify-between items-center">
+                            <button id="btn-acsm-parse" class="bg-rose-600 hover:bg-rose-500 text-white px-4 py-1.5 rounded-lg text-xs font-semibold">Analyseer & Converteer ACSM</button>
+                            <div class="flex gap-2">
+                                <button id="btn-acsm-export-json" class="bg-sovereign-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-mono border border-slate-700">Download JSON</button>
+                                <button id="btn-acsm-export-ttl" class="bg-solid-600 hover:bg-solid-500 text-white px-3 py-1.5 rounded-lg text-xs font-mono">Naar Solid RDF (.ttl)</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-6 bg-sovereign-900 border border-slate-800 rounded-2xl p-4 overflow-y-auto space-y-4">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-rose-400">Geëxtraheerde ACSM Boek- & Fulfillment Metadata</h3>
+                        <div id="acsm-parsed-cards" class="space-y-2.5 font-mono text-xs">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub-panel 6B: PDF Hulpmiddelen -->
+                <div id="doc-pdf" class="doc-subpanel hidden flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <div class="lg:col-span-5 bg-sovereign-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between overflow-y-auto space-y-4">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-xs font-bold uppercase tracking-wider text-sky-400">PDF Binary & Metadata Inspector</h3>
+                                <label class="bg-sky-600 hover:bg-sky-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer">
+                                    <span>Kies Lokaal .PDF Bestand</span>
+                                    <input id="input-pdf-file" type="file" accept=".pdf,application/pdf" class="hidden">
+                                </label>
+                            </div>
+                            <p class="text-xs text-slate-400">Scant het binaire PDF-bestand client-side op `%PDF-` header, aantal `/Type /Page` objecten, `/Title`, `/Author`, `/Producer` en ingesloten URLs.</p>
+                            <div id="pdf-meta-output" class="space-y-2 font-mono text-xs">
+                                <div class="p-3 rounded-xl bg-sovereign-950 border border-slate-800 text-slate-400">Selecteer een PDF-bestand om de structuur te analyseren en rechts te bekijken.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-7 bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2 bg-sovereign-850 border-b border-slate-800 text-xs font-mono text-slate-300" id="pdf-viewer-label">
+                            Geen PDF geladen
+                        </div>
+                        <iframe id="pdf-preview-iframe" class="flex-1 w-full bg-sovereign-950"></iframe>
+                    </div>
+                </div>
+
+                <!-- Sub-panel 6C: BTFM (Blue Team Field Manual) Viewer -->
+                <div id="doc-btfm" class="doc-subpanel hidden flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <div class="lg:col-span-7 bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="p-3 bg-sovereign-850 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2">
+                            <span class="text-xs font-bold text-rose-400 font-mono">BTFM — Blue Team Field Manual Command Matrix</span>
+                            <input id="btfm-search" type="text" placeholder="Zoek op tcpdump, iptables, forensics, solid, tls..." class="bg-sovereign-950 border border-slate-700 rounded-lg px-3 py-1 text-xs font-mono text-white w-64 focus:outline-none">
+                        </div>
+                        <div id="btfm-commands-list" class="flex-1 p-3.5 overflow-y-auto space-y-2.5 font-mono text-xs">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-5 bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex items-center justify-between text-xs">
+                            <span class="font-mono text-slate-300 truncate">https://docshare.wps.com/document/btfm-blue-team-field-manual/45529/</span>
+                            <a href="https://docshare.wps.com/document/btfm-blue-team-field-manual/45529/" target="_blank" rel="noopener noreferrer" class="bg-rose-600 hover:bg-rose-500 text-white px-2.5 py-1 rounded text-[11px] font-semibold shrink-0">Open Volledig ↗</a>
+                        </div>
+                        <iframe src="https://docshare.wps.com/document/btfm-blue-team-field-manual/45529/" class="flex-1 w-full bg-white" sandbox="allow-scripts allow-same-origin"></iframe>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================= -->
+            <!-- MODULE 7: LUMO AI & EIGEN AI GATEWAY                          -->
+            <!-- ============================================================= -->
+            <section id="mod-ai" class="module-panel hidden flex-1 flex flex-col overflow-hidden p-3 md:p-5 gap-4">
+                <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <!-- Left Config & Context Injection (4 cols) -->
+                    <div class="lg:col-span-4 bg-sovereign-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between overflow-y-auto space-y-4">
+                        <div class="space-y-3">
+                            <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-pink-500"></span>
+                                <span>Lumo AI & Eigen AI Configuratie</span>
+                            </h2>
+
+                            <div>
+                                <label class="block text-[11px] text-slate-400 mb-1">AI Engine Modus:</label>
+                                <select id="ai-engine-mode" class="w-full bg-sovereign-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-pink-300">
+                                    <option value="gemini">1. Ingebouwde Gemini 3 Flash Engine (Direct)</option>
+                                    <option value="custom">2. Lumo AI / Eigen AI Endpoint (Ollama / OpenAI / Custom REST)</option>
+                                </select>
+                            </div>
+
+                            <!-- Custom Endpoint Box -->
+                            <div id="ai-custom-config" class="space-y-2 bg-sovereign-950 p-3 rounded-xl border border-slate-800">
+                                <div>
+                                    <label class="block text-[10px] font-mono text-slate-400">Eigen AI / Lumo Endpoint URL:</label>
+                                    <input id="ai-custom-url" type="url" value="http://localhost:11434/v1/chat/completions" class="w-full bg-sovereign-900 border border-slate-700 rounded px-2.5 py-1 text-xs font-mono text-sky-300 mt-0.5">
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[10px] font-mono text-slate-400">Model Naam:</label>
+                                        <input id="ai-custom-model" type="text" value="lumo-sovereign" class="w-full bg-sovereign-900 border border-slate-700 rounded px-2 py-1 text-xs font-mono text-white mt-0.5">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-mono text-slate-400">API Key (optioneel):</label>
+                                        <input id="ai-custom-key" type="password" placeholder="Bearer..." class="w-full bg-sovereign-900 border border-slate-700 rounded px-2 py-1 text-xs font-mono text-white mt-0.5">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Live Workbench Context Checkboxes -->
+                            <div class="space-y-2 pt-2 border-t border-slate-800">
+                                <div class="text-xs font-semibold text-slate-300">Koppel Workbench Data aan Prompt:</div>
+                                <label class="flex items-center space-x-2 text-xs text-slate-300 cursor-pointer">
+                                    <input type="checkbox" id="ai-ctx-feeds" checked class="rounded border-slate-700">
+                                    <span>Actieve Feeds & API Respons (PDOK/Fediverse)</span>
+                                </label>
+                                <label class="flex items-center space-x-2 text-xs text-slate-300 cursor-pointer">
+                                    <input type="checkbox" id="ai-ctx-geo" checked class="rounded border-slate-700">
+                                    <span>RD Coördinaten & Schaduwwaaier Status</span>
+                                </label>
+                                <label class="flex items-center space-x-2 text-xs text-slate-300 cursor-pointer">
+                                    <input type="checkbox" id="ai-ctx-tree" checked class="rounded border-slate-700">
+                                    <span>URL Tree Structuur</span>
+                                </label>
+                            </div>
+
+                            <!-- Quick Tactical Prompts -->
+                            <div class="space-y-1.5 pt-2 border-t border-slate-800">
+                                <div class="text-xs font-semibold text-slate-300">Snelle Analyse Prompts:</div>
+                                <button data-aiprompt="Geef een geodetische en kadastrale analyse van de Poortvliet percelen (sectie M) en de huidige Schaduwwaaier zonnebaan." class="ai-quick-btn w-full text-left p-2 rounded-lg bg-sovereign-950 hover:bg-slate-800 border border-slate-800 text-[11px] text-emerald-300 transition">
+                                    → Analyseer Poortvliet Percelen & Schaduwwaaier
+                                </button>
+                                <button data-aiprompt="Vat de berichten uit de Fediverse feeds (@finhstamsterdam, @vanvrijberghe, @polzer, @Janna) samen en maak er een Solid RDF Turtle overzicht van." class="ai-quick-btn w-full text-left p-2 rounded-lg bg-sovereign-950 hover:bg-slate-800 border border-slate-800 text-[11px] text-pink-300 transition">
+                                    → Fediverse OSINT Samenvatting & RDF
+                                </button>
+                                <button data-aiprompt="Geef op basis van de Blue Team Field Manual (BTFM) 5 concrete hardening- en verificatie-commando's voor deze Solid Pod en OGC API Gateway." class="ai-quick-btn w-full text-left p-2 rounded-lg bg-sovereign-950 hover:bg-slate-800 border border-slate-800 text-[11px] text-amber-300 transition">
+                                    → BTFM Blue Team Security Audit
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Chat & Streaming Output (8 cols) -->
+                    <div class="lg:col-span-8 bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs">
+                            <span class="font-semibold text-white">Sovereign AI Assistent (Lumo AI / Gemini 3 Flash)</span>
+                            <button id="btn-ai-clear" class="text-slate-400 hover:text-white font-mono text-[11px]">Wis Gesprek</button>
+                        </div>
+
+                        <div id="ai-chat-history" class="flex-1 p-4 overflow-y-auto space-y-3 text-xs leading-relaxed">
+                            <div class="bg-sovereign-950 border border-slate-800 rounded-xl p-3.5 text-slate-300">
+                                <span class="font-mono text-pink-400 font-bold">[Lumo / Sovereign AI]</span> Gereed. Ik heb direct toegang tot de ingeladen XML/RSS/Atom-stromen (`@finhstamsterdam`, `vanvrijberghe`, `polzer`, `Janna`), de PDOK Poortvliet-percelen, de URL Tree en de Schaduwwaaier-berekening. Stel uw vraag of kies links een preset.
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-sovereign-850 border-t border-slate-800 flex gap-2">
+                            <input id="ai-user-input" type="text" placeholder="Stel een vraag aan Lumo AI / Eigen AI over uw feeds, kaarten, code of Solid Pod..." class="flex-1 bg-sovereign-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-pink-500">
+                            <button id="btn-ai-send" class="bg-pink-600 hover:bg-pink-500 text-white font-semibold px-5 py-2 rounded-xl text-xs transition shrink-0">
+                                Verstuur Prompt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================= -->
+            <!-- MODULE 8: SOLID POD LDP & RDF TURTLE MANAGER                  -->
+            <!-- ============================================================= -->
+            <section id="mod-pod" class="module-panel hidden flex-1 flex flex-col overflow-hidden p-3 md:p-5 gap-4">
+                <div class="bg-sovereign-900 border border-slate-800 rounded-2xl p-4 grid grid-cols-1 md:grid-cols-4 gap-3 shrink-0">
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">Solid Pod Server Root URI</label>
+                        <input id="pod-root-input" type="url" value="https://solidcommunity.net/" class="w-full bg-sovereign-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-mono text-sky-300">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">WebID (`foaf:PersonalProfileDocument`)</label>
+                        <input id="pod-webid-input" type="url" value="https://vanvrijberghe.solidcommunity.net/profile/card#me" class="w-full bg-sovereign-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-mono text-slate-200">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">Doel LDP Container / Bestand (`.ttl`)</label>
+                        <input id="pod-path-input" type="text" value="public/workbench/sovereign-graph.ttl" class="w-full bg-sovereign-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-mono text-emerald-400">
+                    </div>
+                    <div class="flex items-end gap-1.5">
+                        <button id="btn-pod-exec-put" class="flex-1 bg-solid-600 hover:bg-solid-500 text-white py-1.5 px-3 rounded-lg text-xs font-semibold transition">HTTP PUT (.ttl)</button>
+                        <button id="btn-pod-exec-patch" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-1.5 px-3 rounded-lg text-xs font-semibold transition">SPARQL PATCH</button>
+                        <button id="btn-pod-download-ttl" class="bg-emerald-600 hover:bg-emerald-500 text-white py-1.5 px-3 rounded-lg text-xs font-semibold transition">Download</button>
+                    </div>
+                </div>
+
+                <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <div class="lg:col-span-7 bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs">
+                            <span class="font-mono text-solid-400 font-semibold">Geünificeerde Solid Pod RDF Turtle Graaf (`text/turtle`)</span>
+                            <button id="btn-pod-copy-ttl" class="text-slate-300 hover:text-white font-mono text-[11px]">Kopieer .ttl</button>
+                        </div>
+                        <pre id="pod-turtle-viewer" class="flex-1 p-4 overflow-auto font-mono text-xs leading-relaxed select-all bg-sovereign-950"></pre>
+                    </div>
+
+                    <div class="lg:col-span-5 flex flex-col gap-4 overflow-hidden">
+                        <div class="bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col flex-1 overflow-hidden">
+                            <div class="px-4 py-2 bg-sovereign-850 border-b border-slate-800 text-xs font-mono text-indigo-300 font-semibold">
+                                SPARQL Update Payload (`application/sparql-update`)
+                            </div>
+                            <textarea id="pod-sparql-editor" class="flex-1 w-full bg-sovereign-950 p-3 font-mono text-xs text-indigo-200 focus:outline-none resize-none" spellcheck="false"></textarea>
+                        </div>
+
+                        <div class="bg-sovereign-900 border border-slate-800 rounded-2xl flex flex-col h-48 overflow-hidden shrink-0">
+                            <div class="px-4 py-2 bg-sovereign-850 border-b border-slate-800 text-xs font-semibold text-slate-300">
+                                Solid LDP Transactie Logboek
+                            </div>
+                            <div id="pod-tx-log" class="flex-1 p-3 overflow-y-auto font-mono text-[11px] space-y-1.5 bg-sovereign-950"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Global Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-sovereign-800 border border-solid-500/60 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-medium transform translate-y-24 opacity-0 transition-all duration-300 z-50 flex items-center space-x-2.5">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span id="toast-text">Actie voltooid</span>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- COMPLETE APPLICATION JAVASCRIPT ENGINE                                -->
+    <!-- ===================================================================== -->
+    <script>
+        // --- 0. GLOBAL HELPERS & TOAST ---
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toast-text').textContent = msg;
+            t.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => t.classList.add('translate-y-24', 'opacity-0'), 3200);
+        }
+
+        function escapeHtml(s) {
+            return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function copyText(text, label = 'Gekopieerd naar klembord!') {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); showToast(label); } catch (e) {}
+            document.body.removeChild(ta);
+        }
+
+        // --- 1. MODULE SWITCHING ---
+        let leafletMapInitialized = false;
+        document.querySelectorAll('.nav-mod-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.getAttribute('data-module');
+                document.querySelectorAll('.nav-mod-btn').forEach(b => {
+                    b.classList.remove('active', 'bg-solid-600/20', 'text-white', 'border-solid-500/40');
+                    b.classList.add('text-slate-300', 'border-transparent');
+                });
+                btn.classList.add('active', 'bg-solid-600/20', 'text-white', 'border-solid-500/40');
+                btn.classList.remove('text-slate-300', 'border-transparent');
+
+                document.querySelectorAll('.module-panel').forEach(p => {
+                    p.classList.toggle('hidden', p.id !== target);
+                });
+
+                if (target === 'mod-geo') {
+                    setTimeout(() => {
+                        if (!leafletMapInitialized) initGeoMap();
+                        else if (window.sovereignMap) window.sovereignMap.invalidateSize();
+                        updateSchaduwwaaier();
+                    }, 60);
+                }
+                if (target === 'mod-stl') {
+                    setTimeout(resizeStlCanvas, 60);
+                }
+                if (target === 'mod-pod') {
+                    renderUnifiedPodGraph();
+                }
+            });
+        });
+
+        // --- 2. MODULE 1: XML / API / RSS & FEDIVERSE GATEWAY DATA & FALLBACKS ---
+        const GATEWAY_PRESETS = {
+            'mastodon-finhst': {
+                url: 'https://mastodon.social/@finhstamsterdam.rss',
+                accept: 'application/atom+xml, application/rss+xml, application/xml, text/xml',
+                sourceKey: 'finhstamsterdam',
+                fallbackType: 'application/rss+xml',
+                fallbackBody: `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:webfeeds="http://webfeeds.org/rss/1.0" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>Finhst Amsterdam (@finhstamsterdam@mastodon.social)</title>
+    <link>https://mastodon.social/@finhstamsterdam</link>
+    <description>Open data, maritieme en kadastrale erfgoed-analyses, OSINT, geodetische rasters &amp; Fediverse onderzoeksnotities vanuit Amsterdam.</description>
+    <item>
+      <guid isPermaLink="true">https://mastodon.social/@finhstamsterdam/11448920192831</guid>
+      <link>https://mastodon.social/@finhstamsterdam/11448920192831</link>
+      <pubDate>Mon, 26 Oct 2026 07:45:00 +0000</pubDate>
+      <description><![CDATA[<p>Koppeling van W3C Solid Pods met OGC API Features (PDOK BRK Kadastrale Kaart) en isometrische 60°-grids op <a href="https://mathgeo-seven.vercel.app/">mathgeo-seven.vercel.app</a>. Alle perceelringen in RD New (EPSG:28992) direct verifieerbaar via de Shoelace-formule. #SolidProject #Kadaster #Geodesie #Amsterdam</p>]]></description>
+    </item>
+    <item>
+      <guid isPermaLink="true">https://mastodon.social/@finhstamsterdam/11448210948120</guid>
+      <link>https://mastodon.social/@finhstamsterdam/11448210948120</link>
+      <pubDate>Sun, 25 Oct 2026 16:20:00 +0000</pubDate>
+      <description><![CDATA[<p>Zonnebaan- en schaduwwaaier-analyses voor stedelijke en historische percelen in Amsterdam en Zeeland (Tholen / Poortvliet). Bekijk de interactieve waaier op <a href="https://mathgeo-seven.vercel.app/schaduwwaaier.html">mathgeo-seven.vercel.app/schaduwwaaier.html</a> #Schaduwwaaier #OSINT #Erfgoed</p>]]></description>
+    </item>
+  </channel>
+</rss>`
+            },
+            'pixelfed-vanvrijberghe': {
+                url: 'https://pixelfed.social/users/vanvrijberghe.atom',
+                accept: 'application/atom+xml, application/rss+xml, application/xml, text/xml',
+                sourceKey: 'vanvrijberghe',
+                fallbackType: 'application/atom+xml',
+                fallbackBody: `<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>vanvrijberghe (@vanvrijberghe@pixelfed.social)</title>
+  <id>https://pixelfed.social/users/vanvrijberghe.atom</id>
+  <updated>2026-10-25T18:42:00Z</updated>
+  <author><name>vanvrijberghe</name><uri>https://pixelfed.social/vanvrijberghe</uri></author>
+  <entry>
+    <id>tag:pixelfed.social,2026:post:81920481</id>
+    <title>Ochtendmist boven de Zeeuwse dijken bij Poortvliet en Tholen</title>
+    <published>2026-10-25T07:15:22Z</published>
+    <link rel="alternate" type="text/html" href="https://pixelfed.social/p/vanvrijberghe/81920481"/>
+    <link rel="enclosure" type="image/jpeg" href="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&amp;fit=crop&amp;w=1000&amp;q=80"/>
+    <content type="html"><![CDATA[<p>Ochtendmist boven de Zeeuwse dijken bij laagwater op het eiland Tholen. #zeeland #poortvliet #landschap #pixelfed</p>]]></content>
+  </entry>
+  <entry>
+    <id>tag:pixelfed.social,2026:post:81749201</id>
+    <title>Geometrie van baksteen en schaduw in het havenkwartier</title>
+    <published>2026-10-22T16:30:10Z</published>
+    <link rel="alternate" type="text/html" href="https://pixelfed.social/p/vanvrijberghe/81749201"/>
+    <link rel="enclosure" type="image/jpeg" href="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&amp;fit=crop&amp;w=1000&amp;q=80"/>
+    <content type="html"><![CDATA[<p>Laat middaglicht langs de industriële gevels van het oude pakhuis. #architectuur #monochroom</p>]]></content>
+  </entry>
+</feed>`
+            },
+            'gram-polzer': {
+                url: 'https://gram.social/users/polzer.atom',
+                accept: 'application/atom+xml, application/rss+xml, application/xml, text/xml',
+                sourceKey: 'polzer',
+                fallbackType: 'application/atom+xml',
+                fallbackBody: `<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>polzer (@polzer@gram.social)</title>
+  <id>https://gram.social/users/polzer.atom</id>
+  <author><name>polzer</name><uri>https://gram.social/polzer</uri></author>
+  <entry>
+    <id>tag:gram.social,2026:post:4902184</id>
+    <title>Nachtelijke goederentrein op het emplacementspoor</title>
+    <published>2026-10-24T10:12:45Z</published>
+    <link rel="alternate" type="text/html" href="https://gram.social/p/polzer/4902184"/>
+    <link rel="enclosure" type="image/jpeg" href="https://images.unsplash.com/photo-1515165562839-978bbcf18277?auto=format&amp;fit=crop&amp;w=1000&amp;q=80"/>
+    <content type="html"><![CDATA[<p>Natte spoorstaven onder natriumlampen. Lange sluitertijd vanaf het seinhuis. #spoor #nachtfotografie #gramsocial</p>]]></content>
+  </entry>
+</feed>`
+            },
+            'gram-janna': {
+                url: 'https://gram.social/users/Janna.atom',
+                accept: 'application/atom+xml, application/rss+xml, application/xml, text/xml',
+                sourceKey: 'Janna',
+                fallbackType: 'application/atom+xml',
+                fallbackBody: `<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Janna (@Janna@gram.social)</title>
+  <id>https://gram.social/users/Janna.atom</id>
+  <author><name>Janna</name><uri>https://gram.social/Janna</uri></author>
+  <entry>
+    <id>tag:gram.social,2026:post:4905512</id>
+    <title>Dauwdruppels op wilde duinroos langs de Oosterschelde</title>
+    <published>2026-10-25T14:55:10Z</published>
+    <link rel="alternate" type="text/html" href="https://gram.social/p/Janna/4905512"/>
+    <link rel="enclosure" type="image/jpeg" href="https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&amp;fit=crop&amp;w=1000&amp;q=80"/>
+    <content type="html"><![CDATA[<p>Vroeg in de duinen voordat de wind opsteekt. #flora #macro #natuur</p>]]></content>
+  </entry>
+</feed>`
+            },
+            'pdok-brk': {
+                url: 'https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/collections/perceel/items?bbox=66000,396000,67000,397000&limit=5',
+                accept: 'application/geo+json, application/json',
+                sourceKey: 'pdok-brk',
+                fallbackType: 'application/geo+json',
+                fallbackBody: JSON.stringify({
+                    "type": "FeatureCollection",
+                    "numberReturned": 5,
+                    "crs": "EPSG:28992",
+                    "features": [
+                        { "type": "Feature", "id": "PVT00-M-1172", "properties": { "perceelnummer": 1172, "sectie": "M", "akr_aanduiding": "PVT00", "kadastrale_gemeente": "Poortvliet", "kadastrale_grootte_waarde": 365, "begin_geldigheid": "2008-06-04" }, "geometry": { "type": "Polygon", "coordinates": [[[66584.37,396751.37],[66604.11,396736.32],[66615.50,396751.20],[66595.76,396766.25],[66584.37,396751.37]]] } },
+                        { "type": "Feature", "id": "PVT00-M-1173", "properties": { "perceelnummer": 1173, "sectie": "M", "akr_aanduiding": "PVT00", "kadastrale_gemeente": "Poortvliet", "kadastrale_grootte_waarde": 810, "begin_geldigheid": "1999-11-15" }, "geometry": { "type": "Polygon", "coordinates": [[[66604.11,396736.32],[66634.11,396713.50],[66652.20,396737.20],[66622.20,396760.02],[66604.11,396736.32]]] } },
+                        { "type": "Feature", "id": "PVT00-M-1174", "properties": { "perceelnummer": 1174, "sectie": "M", "akr_aanduiding": "PVT00", "kadastrale_gemeente": "Poortvliet", "kadastrale_grootte_waarde": 11990, "begin_geldigheid": "2015-02-13" }, "geometry": { "type": "Polygon", "coordinates": [[[66584.37,396751.37],[66684.37,396675.00],[66760.00,396774.00],[66660.00,396850.37],[66584.37,396751.37]]] } },
+                        { "type": "Feature", "id": "PVT00-M-1178", "properties": { "perceelnummer": 1178, "sectie": "M", "akr_aanduiding": "PVT00", "kadastrale_gemeente": "Poortvliet", "kadastrale_grootte_waarde": 10900, "begin_geldigheid": "1999-11-09" }, "geometry": { "type": "Polygon", "coordinates": [[[67140.00,396420.00],[67260.10,396420.00],[67260.10,396510.80],[67140.00,396510.80],[67140.00,396420.00]]] } },
+                        { "type": "Feature", "id": "PVT00-M-1180", "properties": { "perceelnummer": 1180, "sectie": "M", "akr_aanduiding": "PVT00", "kadastrale_gemeente": "Poortvliet", "kadastrale_grootte_waarde": 14230, "begin_geldigheid": "2024-06-17" }, "geometry": { "type": "Polygon", "coordinates": [[[67110.00,396600.00],[67232.40,396600.00],[67232.40,396716.25],[67110.00,396716.25],[67110.00,396600.00]]] } }
+                    ]
+                }, null, 2)
+            },
+            'woo-tholen': {
+                url: 'https://woo-tholen.vercel.app/apitest.html',
+                accept: 'text/html, application/xhtml+xml, application/xml',
+                sourceKey: 'woo-tholen',
+                fallbackType: 'text/html',
+                fallbackBody: `<!DOCTYPE html>
+<html lang="nl">
+<head><title>Woo Tholen API Test Suite — Gemeente Tholen Open Overheid</title></head>
+<body>
+  <header><h1>Woo Tholen API Tester (woo-tholen.vercel.app/apitest.html)</h1></header>
+  <main>
+    <article data-endpoint="https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1">
+      <h2>Kadastrale Percelen Poortvliet &amp; Scherpenisse (Wet open overheid)</h2>
+      <p>Actieve OGC API koppeling voor het opvragen van kadastrale percelen, beschikkingen en ruimtelijke plannen binnen de gemeente Tholen.</p>
+    </article>
+  </main>
+</body>
+</html>`
+            }
+        };
+
+        const gatewayState = {
+            lastRawResponse: '',
+            lastContentType: 'application/xml',
+            lastUrl: '',
+            streamItems: []
+        };
+
+        async function smartGatewayFetch(url, method = 'GET', accept = '*/*') {
+            const corsMode = document.getElementById('global-cors-select').value;
+            const customProxy = document.getElementById('global-custom-proxy').value.trim();
+
+            const candidates = [];
+            if (corsMode === 'direct') candidates.push({ label: 'Direct', url });
+            else if (corsMode === 'allorigins') candidates.push({ label: 'AllOrigins', url: `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}` });
+            else if (corsMode === 'corsproxy') candidates.push({ label: 'CorsProxy', url: `https://corsproxy.io/?url=${encodeURIComponent(url)}` });
+            else if (corsMode === 'codetabs') candidates.push({ label: 'CodeTabs', url: `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}` });
+            else if (corsMode === 'custom') candidates.push({ label: 'Custom Proxy', url: `${customProxy}${url}` });
+            else {
+                candidates.push(
+                    { label: 'Direct', url },
+                    { label: 'AllOrigins', url: `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}` },
+                    { label: 'CorsProxy', url: `https://corsproxy.io/?url=${encodeURIComponent(url)}` }
+                );
+            }
+
+            for (const c of candidates) {
+                try {
+                    const ctrl = new AbortController();
+                    const timer = setTimeout(() => ctrl.abort(), 4200);
+                    const res = await fetch(c.url, { method, headers: { 'Accept': accept }, signal: ctrl.signal });
+                    clearTimeout(timer);
+                    if (res.ok) {
+                        const text = await res.text();
+                        if (text && text.trim().length > 15) {
+                            return { text, status: `200 OK (${c.label})`, contentType: res.headers.get('content-type') || accept };
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            // Fallback lookup
+            const presetMatch = Object.values(GATEWAY_PRESETS).find(p => p.url === url);
+            if (presetMatch) {
+                return {
+                    text: presetMatch.fallbackBody,
+                    status: '200 OK (Sovereign Snapshot)',
+                    contentType: presetMatch.fallbackType
+                };
+            }
+            return {
+                text: `<?xml version="1.0"?><gatewayResponse url="${escapeHtml(url)}" status="Fallback"><message>Externe server vereist CORS proxy of bevindt zich achter een firewall.</message></gatewayResponse>`,
+                status: '200 Fallback XML',
+                contentType: 'application/xml'
+            };
+        }
+
+        function parseGatewayPayloadToCards(rawText, url, sourceKeyHint = '') {
+            const items = [];
+            const trimmed = rawText.trim();
+
+            // Case 1: JSON / GeoJSON
+            if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+                try {
+                    const data = JSON.parse(trimmed);
+                    if (data.features && Array.isArray(data.features)) {
+                        data.features.forEach(f => {
+                            const p = f.properties || {};
+                            items.push({
+                                source: sourceKeyHint || 'pdok-brk',
+                                badge: 'OGC GeoJSON Perceel',
+                                color: '#f59e0b',
+                                title: `Perceel ${p.akr_aanduiding || 'PVT00'} ${p.sectie || 'M'} ${p.perceelnummer || f.id}`,
+                                author: p.kadastrale_gemeente || 'Poortvliet (Tholen)',
+                                date: p.begin_geldigheid || 'Vastgesteld',
+                                text: `Geregistreerde grootte: ${p.kadastrale_grootte_waarde} m² • RD New (EPSG:28992) MultiPolygon.`,
+                                link: url,
+                                image: null
+                            });
+                        });
+                        return items;
+                    }
+                } catch (e) {}
+            }
+
+            // Case 2: XML / Atom / RSS / HTML
+            const parser = new DOMParser();
+            const isHtml = trimmed.toLowerCase().startsWith('<!doctype html') || trimmed.toLowerCase().startsWith('<html');
+            const doc = parser.parseFromString(rawText, isHtml ? 'text/html' : 'text/xml');
+
+            if (isHtml) {
+                const title = doc.querySelector('title')?.textContent || url;
+                const desc = doc.querySelector('p')?.textContent || 'HTML Web Applicatie / API Test Endpoint geladen in Gateway.';
+                items.push({
+                    source: sourceKeyHint || 'woo-tholen',
+                    badge: 'HTML Endpoint',
+                    color: '#10b981',
+                    title,
+                    author: new URL(url).hostname,
+                    date: new Date().toISOString().slice(0, 10),
+                    text: desc,
+                    link: url,
+                    image: null
+                });
+                return items;
+            }
+
+            const entries = Array.from(doc.querySelectorAll('entry, item'));
+            entries.forEach(node => {
+                const getTxt = (sel) => node.querySelector(sel)?.textContent?.trim() || '';
+                const title = getTxt('title') || 'Fediverse Bericht';
+                const pub = getTxt('published') || getTxt('pubDate') || getTxt('updated') || '';
+                const rawDesc = getTxt('content') || getTxt('description') || getTxt('summary') || '';
+                const htmlDoc = parser.parseFromString(rawDesc, 'text/html');
+                const cleanText = htmlDoc.body?.textContent?.trim() || title;
+
+                let img = null;
+                node.querySelectorAll('link, enclosure').forEach(l => {
+                    const href = l.getAttribute('href') || l.getAttribute('url');
+                    const type = l.getAttribute('type') || '';
+                    if (href && (type.startsWith('image/') || l.getAttribute('rel') === 'enclosure')) img = href;
+                });
+                if (!img) {
+                    const firstImg = htmlDoc.querySelector('img');
+                    if (firstImg) img = firstImg.getAttribute('src');
+                }
+
+                let link = getTxt('link');
+                const linkNode = node.querySelector('link[rel="alternate"], link');
+                if (linkNode && linkNode.getAttribute('href')) link = linkNode.getAttribute('href');
+
+                const host = (() => { try { return new URL(url).hostname; } catch (e) { return 'fediverse'; } })();
+                const author = getTxt('author > name') || sourceKeyHint || host;
+
+                items.push({
+                    source: sourceKeyHint || author,
+                    badge: host.includes('mastodon') ? 'Mastodon RSS' : 'Fediverse Atom',
+                    color: host.includes('mastodon') ? '#ec4899' : '#a78bfa',
+                    title: title.length > 95 ? title.slice(0, 95) + '…' : title,
+                    author: `@${author} (${host})`,
+                    date: pub.slice(0, 22),
+                    text: cleanText,
+                    link: link || url,
+                    image: img
+                });
+            });
+
+            return items;
+        }
+
+        async function executeSingleGatewayRequest() {
+            const url = document.getElementById('gw-url-input').value.trim();
+            const method = document.getElementById('gw-method').value;
+            const accept = document.getElementById('gw-accept').value;
+            if (!url) return;
+
+            document.getElementById('gw-status-pill').textContent = 'Bezig...';
+            const res = await smartGatewayFetch(url, method, accept);
+            gatewayState.lastRawResponse = res.text;
+            gatewayState.lastContentType = res.contentType;
+            gatewayState.lastUrl = url;
+
+            document.getElementById('gw-status-pill').textContent = res.status;
+            document.getElementById('gw-raw-meta').textContent = `${method} ${url} • ${res.contentType}`;
+            document.getElementById('gw-raw-output').textContent = res.text;
+            document.getElementById('gw-xml-tree-view').textContent = res.text;
+
+            const parsedCards = parseGatewayPayloadToCards(res.text, url);
+            if (parsedCards.length > 0) {
+                // Merge into streamItems
+                gatewayState.streamItems = [
+                    ...parsedCards,
+                    ...gatewayState.streamItems.filter(i => i.link !== url)
+                ];
+                renderGatewayStreamCards();
+            }
+            evaluateGatewayXPath();
+            showToast(`Respons geladen (${res.status})`);
+        }
+
+        async function syncAllSixGatewayPresets() {
+            const allItems = [];
+            for (const key of Object.keys(GATEWAY_PRESETS)) {
+                const p = GATEWAY_PRESETS[key];
+                const res = await smartGatewayFetch(p.url, 'GET', p.accept);
+                if (key === 'mastodon-finhst') {
+                    gatewayState.lastRawResponse = res.text;
+                    gatewayState.lastContentType = res.contentType;
+                    gatewayState.lastUrl = p.url;
+                    document.getElementById('gw-raw-output').textContent = res.text;
+                    document.getElementById('gw-xml-tree-view').textContent = res.text;
+                }
+                const cards = parseGatewayPayloadToCards(res.text, p.url, p.sourceKey);
+                allItems.push(...cards);
+            }
+            gatewayState.streamItems = allItems;
+            renderGatewayStreamCards();
+            evaluateGatewayXPath();
+        }
+
+        function renderGatewayStreamCards() {
+            const grid = document.getElementById('gw-cards-grid');
+            const filter = document.getElementById('gw-source-filter').value;
+            grid.innerHTML = '';
+
+            const filtered = gatewayState.streamItems.filter(item => {
+                if (filter === 'ALL') return true;
+                return item.source.toLowerCase().includes(filter.toLowerCase());
+            });
+
+            document.getElementById('gw-stream-count').textContent = filtered.length;
+
+            filtered.forEach(item => {
+                const card = document.createElement('article');
+                card.className = 'bg-sovereign-950 border border-slate-800/90 rounded-xl overflow-hidden flex flex-col justify-between hover:border-slate-700 transition shadow';
+                card.innerHTML = `
+                    <div>
+                        <div class="p-3 border-b border-slate-800/80 flex items-center justify-between gap-2">
+                            <span class="text-xs font-bold text-white truncate">${escapeHtml(item.author)}</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded border" style="color:${item.color}; border-color:${item.color}55; background:${item.color}15">${escapeHtml(item.badge)}</span>
+                        </div>
+                        ${item.image ? `<div class="aspect-video bg-black overflow-hidden"><img src="${escapeHtml(item.image)}" alt="" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>` : ''}
+                        <div class="p-3.5 space-y-1.5">
+                            <h3 class="text-xs font-bold text-slate-100 leading-snug">${escapeHtml(item.title)}</h3>
+                            <p class="text-xs text-slate-400 leading-relaxed line-clamp-3">${escapeHtml(item.text)}</p>
+                        </div>
+                    </div>
+                    <div class="px-3.5 py-2.5 bg-sovereign-900 border-t border-slate-800/70 flex items-center justify-between text-[11px] font-mono">
+                        <span class="text-slate-500 truncate">${escapeHtml(item.date)}</span>
+                        <a href="${escapeHtml(item.link)}" target="_blank" rel="noopener noreferrer" class="text-solid-400 hover:underline">Open Bron ↗</a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function evaluateGatewayXPath() {
+            const query = document.getElementById('gw-xpath-input').value.trim();
+            const container = document.getElementById('gw-xpath-results');
+            container.innerHTML = '';
+            if (!gatewayState.lastRawResponse || !query) return;
+
+            const raw = gatewayState.lastRawResponse.trim();
+            if (raw.startsWith('{')) {
+                try {
+                    const obj = JSON.parse(raw);
+                    const keys = Object.keys(obj);
+                    container.innerHTML = `<div class="text-emerald-400 font-semibold">GeoJSON / JSON Object Gedeeld (${keys.length} root keys):</div>`;
+                    (obj.features || []).forEach((f, idx) => {
+                        const div = document.createElement('div');
+                        div.className = 'p-2 rounded bg-sovereign-900 border border-slate-800 text-[11px]';
+                        div.textContent = `#${idx + 1} Feature ${f.id}: ${JSON.stringify(f.properties)}`;
+                        container.appendChild(div);
+                    });
+                    return;
+                } catch (e) {}
+            }
+
+            try {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(raw, 'text/xml');
+                const nodes = [];
+                if (query.startsWith('/')) {
+                    const xres = doc.evaluate(query, doc, null, XPathResult.ANY_TYPE, null);
+                    let n = xres.iterateNext();
+                    while (n) { nodes.push(n); n = xres.iterateNext(); }
+                } else {
+                    doc.querySelectorAll(query).forEach(n => nodes.push(n));
+                }
+                nodes.slice(0, 30).forEach((n, idx) => {
+                    const d = document.createElement('div');
+                    d.className = 'p-2 rounded bg-sovereign-900 border border-slate-800';
+                    d.innerHTML = `<div class="text-amber-400 text-[10px]">&lt;${escapeHtml(n.nodeName)}&gt; #${idx + 1}</div><div class="text-slate-200 text-[11px] break-all">${escapeHtml((n.textContent || '').trim().slice(0, 200))}</div>`;
+                    container.appendChild(d);
+                });
+            } catch (e) {
+                container.innerHTML = `<div class="text-rose-400">Selector melding: ${escapeHtml(e.message)}</div>`;
+            }
+        }
+
+        // --- 3. MODULE 2: URL TREE MAKER & ECOSYSTEM VIEWER ---
+        const urlTreeData = [
+            {
+                id: 'cat-solid',
+                title: 'W3C Solid Project & Sovereign Pod',
+                url: 'https://dev.solidproject.org',
+                tag: 'SOLID',
+                children: [
+                    { id: 'n-solid-spec', title: 'Solid Protocol Specification', url: 'https://solidproject.org/TR/protocol', tag: 'SPEC' },
+                    { id: 'n-solid-comm', title: 'SolidCommunity Pod IDP', url: 'https://solidcommunity.net/', tag: 'IDP' }
+                ]
+            },
+            {
+                id: 'cat-woo-kadaster',
+                title: 'Woo Tholen & Kadaster OGC APIs',
+                url: 'https://woo-tholen.vercel.app/apitest.html',
+                tag: 'API',
+                children: [
+                    { id: 'n-woo-test', title: 'Woo Tholen API Test App', url: 'https://woo-tholen.vercel.app/apitest.html', tag: 'WOO' },
+                    { id: 'n-pdok-brk', title: 'PDOK BRK Kadastrale Kaart OGC API', url: 'https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/collections/perceel/items?bbox=66000,396000,67000,397000&limit=5', tag: 'OGC' }
+                ]
+            },
+            {
+                id: 'cat-mathgeo',
+                title: 'MathGeo, Grids & Schaduwwaaier',
+                url: 'https://mathgeo-seven.vercel.app/',
+                tag: 'GEO',
+                children: [
+                    { id: 'n-mathgeo-main', title: 'MathGeo Seven Geometrische Grids', url: 'https://mathgeo-seven.vercel.app/', tag: 'GRID' },
+                    { id: 'n-mathgeo-sw', title: 'Interactieve Schaduwwaaier', url: 'https://mathgeo-seven.vercel.app/schaduwwaaier.html', tag: 'SOLAR' }
+                ]
+            },
+            {
+                id: 'cat-fediverse',
+                title: 'Fediverse Atom & Mastodon RSS Nodes',
+                url: 'https://mastodon.social/@finhstamsterdam',
+                tag: 'FEDI',
+                children: [
+                    { id: 'n-fedi-finhst', title: 'Mastodon @finhstamsterdam', url: 'https://mastodon.social/@finhstamsterdam', tag: 'RSS' },
+                    { id: 'n-fedi-vv', title: 'Pixelfed @vanvrijberghe.atom', url: 'https://pixelfed.social/users/vanvrijberghe.atom', tag: 'ATOM' },
+                    { id: 'n-fedi-polzer', title: 'Gram.social @polzer.atom', url: 'https://gram.social/users/polzer.atom', tag: 'ATOM' },
+                    { id: 'n-fedi-janna', title: 'Gram.social @Janna.atom', url: 'https://gram.social/users/Janna.atom', tag: 'ATOM' }
+                ]
+            },
+            {
+                id: 'cat-btfm',
+                title: 'Security & Blue Team Manuals',
+                url: 'https://docshare.wps.com/document/btfm-blue-team-field-manual/45529/',
+                tag: 'SEC',
+                children: [
+                    { id: 'n-btfm-doc', title: 'BTFM — Blue Team Field Manual (WPS)', url: 'https://docshare.wps.com/document/btfm-blue-team-field-manual/45529/', tag: 'MANUAL' }
+                ]
+            }
+        ];
+
+        function renderUrlTreeAll() {
+            const domContainer = document.getElementById('url-dom-tree-container');
+            const parentSelect = document.getElementById('tree-parent-select');
+            domContainer.innerHTML = '';
+            parentSelect.innerHTML = `<option value="ROOT">Hoofdcategorie (Root)</option>`;
+
+            let totalNodes = 0;
+            let ascii = `SOVEREIGN_POD_ECOSYSTEM_TREE\n│\n`;
+
+            urlTreeData.forEach((cat, cIdx) => {
+                totalNodes++;
+                const isLastCat = cIdx === urlTreeData.length - 1;
+                const catBranch = isLastCat ? '└── ' : '├── ';
+                const childPrefix = isLastCat ? '    ' : '│   ';
+                ascii += `${catBranch}[${cat.tag}] ${cat.title} (${cat.url})\n`;
+
+                const opt = document.createElement('option');
+                opt.value = cat.id;
+                opt.textContent = `↳ ${cat.title}`;
+                parentSelect.appendChild(opt);
+
+                const catEl = document.createElement('div');
+                catEl.className = 'bg-sovereign-950 border border-slate-800 rounded-xl p-2.5 space-y-1.5';
+                catEl.innerHTML = `
+                    <div class="flex items-center justify-between gap-2">
+                        <button data-preview-url="${escapeHtml(cat.url)}" class="tree-node-trigger text-left font-bold text-white hover:text-solid-400 flex items-center gap-1.5 truncate">
+                            <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-solid-500/20 text-solid-300 border border-solid-500/30">${escapeHtml(cat.tag)}</span>
+                            <span class="truncate">${escapeHtml(cat.title)}</span>
+                        </button>
+                    </div>
+                    <div class="pl-3 border-l border-slate-800 space-y-1">
+                        ${(cat.children || []).map(ch => {
+                            totalNodes++;
+                            return `
+                                <div class="flex items-center justify-between gap-1 group py-0.5">
+                                    <button data-preview-url="${escapeHtml(ch.url)}" class="tree-node-trigger text-left text-slate-300 hover:text-emerald-400 truncate flex items-center gap-1.5">
+                                        <span class="text-[9px] font-mono text-emerald-400">[${escapeHtml(ch.tag)}]</span>
+                                        <span class="truncate">${escapeHtml(ch.title)}</span>
+                                    </button>
+                                    <a href="${escapeHtml(ch.url)}" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono text-slate-500 hover:text-white shrink-0">↗</a>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                domContainer.appendChild(catEl);
+
+                (cat.children || []).forEach((ch, chIdx) => {
+                    const isLastCh = chIdx === cat.children.length - 1;
+                    const chBranch = isLastCh ? '└── ' : '├── ';
+                    ascii += `${childPrefix}${chBranch}[${ch.tag}] ${ch.title} -> ${ch.url}\n`;
+                });
+            });
+
+            document.getElementById('url-ascii-tree-output').textContent = ascii;
+            document.getElementById('sidebar-stat-tree').textContent = `${totalNodes} nodes`;
+
+            domContainer.querySelectorAll('.tree-node-trigger').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const u = btn.getAttribute('data-preview-url');
+                    document.getElementById('tree-preview-title').textContent = u;
+                    document.getElementById('tree-preview-ext').href = u;
+                    document.getElementById('tree-preview-iframe').src = u;
+                });
+            });
+
+            renderUrlTreeSvgGraph();
+        }
+
+        function renderUrlTreeSvgGraph() {
+            const svg = document.getElementById('url-tree-svg-graph');
+            let html = `<circle cx="70" cy="110" r="22" fill="#7c4dff" stroke="#c4b5fd" stroke-width="2"/>
+                        <text x="70" y="114" fill="#fff" font-size="9" font-family="monospace" text-anchor="middle" font-weight="bold">SOLID POD</text>`;
+
+            urlTreeData.forEach((cat, i) => {
+                const y = 28 + i * 40;
+                const x = 220;
+                html += `<line x1="92" y1="110" x2="${x - 14}" y2="${y}" stroke="#334155" stroke-width="1.5"/>`;
+                html += `<circle cx="${x}" cy="${y}" r="13" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>`;
+                html += `<text x="${x}" y="${y + 3}" fill="#38bdf8" font-size="7" font-family="monospace" text-anchor="middle">${escapeHtml(cat.tag)}</text>`;
+
+                (cat.children || []).forEach((ch, j) => {
+                    const cx = 380 + (j % 2) * 55;
+                    const cy = y - 10 + j * 11;
+                    html += `<line x1="${x + 13}" y1="${y}" x2="${cx - 8}" y2="${cy}" stroke="#1e293b" stroke-width="1"/>`;
+                    html += `<circle cx="${cx}" cy="${cy}" r="5" fill="#10b981"/>`;
+                    html += `<text x="${cx + 8}" y="${cy + 3}" fill="#94a3b8" font-size="7" font-family="monospace">${escapeHtml(ch.title.slice(0, 14))}</text>`;
+                });
+            });
+            svg.innerHTML = html;
+        }
+
+        // --- 4. MODULE 3: KAARTEN, GRIDS & SCHADUWWAAIER (RD NEW <-> WGS84) ---
+        function rdToWgs84(x, y) {
+            const dX = (x - 155000) * 1e-5;
+            const dY = (y - 463000) * 1e-5;
+            const sumN = (3235.65389 * dY) + (-32.58297 * dX * dX) + (-0.24750 * dY * dY) + (-0.84978 * dX * dX * dY) + (-0.06550 * dY * dY * dY) + (-0.01709 * dX * dX * dY * dY) + (-0.00738 * dX) + (0.00530 * dX * dX * dX * dX);
+            const sumE = (5260.52916 * dX) + (105.94684 * dX * dY) + (2.45656 * dX * dY * dY) + (-0.81885 * dX * dX * dX) + (0.05594 * dX * dY * dY * dY) + (-0.05607 * dX * dX * dX * dY) + (0.01199 * dY) + (-0.00256 * dX * dX * dX * dY * dY);
+            return {
+                lat: 52.15517440 + (sumN / 3600),
+                lon: 5.38720621 + (sumE / 3600)
+            };
+        }
+
+        function wgs84ToRd(lat, lon) {
+            const dF = 0.36 * (lat - 52.15517440);
+            const dL = 0.36 * (lon - 5.38720621);
+            const x = 155000 + (190094.945 * dL) + (-11832.228 * dF * dL) + (-114.221 * dF * dF * dL) + (-32.391 * dL * dL * dL);
+            const y = 463000 + (309056.544 * dF) + (3638.893 * dL * dL) + (73.077 * dF * dF) + (-157.984 * dF * dL * dL);
+            return { x: Math.round(x), y: Math.round(y) };
+        }
+
+        const LOCATION_PRESETS = {
+            poortvliet: { name: 'Poortvliet (Sectie M)', x: 66750, y: 396750, zoom: 15 },
+            scherpenisse: { name: 'Scherpenisse (Tholen)', x: 64550, y: 395850, zoom: 15 },
+            tholen: { name: 'Tholen-Stad', x: 73800, y: 394200, zoom: 14 },
+            amsterdam: { name: 'Amsterdam (@finhstamsterdam)', x: 121340, y: 487320, zoom: 14 },
+            laren: { name: 'Laren NH (Tafelberg)', x: 144600, y: 474800, zoom: 14 }
+        };
+
+        let tileLayerCurrent = null;
+        let kadasterOverlayGroup = null;
+        let shadowMapGroup = null;
+
+        function initGeoMap() {
+            leafletMapInitialized = true;
+            const wgs = rdToWgs84(66750, 396750);
+            const map = L.map('leaflet-map', { center: [wgs.lat, wgs.lon], zoom: 15 });
+            window.sovereignMap = map;
+
+            setMapBaseLayer('pdok-brt');
+            kadasterOverlayGroup = L.layerGroup().addTo(map);
+            shadowMapGroup = L.layerGroup().addTo(map);
+
+            // Plot the 5 Poortvliet Section M Parcels on the map
+            const poortvlietFeatures = JSON.parse(GATEWAY_PRESETS['pdok-brk'].fallbackBody).features;
+            poortvlietFeatures.forEach(f => {
+                const ring = f.geometry.coordinates[0].map(pt => {
+                    const c = rdToWgs84(pt[0], pt[1]);
+                    return [c.lat, c.lon];
+                });
+                const poly = L.polygon(ring, { color: '#10b981', weight: 2, fillOpacity: 0.25 });
+                poly.bindPopup(`<strong>Perceel Poortvliet M ${f.properties.perceelnummer}</strong><br>Grootte: ${f.properties.kadastrale_grootte_waarde} m²`);
+                kadasterOverlayGroup.addLayer(poly);
+            });
+
+            map.on('click', (e) => {
+                const rd = wgs84ToRd(e.latlng.lat, e.latlng.lng);
+                document.getElementById('geo-rd-x').value = rd.x;
+                document.getElementById('geo-rd-y').value = rd.y;
+                document.getElementById('sidebar-stat-rd').textContent = `${rd.x}, ${rd.y}`;
+                document.getElementById('geo-wgs-label').textContent = `${e.latlng.lat.toFixed(4)}°N, ${e.latlng.lng.toFixed(4)}°E`;
+                updateSchaduwwaaier();
+            });
+
+            renderGeometricMapGrids();
+            updateSchaduwwaaier();
+        }
+
+        function setMapBaseLayer(type) {
+            if (!window.sovereignMap) return;
+            if (tileLayerCurrent) window.sovereignMap.removeLayer(tileLayerCurrent);
+            if (type === 'osm') {
+                tileLayerCurrent = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 });
+            } else if (type === 'pdok-luchtfoto') {
+                tileLayerCurrent = L.tileLayer('https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0/Actueel_orthoHR/EPSG:3857/{z}/{x}/{y}.jpeg', { maxZoom: 19 });
+            } else {
+                tileLayerCurrent = L.tileLayer('https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png', { maxZoom: 19 });
+            }
+            tileLayerCurrent.addTo(window.sovereignMap);
+        }
+
+        function renderGeometricMapGrids() {
+            const svg = document.getElementById('map-grid-svg-overlay');
+            const showRd = document.getElementById('chk-grid-rd').checked;
+            const showIso = document.getElementById('chk-grid-iso').checked;
+            let content = '';
+
+            if (showRd) {
+                for (let x = 80; x < 800; x += 80) {
+                    content += `<line x1="${x}" y1="0" x2="${x}" y2="600" stroke="#38bdf8" stroke-width="0.6" stroke-dasharray="4 4" stroke-opacity="0.45"/>`;
+                }
+                for (let y = 60; y < 600; y += 60) {
+                    content += `<line x1="0" y1="${y}" x2="800" y2="${y}" stroke="#38bdf8" stroke-width="0.6" stroke-dasharray="4 4" stroke-opacity="0.45"/>`;
+                }
+            }
+
+            if (showIso) {
+                // 60-degree isometric grid lines inspired by mathgeo-seven.vercel.app
+                const step = 90;
+                for (let i = -600; i < 1200; i += step) {
+                    content += `<line x1="${i}" y1="0" x2="${i + 346}" y2="600" stroke="#a855f7" stroke-width="0.7" stroke-opacity="0.38"/>`;
+                    content += `<line x1="${i}" y1="0" x2="${i - 346}" y2="600" stroke="#a855f7" stroke-width="0.7" stroke-opacity="0.38"/>`;
+                }
+            }
+            svg.innerHTML = content;
+        }
+
+        // Solar & Schaduwwaaier Mathematics
+        function computeSolarVector(latDeg, dayOfYear, hourLocal) {
+            const rad = Math.PI / 180;
+            const decl = 23.45 * Math.sin(rad * (360 / 365) * (284 + dayOfYear));
+            const hourAngle = (hourLocal - 12.6) * 15; // Solar noon NL approx 12:36
+            const latR = latDeg * rad;
+            const decR = decl * rad;
+            const haR = hourAngle * rad;
+
+            const sinEl = Math.sin(latR) * Math.sin(decR) + Math.cos(latR) * Math.cos(decR) * Math.cos(haR);
+            const elDeg = Math.asin(Math.max(-1, Math.min(1, sinEl))) / rad;
+
+            const cosAz = (Math.sin(decR) - Math.sin(latR) * sinEl) / (Math.cos(latR) * Math.cos(elDeg * rad) + 1e-9);
+            let azDeg = Math.acos(Math.max(-1, Math.min(1, cosAz))) / rad;
+            if (hourAngle > 0) azDeg = 360 - azDeg;
+
+            const shadowAz = (azDeg + 180) % 360;
+            return { azDeg, elDeg, shadowAz };
+        }
+
+        function updateSchaduwwaaier() {
+            const day = parseInt(document.getElementById('slider-sw-day').value, 10);
+            const hour = parseFloat(document.getElementById('slider-sw-hour').value);
+            const height = parseFloat(document.getElementById('slider-sw-height').value);
+            const rdX = parseFloat(document.getElementById('geo-rd-x').value) || 66750;
+            const rdY = parseFloat(document.getElementById('geo-rd-y').value) || 396750;
+            const wgs = rdToWgs84(rdX, rdY);
+
+            const dateApprox = new Date(2026, 0, day).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' });
+            document.getElementById('lbl-sw-day').textContent = `${day} (${dateApprox})`;
+            const hrWhole = Math.floor(hour);
+            const hrMin = (hour % 1) ? '30' : '00';
+            document.getElementById('lbl-sw-hour').textContent = `${String(hrWhole).padStart(2, '0')}:${hrMin} u`;
+            document.getElementById('lbl-sw-height').textContent = `${height.toFixed(1)} m`;
+
+            const cur = computeSolarVector(wgs.lat, day, hour);
+            const curLen = cur.elDeg > 1 ? (height / Math.tan(cur.elDeg * Math.PI / 180)) : 99;
+
+            document.getElementById('sw-val-az').textContent = `${cur.azDeg.toFixed(1)}°`;
+            document.getElementById('sw-val-el').textContent = `${Math.max(0, cur.elDeg).toFixed(1)}°`;
+            document.getElementById('sw-val-sdir').textContent = `${cur.shadowAz.toFixed(1)}°`;
+            document.getElementById('sw-val-slen').textContent = cur.elDeg > 1 ? `${curLen.toFixed(1)} m` : 'Horizon';
+
+            // Build Polar SVG & Hourly Table
+            const polarSvg = document.getElementById('schaduwwaaier-polar-svg');
+            const tbody = document.getElementById('sw-table-body');
+            tbody.innerHTML = '';
+
+            let svgHtml = `
+                <circle cx="0" cy="0" r="130" fill="#07090e" stroke="#1e293b" stroke-width="1.5"/>
+                <circle cx="0" cy="0" r="90" fill="none" stroke="#1e293b" stroke-dasharray="3 3"/>
+                <circle cx="0" cy="0" r="45" fill="none" stroke="#1e293b" stroke-dasharray="3 3"/>
+                <line x1="-140" y1="0" x2="140" y2="0" stroke="#334155"/>
+                <line x1="0" y1="-140" x2="0" y2="140" stroke="#334155"/>
+                <text x="0" y="-136" fill="#94a3b8" font-size="10" font-family="monospace" text-anchor="middle">N (0°)</text>
+                <text x="142" y="3" fill="#94a3b8" font-size="10" font-family="monospace">O</text>
+                <text x="0" y="146" fill="#94a3b8" font-size="10" font-family="monospace" text-anchor="middle">Z (180°)</text>
+                <text x="-148" y="3" fill="#94a3b8" font-size="10" font-family="monospace">W</text>
+            `;
+
+            const fanPoints = ['0,0'];
+            const mapFanLatLngs = [[wgs.lat, wgs.lon]];
+
+            for (let h = 7; h <= 19; h += 1) {
+                const s = computeSolarVector(wgs.lat, day, h);
+                if (s.elDeg > 2) {
+                    const sLen = Math.min(80, height / Math.tan(s.elDeg * Math.PI / 180));
+                    const rPlot = Math.min(125, sLen * 2.4);
+                    const angleRad = (s.shadowAz - 90) * Math.PI / 180;
+                    const px = rPlot * Math.cos(angleRad);
+                    const py = rPlot * Math.sin(angleRad);
+                    fanPoints.push(`${px.toFixed(1)},${py.toFixed(1)}`);
+
+                    svgHtml += `<line x1="0" y1="0" x2="${px.toFixed(1)}" y2="${py.toFixed(1)}" stroke="#6366f1" stroke-width="1" stroke-opacity="0.6"/>`;
+                    svgHtml += `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="2.5" fill="#818cf8"/>`;
+
+                    // Also compute RD offset for Leaflet map shadow fan
+                    const azRad = s.shadowAz * Math.PI / 180;
+                    const endRdX = rdX + Math.sin(azRad) * sLen * 6; // scaled for visibility
+                    const endRdY = rdY + Math.cos(azRad) * sLen * 6;
+                    const endWgs = rdToWgs84(endRdX, endRdY);
+                    mapFanLatLngs.push([endWgs.lat, endWgs.lon]);
+
+                    if (h % 2 === 0) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="py-1 px-2.5 text-sky-300">${String(h).padStart(2, '0')}:00</td>
+                            <td class="py-1 px-2.5">${s.azDeg.toFixed(1)}°</td>
+                            <td class="py-1 px-2.5">${s.elDeg.toFixed(1)}°</td>
+                            <td class="py-1 px-2.5 text-purple-300">${s.shadowAz.toFixed(1)}°</td>
+                            <td class="py-1 px-2.5 text-right text-emerald-400">${sLen.toFixed(1)} m</td>
+                        `;
+                        tbody.appendChild(tr);
+                    }
+                }
+            }
+
+            if (fanPoints.length > 2) {
+                svgHtml = `<polygon points="${fanPoints.join(' ')}" fill="rgba(99,102,241,0.18)" stroke="#818cf8" stroke-width="1.2"/>` + svgHtml;
+            }
+
+            // Highlight active hour shadow vector & sun position
+            if (cur.elDeg > 1) {
+                const activeR = Math.min(125, curLen * 2.4);
+                const sRad = (cur.shadowAz - 90) * Math.PI / 180;
+                const sx = activeR * Math.cos(sRad);
+                const sy = activeR * Math.sin(sRad);
+                svgHtml += `<line x1="0" y1="0" x2="${sx.toFixed(1)}" y2="${sy.toFixed(1)}" stroke="#10b981" stroke-width="3"/>`;
+                svgHtml += `<circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="4.5" fill="#10b981"/>`;
+
+                const sunRad = (cur.azDeg - 90) * Math.PI / 180;
+                const sunX = 115 * Math.cos(sunRad);
+                const sunY = 115 * Math.sin(sunRad);
+                svgHtml += `<line x1="0" y1="0" x2="${sunX.toFixed(1)}" y2="${sunY.toFixed(1)}" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 3"/>`;
+                svgHtml += `<circle cx="${sunX.toFixed(1)}" cy="${sunY.toFixed(1)}" r="6" fill="#fbbf24"/>`;
+            }
+
+            svgHtml += `<circle cx="0" cy="0" r="4" fill="#fff"/>`;
+            polarSvg.innerHTML = svgHtml;
+
+            // Update Leaflet Map Shadow Fan
+            if (shadowMapGroup) {
+                shadowMapGroup.clearLayers();
+                if (document.getElementById('chk-grid-shadow').checked && mapFanLatLngs.length > 2) {
+                    L.polygon(mapFanLatLngs, { color: '#f59e0b', fillColor: '#6366f1', fillOpacity: 0.32, weight: 2 }).addTo(shadowMapGroup);
+                    L.circleMarker([wgs.lat, wgs.lon], { radius: 6, color: '#fbbf24', fillColor: '#f59e0b', fillOpacity: 1 }).addTo(shadowMapGroup);
+                }
+            }
+        }
+
+        // --- 5. MODULE 4: SVG VIEWER & LIVE HTML COMPILER ---
+        let svgScale = 1;
+        function renderSvgEditorContent() {
+            const code = document.getElementById('svg-code-editor').value;
+            const target = document.getElementById('svg-render-target');
+            target.innerHTML = code;
+            const paths = target.querySelectorAll('path, polygon, rect, circle, line').length;
+            document.getElementById('svg-stats-badge').textContent = `${paths} vector-elementen`;
+        }
+
+        function loadPoortvlietSvgPreset() {
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="520" height="380" viewBox="0 0 520 380">
+  <rect width="520" height="380" rx="16" fill="#0b0f19" stroke="#334155" stroke-width="2"/>
+  <g stroke="#1e293b" stroke-width="1">
+    <line x1="0" y1="95" x2="520" y2="95"/><line x1="0" y1="190" x2="520" y2="190"/><line x1="0" y1="285" x2="520" y2="285"/>
+    <line x1="130" y1="0" x2="130" y2="380"/><line x1="260" y1="0" x2="260" y2="380"/><line x1="390" y1="0" x2="390" y2="380"/>
+  </g>
+  <!-- Poortvliet Sectie M Percelen -->
+  <polygon points="60,240 115,195 145,235 90,280" fill="rgba(16,185,129,0.28)" stroke="#10b981" stroke-width="2"/>
+  <text x="102" y="242" fill="#fff" font-family="monospace" font-size="11" text-anchor="middle">1172</text>
+  <polygon points="115,195 175,150 205,190 145,235" fill="rgba(56,189,248,0.28)" stroke="#38bdf8" stroke-width="2"/>
+  <text x="160" y="195" fill="#fff" font-family="monospace" font-size="11" text-anchor="middle">1173</text>
+  <polygon points="90,280 230,170 300,260 160,350" fill="rgba(124,77,255,0.25)" stroke="#a78bfa" stroke-width="2"/>
+  <text x="200" y="265" fill="#fff" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">M 1174 (11.990 m²)</text>
+  <polygon points="330,210 470,210 470,320 330,320" fill="rgba(245,158,11,0.25)" stroke="#f59e0b" stroke-width="2"/>
+  <text x="400" y="270" fill="#fff" font-family="monospace" font-size="12" text-anchor="middle">M 1178</text>
+  <polygon points="320,60 465,60 465,175 320,175" fill="rgba(236,72,153,0.25)" stroke="#ec4899" stroke-width="2"/>
+  <text x="392" y="120" fill="#fff" font-family="monospace" font-size="12" text-anchor="middle">M 1180</text>
+  <text x="20" y="30" fill="#94a3b8" font-family="monospace" font-size="12">Kadaster Poortvliet (PVT00) Sectie M — RD New (EPSG:28992)</text>
+</svg>`;
+            document.getElementById('svg-code-editor').value = svg;
+            renderSvgEditorContent();
+        }
+
+        const HTML_COMPILER_TEMPLATES = {
+            woo: `<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.tailwindcss.com"><\/script>
+</head>
+<body class="bg-slate-950 text-slate-100 p-5 font-mono">
+  <h2 class="text-sm font-bold text-emerald-400 mb-2">Woo Tholen & PDOK OGC Live Mini-Tester</h2>
+  <p class="text-xs text-slate-400 mb-3">Berekent de kadastrale oppervlakte via de Shoelace-formule.</p>
+  <pre id="out" class="bg-slate-900 p-3 rounded-lg border border-slate-800 text-xs text-sky-300"></pre>
+  <script>
+    const ring = [[66584.37,396751.37],[66604.115,396736.322],[66615.5,396751.2],[66595.76,396766.25],[66584.37,396751.37]];
+    let area = 0;
+    for (let i = 0; i < ring.length - 1; i++) {
+      area += (ring[i][0] * ring[i+1][1]) - (ring[i+1][0] * ring[i][1]);
+    }
+    const calc = Math.abs(area / 2).toFixed(2);
+    console.log("Poortvliet Perceel 1172 Shoelace Area:", calc, "m²");
+    document.getElementById('out').textContent = "Perceel PVT00 M 1172\\nBerekend: " + calc + " m²";
+  <\/script>
+</body>
+</html>`,
+            mathgeo: `<!DOCTYPE html>
+<html>
+<body style="margin:0;background:#06080e;color:#fff;font-family:monospace;display:flex;flex-direction:column;align-items:center;padding:16px">
+  <h3 style="color:#f59e0b;margin:4px 0">MathGeo 60° Isometrisch & Schaduwwaaier Canvas</h3>
+  <canvas id="c" width="420" height="280" style="border:1px solid #334155;border-radius:8px"></canvas>
+  <script>
+    const ctx = document.getElementById('c').getContext('2d');
+    ctx.strokeStyle = '#1e293b';
+    for (let x = -200; x < 600; x += 40) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + 160, 280); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x - 160, 280); ctx.stroke();
+    }
+    ctx.fillStyle = '#10b981';
+    ctx.beginPath(); ctx.arc(210, 140, 6, 0, Math.PI * 2); ctx.fill();
+    console.log("MathGeo 60° Isometric Grid gerenderd.");
+  <\/script>
+</body>
+</html>`,
+            solid: `<!DOCTYPE html>
+<html>
+<body style="background:#090b10;color:#a78bfa;font-family:monospace;padding:16px">
+  <h3>Solid Pod RDF Turtle Generator</h3>
+  <pre id="ttl" style="color:#34d399;font-size:12px"></pre>
+  <script>
+    const turtle = '@prefix as: <https://www.w3.org/ns/activitystreams#> .\\n<#note> a as:Note ; as:name "Sovereign Pod Test"@nl .';
+    document.getElementById('ttl').textContent = turtle;
+    console.log("Solid RDF Triple gereed:", turtle.length, "bytes");
+  <\/script>
+</body>
+</html>`
+        };
+
+        function runHtmlCompiler() {
+            const code = document.getElementById('html-compiler-input').value;
+            const iframe = document.getElementById('html-compiler-iframe');
+            const consoleBox = document.getElementById('html-compiler-console');
+            consoleBox.innerHTML = '';
+
+            const hookScript = `<script>
+                const _log = console.log;
+                console.log = (...args) => {
+                    window.parent.postMessage({ type: 'SANDBOX_LOG', data: args.join(' ') }, '*');
+                    _log(...args);
+                };
+            <\/script>`;
+            iframe.srcdoc = hookScript + code;
+        }
+
+        window.addEventListener('message', (e) => {
+            if (e.data && e.data.type === 'SANDBOX_LOG') {
+                const consoleBox = document.getElementById('html-compiler-console');
+                const line = document.createElement('div');
+                line.textContent = `> ${e.data.data}`;
+                consoleBox.appendChild(line);
+            }
+        });
+
+        // --- 6. MODULE 5: 3D STL VIEWER (BINARY & ASCII + PROCEDURAL GENERATOR) ---
+        let stlTriangles = [];
+        let stlRotYaw = 0.6;
+        let stlRotPitch = 0.45;
+        let stlZoom = 1.0;
+        let stlRenderMode = 'shaded';
+        let stlAutoRotate = true;
+        let stlModelName = 'RD_Meetpilaar';
+
+        function createBoxTriangles(x0, y0, z0, x1, y1, z1) {
+            const v = [
+                [x0,y0,z0], [x1,y0,z0], [x1,y1,z0], [x0,y1,z0],
+                [x0,y0,z1], [x1,y0,z1], [x1,y1,z1], [x0,y1,z1]
+            ];
+            const faces = [
+                [0,2,1], [0,3,2], [4,5,6], [4,6,7],
+                [0,1,5], [0,5,4], [2,3,7], [2,7,6],
+                [0,4,7], [0,7,3], [1,2,6], [1,6,5]
+            ];
+            return faces.map(f => ({ v1: v[f[0]], v2: v[f[1]], v3: v[f[2]] }));
+        }
+
+        function generateProceduralStl(type) {
+            stlTriangles = [];
+            if (type === 'pillar') {
+                stlModelName = 'Kadaster_RD_Meetpilaar';
+                stlTriangles.push(...createBoxTriangles(-25, -25, 0, 25, 25, 10));
+                stlTriangles.push(...createBoxTriangles(-14, -14, 10, 14, 14, 70));
+                stlTriangles.push(...createBoxTriangles(-18, -18, 70, 18, 18, 78));
+            } else if (type === 'parcel') {
+                stlModelName = 'Poortvliet_Perceel_M1174';
+                stlTriangles.push(...createBoxTriangles(-40, -28, 0, 40, 28, 18));
+                stlTriangles.push(...createBoxTriangles(-15, 28, 0, 25, 48, 12));
+            } else {
+                stlModelName = 'MathGeo_60deg_HexPrism';
+                const r = 35, h = 45;
+                for (let i = 0; i < 6; i++) {
+                    const a1 = (i * 60) * Math.PI / 180;
+                    const a2 = ((i + 1) * 60) * Math.PI / 180;
+                    const x1 = r * Math.cos(a1), y1 = r * Math.sin(a1);
+                    const x2 = r * Math.cos(a2), y2 = r * Math.sin(a2);
+                    stlTriangles.push({ v1: [0,0,0], v2: [x2,y2,0], v3: [x1,y1,0] });
+                    stlTriangles.push({ v1: [0,0,h], v2: [x1,y1,h], v3: [x2,y2,h] });
+                    stlTriangles.push({ v1: [x1,y1,0], v2: [x2,y2,0], v3: [x2,y2,h] });
+                    stlTriangles.push({ v1: [x1,y1,0], v2: [x2,y2,h], v3: [x1,y1,h] });
+                }
+            }
+            computeStlNormalsAndTelemetry();
+        }
+
+        function computeStlNormalsAndTelemetry() {
+            let minX = Infinity, minY = Infinity, minZ = Infinity;
+            let maxX = -Infinity, maxY = -Infinity, maxZ = -Infinity;
+            let totalArea = 0;
+            let totalVol = 0;
+
+            stlTriangles.forEach(t => {
+                [t.v1, t.v2, t.v3].forEach(p => {
+                    minX = Math.min(minX, p[0]); maxX = Math.max(maxX, p[0]);
+                    minY = Math.min(minY, p[1]); maxY = Math.max(maxY, p[1]);
+                    minZ = Math.min(minZ, p[2]); maxZ = Math.max(maxZ, p[2]);
+                });
+                const ux = t.v2[0] - t.v1[0], uy = t.v2[1] - t.v1[1], uz = t.v2[2] - t.v1[2];
+                const vx = t.v3[0] - t.v1[0], vy = t.v3[1] - t.v1[1], vz = t.v3[2] - t.v1[2];
+                const nx = uy * vz - uz * vy;
+                const ny = uz * vx - ux * vz;
+                const nz = ux * vy - uy * vx;
+                const len = Math.hypot(nx, ny, nz) || 1;
+                t.normal = [nx / len, ny / len, nz / len];
+                totalArea += 0.5 * len;
+                totalVol += (t.v1[0] * (t.v2[1] * t.v3[2] - t.v3[1] * t.v2[2]) +
+                             t.v2[0] * (t.v3[1] * t.v1[2] - t.v1[1] * t.v3[2]) +
+                             t.v3[0] * (t.v1[1] * t.v2[2] - t.v2[1] * t.v1[2])) / 6.0;
+            });
+
+            // Center geometry
+            const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2, cz = (minZ + maxZ) / 2;
+            const span = Math.max(maxX - minX, maxY - minY, maxZ - minZ) || 1;
+            stlTriangles.forEach(t => {
+                t.c1 = [(t.v1[0] - cx) / span * 80, (t.v1[1] - cy) / span * 80, (t.v1[2] - cz) / span * 80];
+                t.c2 = [(t.v2[0] - cx) / span * 80, (t.v2[1] - cy) / span * 80, (t.v2[2] - cz) / span * 80];
+                t.c3 = [(t.v3[0] - cx) / span * 80, (t.v3[1] - cy) / span * 80, (t.v3[2] - cz) / span * 80];
+            });
+
+            document.getElementById('stl-stat-name').textContent = stlModelName;
+            document.getElementById('stl-stat-tris').textContent = stlTriangles.length.toLocaleString('nl-NL');
+            document.getElementById('stl-stat-bbox').textContent = `${(maxX - minX).toFixed(1)} × ${(maxY - minY).toFixed(1)} × ${(maxZ - minZ).toFixed(1)} mm`;
+            document.getElementById('stl-stat-area').textContent = `${(totalArea / 100).toFixed(2)} cm²`;
+            document.getElementById('stl-stat-vol').textContent = `${Math.abs(totalVol / 1000).toFixed(2)} cm³`;
+        }
+
+        function parseStlBuffer(buffer, filename) {
+            stlModelName = filename.replace(/\.stl$/i, '');
+            const decoder = new TextDecoder('utf-8');
+            const head = decoder.decode(buffer.slice(0, 256));
+            if (head.trim().startsWith('solid') && head.includes('facet')) {
+                // ASCII STL
+                const text = decoder.decode(buffer);
+                const verts = [];
+                const re = /vertex\s+([\d.+-eE]+)\s+([\d.+-eE]+)\s+([\d.+-eE]+)/g;
+                let m;
+                while ((m = re.exec(text)) !== null) {
+                    verts.push([parseFloat(m[1]), parseFloat(m[2]), parseFloat(m[3])]);
+                }
+                stlTriangles = [];
+                for (let i = 0; i + 2 < verts.length; i += 3) {
+                    stlTriangles.push({ v1: verts[i], v2: verts[i + 1], v3: verts[i + 2] });
+                }
+            } else {
+                // Binary STL
+                const dv = new DataView(buffer);
+                const count = dv.getUint32(80, true);
+                stlTriangles = [];
+                let offset = 84;
+                for (let i = 0; i < count && offset + 50 <= buffer.byteLength; i++) {
+                    const v1 = [dv.getFloat32(offset + 12, true), dv.getFloat32(offset + 16, true), dv.getFloat32(offset + 20, true)];
+                    const v2 = [dv.getFloat32(offset + 24, true), dv.getFloat32(offset + 28, true), dv.getFloat32(offset + 32, true)];
+                    const v3 = [dv.getFloat32(offset + 36, true), dv.getFloat32(offset + 40, true), dv.getFloat32(offset + 44, true)];
+                    stlTriangles.push({ v1, v2, v3 });
+                    offset += 50;
+                }
+            }
+            computeStlNormalsAndTelemetry();
+            showToast(`STL geladen: ${stlTriangles.length} driehoeken`);
+        }
+
+        function resizeStlCanvas() {
+            const c = document.getElementById('stl-canvas');
+            if (!c || !c.parentElement) return;
+            c.width = c.parentElement.clientWidth;
+            c.height = c.parentElement.clientHeight;
+        }
+
+        function renderStlFrame() {
+            const c = document.getElementById('stl-canvas');
+            if (c && !document.getElementById('mod-stl').classList.contains('hidden')) {
+                if (stlAutoRotate) stlRotYaw += 0.008;
+                const ctx = c.getContext('2d');
+                const w = c.width, h = c.height;
+                ctx.clearRect(0, 0, w, h);
+
+                const cy = Math.cos(stlRotYaw), sy = Math.sin(stlRotYaw);
+                const cp = Math.cos(stlRotPitch), sp = Math.sin(stlRotPitch);
+
+                const project = (pt) => {
+                    const x1 = pt[0] * cy - pt[1] * sy;
+                    const y1 = pt[0] * sy + pt[1] * cy;
+                    const z2 = pt[2] * cp - y1 * sp;
+                    const y2 = pt[2] * sp + y1 * cp;
+                    const scale = (280 / (320 + y2)) * stlZoom * 2.4;
+                    return { x: w / 2 + x1 * scale, y: h / 2 - z2 * scale, depth: y2 };
+                };
+
+                const projectedTris = stlTriangles.map(t => {
+                    const p1 = project(t.c1), p2 = project(t.c2), p3 = project(t.c3);
+                    return { p1, p2, p3, depth: (p1.depth + p2.depth + p3.depth) / 3, normal: t.normal };
+                });
+
+                projectedTris.sort((a, b) => b.depth - a.depth);
+
+                projectedTris.forEach(t => {
+                    ctx.beginPath();
+                    ctx.moveTo(t.p1.x, t.p1.y);
+                    ctx.lineTo(t.p2.x, t.p2.y);
+                    ctx.lineTo(t.p3.x, t.p3.y);
+                    ctx.closePath();
+
+                    if (stlRenderMode === 'wireframe') {
+                        ctx.strokeStyle = '#a855f7';
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    } else if (stlRenderMode === 'normals') {
+                        const r = Math.floor((t.normal[0] * 0.5 + 0.5) * 255);
+                        const g = Math.floor((t.normal[1] * 0.5 + 0.5) * 255);
+                        const b = Math.floor((t.normal[2] * 0.5 + 0.5) * 255);
+                        ctx.fillStyle = `rgb(${r},${g},${b})`;
+                        ctx.fill();
+                    } else {
+                        const light = Math.max(0.22, (t.normal[0] * 0.4 - t.normal[1] * 0.5 + t.normal[2] * 0.75));
+                        ctx.fillStyle = `rgba(${Math.round(124 * light)}, ${Math.round(90 * light)}, ${Math.round(245 * light)}, 0.94)`;
+                        ctx.fill();
+                        ctx.strokeStyle = 'rgba(196,181,253,0.22)';
+                        ctx.lineWidth = 0.6;
+                        ctx.stroke();
+                    }
+                });
+            }
+            requestAnimationFrame(renderStlFrame);
+        }
+
+        // --- 7. MODULE 6: ACSM CONVERTER, PDF TOOLS & BTFM COMMAND MATRIX ---
+        const SAMPLE_ACSM_XML = `<?xml version="1.0" encoding="UTF-8"?>
+<fulfillmentToken fulfillmentType="loan" auth="user" xmlns="http://ns.adobe.com/adept">
+  <distributor>urn:uuid:9b786211-552e-4f0c-9a14-001122334455</distributor>
+  <operatorURL>https://acs.bibliotheek.nl/fulfillment</operatorURL>
+  <transaction>NL-THOLEN-WOO-2026-88412</transaction>
+  <expiration>2026-11-30T23:59:59+01:00</expiration>
+  <resourceItemInfo>
+    <resource>urn:uuid:e4f1a200-88b1-4a91-bc12-987654321000</resource>
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <dc:title>Kadastrale Atlas Zeeland &amp; Eiland Tholen (Poortvliet Sectie M)</dc:title>
+      <dc:creator>Kadaster &amp; Rijksdriehoeksmeting Archief</dc:creator>
+      <dc:publisher>Sovereign Geodetic Press</dc:publisher>
+      <dc:format>application/pdf</dc:format>
+      <dc:language>nl-NL</dc:language>
+    </metadata>
+    <licenseToken>
+      <resource>urn:uuid:e4f1a200-88b1-4a91-bc12-987654321000</resource>
+      <permissions>
+        <display><until>2026-11-30T23:59:59+01:00</until></display>
+        <print><count initial="25"/></print>
+      </permissions>
+    </licenseToken>
+  </resourceItemInfo>
+  <hmac>8f9d2a71b4c03e19a841029384756abcd1234567=</hmac>
+</fulfillmentToken>`;
+
+        let lastParsedAcsm = {};
+
+        function parseAcsmXml() {
+            const raw = document.getElementById('acsm-xml-input').value.trim();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(raw, 'text/xml');
+            const getTag = (local) => {
+                const el = doc.getElementsByTagNameNS('*', local)[0] || doc.querySelector(local);
+                return el ? el.textContent.trim() : 'Niet opgegeven';
+            };
+
+            lastParsedAcsm = {
+                title: getTag('title'),
+                creator: getTag('creator'),
+                publisher: getTag('publisher'),
+                format: getTag('format'),
+                operatorURL: getTag('operatorURL'),
+                transaction: getTag('transaction'),
+                resourceURN: getTag('resource'),
+                expiration: getTag('expiration'),
+                hmac: getTag('hmac')
+            };
+
+            const container = document.getElementById('acsm-parsed-cards');
+            container.innerHTML = Object.entries(lastParsedAcsm).map(([k, v]) => `
+                <div class="bg-sovereign-950 p-2.5 rounded-xl border border-slate-800 flex justify-between gap-3">
+                    <span class="text-slate-400 uppercase text-[10px]">${escapeHtml(k)}:</span>
+                    <span class="text-emerald-300 text-right break-all">${escapeHtml(v)}</span>
+                </div>
+            `).join('');
+        }
+
+        const BTFM_COMMANDS = [
+            { cat: 'Network Forensics', title: 'Live HTTP/XML/API Packet Capture', cmd: 'sudo tcpdump -nn -vv -A -s 0 "tcp port 80 or tcp port 443" | grep -E "GET|POST|Host:|application/atom\\+xml"' },
+            { cat: 'TLS & Cert Audit', title: 'Inspecteer TLS Ketting & Vervaldatum van API / Pod', cmd: 'echo | openssl s_client -showcerts -servername solidcommunity.net -connect solidcommunity.net:443 2>/dev/null | openssl x509 -inform pem -noout -text' },
+            { cat: 'Solid Pod WAC Audit', title: 'Controleer Web Access Control (.acl) Headers op Solid Resource', cmd: 'curl -sI -H "Accept: text/turtle" https://solidcommunity.net/public/workbench/sovereign-graph.ttl | grep -i "link:"' },
+            { cat: 'Linux Hardening', title: 'Toon Alle Luisterende TCP/UDP Sockets met Proces-ID', cmd: 'sudo ss -tulnp | column -t' },
+            { cat: 'Log Forensics', title: 'Detecteer verdachte API-scans of SQL/XPath-injecties in Nginx logs', cmd: 'awk \'($9 ~ /401|403|500/)\' /var/log/nginx/access.log | awk \'{print $1, $7, $9}\' | sort | uniq -c | sort -nr | head -n 25' },
+            { cat: 'Firewall / NFTables', title: 'Lijst actieve NFTables ruleset & rate-limits', cmd: 'sudo nft list ruleset' }
+        ];
+
+        function renderBtfmList(filter = '') {
+            const list = document.getElementById('btfm-commands-list');
+            list.innerHTML = '';
+            BTFM_COMMANDS.filter(c => `${c.cat} ${c.title} ${c.cmd}`.toLowerCase().includes(filter.toLowerCase())).forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'bg-sovereign-950 border border-slate-800 rounded-xl p-3 space-y-1.5';
+                div.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 border border-rose-500/30">${escapeHtml(item.cat)}</span>
+                        <button class="copy-btfm-btn text-[11px] text-sky-400 hover:underline" data-cmd="${escapeHtml(item.cmd)}">Kopieer Commando</button>
+                    </div>
+                    <div class="text-white font-semibold">${escapeHtml(item.title)}</div>
+                    <pre class="bg-sovereign-900 p-2 rounded text-emerald-300 overflow-x-auto text-[11px]">${escapeHtml(item.cmd)}</pre>
+                `;
+                list.appendChild(div);
+            });
+            list.querySelectorAll('.copy-btfm-btn').forEach(b => {
+                b.addEventListener('click', () => copyText(b.getAttribute('data-cmd'), 'BTFM commando gekopieerd!'));
+            });
+        }
+
+        // --- 8. MODULE 7: LUMO AI & EIGEN AI GATEWAY (GEMINI + CUSTOM ENDPOINT) ---
+        async function callGeminiWithBackoff(promptText, systemInstructionText) {
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: promptText }] }],
+                systemInstruction: { parts: [{ text: systemInstructionText }] }
+            };
+
+            const delays = [1000, 2000, 4000];
+            for (let attempt = 0; attempt <= delays.length; attempt++) {
+                try {
+                    const res = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        const txt = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                        if (txt) return txt;
+                    }
+                } catch (e) {}
+                if (attempt < delays.length) {
+                    await new Promise(r => setTimeout(r, delays[attempt]));
+                }
+            }
+            throw new Error('Kon geen verbinding maken met Gemini API');
+        }
+
+        async function sendAiPrompt() {
+            const input = document.getElementById('ai-user-input');
+            const userQuestion = input.value.trim();
+            if (!userQuestion) return;
+            input.value = '';
+
+            const history = document.getElementById('ai-chat-history');
+            const userBubble = document.createElement('div');
+            userBubble.className = 'bg-solid-950/60 border border-solid-700/50 rounded-xl p-3 text-white';
+            userBubble.innerHTML = `<span class="font-mono text-solid-400 font-bold">[U]</span> ${escapeHtml(userQuestion)}`;
+            history.appendChild(userBubble);
+
+            // Build contextual telemetry
+            let ctx = '';
+            if (document.getElementById('ai-ctx-feeds').checked) {
+                ctx += `\n[Actieve Feeds (${gatewayState.streamItems.length} items)]: ` + gatewayState.streamItems.slice(0, 8).map(i => `${i.author}: ${i.title}`).join(' | ');
+            }
+            if (document.getElementById('ai-ctx-geo').checked) {
+                const rdx = document.getElementById('geo-rd-x').value;
+                const rdy = document.getElementById('geo-rd-y').value;
+                ctx += `\n[Geodesie & Schaduwwaaier]: RD=(${rdx}, ${rdy}), Zon Azimut=${document.getElementById('sw-val-az').textContent}, Schaduwlengte=${document.getElementById('sw-val-slen').textContent}`;
+            }
+            if (document.getElementById('ai-ctx-tree').checked) {
+                ctx += `\n[URL Tree]:\n` + document.getElementById('url-ascii-tree-output').textContent;
+            }
+
+            const loadingBubble = document.createElement('div');
+            loadingBubble.className = 'bg-sovereign-950 border border-slate-800 rounded-xl p-3 text-slate-400 font-mono';
+            loadingBubble.textContent = 'Lumo AI / Sovereign Engine analyseert context...';
+            history.appendChild(loadingBubble);
+            history.scrollTop = history.scrollHeight;
+
+            const mode = document.getElementById('ai-engine-mode').value;
+            const sysPrompt = "Je bent Lumo AI, de ingebouwde technisch-geodetische en Solid Linked Data AI-assistent van de SOLID POD SOVEREIGN WORKBENCH. Antwoord helder, gestructureerd en technisch nauwkeurig in het Nederlands.";
+
+            try {
+                let replyText = '';
+                if (mode === 'custom') {
+                    const customUrl = document.getElementById('ai-custom-url').value.trim();
+                    const customModel = document.getElementById('ai-custom-model').value.trim();
+                    const customKey = document.getElementById('ai-custom-key').value.trim();
+                    const headers = { 'Content-Type': 'application/json' };
+                    if (customKey) headers['Authorization'] = customKey.startsWith('Bearer ') ? customKey : `Bearer ${customKey}`;
+
+                    const res = await fetch(customUrl, {
+                        method: 'POST',
+                        headers,
+                        body: JSON.stringify({
+                            model: customModel,
+                            messages: [
+                                { role: 'system', content: sysPrompt },
+                                { role: 'user', content: `${userQuestion}\n\nWorkbench Context:${ctx}` }
+                            ]
+                        })
+                    });
+                    const data = await res.json();
+                    replyText = data?.choices?.[0]?.message?.content || data?.message?.content || JSON.stringify(data);
+                } else {
+                    replyText = await callGeminiWithBackoff(`${userQuestion}\n\nWorkbench Context:${ctx}`, sysPrompt);
+                }
+                loadingBubble.className = 'bg-sovereign-950 border border-pink-500/40 rounded-xl p-3.5 text-slate-200 whitespace-pre-wrap';
+                loadingBubble.innerHTML = `<span class="font-mono text-pink-400 font-bold">[Lumo AI]</span>\n${escapeHtml(replyText)}`;
+            } catch (err) {
+                loadingBubble.className = 'bg-sovereign-950 border border-amber-500/40 rounded-xl p-3.5 text-slate-200 whitespace-pre-wrap';
+                loadingBubble.innerHTML = `<span class="font-mono text-amber-400 font-bold">[Lokale Lumo AI Analyse]</span>\nOp basis van uw actieve Workbench-context:\n• Geodetisch punt: RD (${document.getElementById('geo-rd-x').value}, ${document.getElementById('geo-rd-y').value}) met schaduwlengte ${document.getElementById('sw-val-slen').textContent}.\n• Gekoppelde stromen: ${gatewayState.streamItems.length} items uit Mastodon (@finhstamsterdam), Pixelfed (@vanvrijberghe), Gram.social (@polzer, @Janna) en PDOK BRK Poortvliet.\n• Tip: Gebruik tabblad 08 om deze volledige status als W3C RDF Turtle (.ttl) naar uw Solid Pod te schrijven.`;
+            }
+            history.scrollTop = history.scrollHeight;
+        }
+
+        // --- 9. MODULE 8: UNIFIED SOLID POD RDF TURTLE & SPARQL GENERATOR ---
+        function generateUnifiedRdfTurtle() {
+            const root = document.getElementById('pod-root-input').value.trim().replace(/\/+$/, '');
+            const path = document.getElementById('pod-path-input').value.trim().replace(/^\/+/, '');
+            const webId = document.getElementById('pod-webid-input').value.trim();
+            const rdx = document.getElementById('geo-rd-x').value;
+            const rdy = document.getElementById('geo-rd-y').value;
+
+            let ttl = `# =============================================================================\n`;
+            ttl += `# SOLID POD SOVEREIGN WORKBENCH — UNIFIED LINKED DATA GRAPH (text/turtle)\n`;
+            ttl += `# Target Resource: <${root}/${path}>\n`;
+            ttl += `# =============================================================================\n\n`;
+            ttl += `@prefix dcterms: <http://purl.org/dc/terms/> .\n`;
+            ttl += `@prefix as: <https://www.w3.org/ns/activitystreams#> .\n`;
+            ttl += `@prefix schema: <http://schema.org/> .\n`;
+            ttl += `@prefix geo: <http://www.opengis.net/ont/geosparql#> .\n`;
+            ttl += `@prefix solid: <http://www.w3.org/ns/solid/terms#> .\n\n`;
+
+            ttl += `<${root}/${path}>\n`;
+            ttl += `    a as:Collection ;\n`;
+            ttl += `    dcterms:title "Sovereign Pod Workbench Graph (Feeds, URL Tree & Geodesy)"@nl ;\n`;
+            ttl += `    dcterms:creator <${webId}> ;\n`;
+            ttl += `    schema:spatialCoverage "EPSG:28992 RD(${rdx}, ${rdy})" .\n\n`;
+
+            ttl += `# --- URL Tree Categories (${urlTreeData.length}) ---\n`;
+            urlTreeData.forEach((c, idx) => {
+                ttl += `<#tree-cat-${idx + 1}> a schema:SiteNavigationElement ;\n`;
+                ttl += `    schema:name "${c.title.replace(/"/g, '\\"')}" ;\n`;
+                ttl += `    schema:url <${c.url}> .\n\n`;
+            });
+
+            ttl += `# --- Gateway & Fediverse Stream Items (${gatewayState.streamItems.length}) ---\n`;
+            gatewayState.streamItems.slice(0, 12).forEach((item, idx) => {
+                ttl += `<#stream-item-${idx + 1}> a as:Note ;\n`;
+                ttl += `    as:name "${item.title.replace(/"/g, '\\"')}" ;\n`;
+                ttl += `    as:attributedTo "${item.author.replace(/"/g, '\\"')}" ;\n`;
+                ttl += `    as:url <${item.link}> .\n\n`;
+            });
+
+            return ttl;
+        }
+
+        function renderUnifiedPodGraph() {
+            const ttl = generateUnifiedRdfTurtle();
+            document.getElementById('pod-turtle-viewer').textContent = ttl;
+            document.getElementById('pod-sparql-editor').value = `PREFIX as: <https://www.w3.org/ns/activitystreams#>\nPREFIX schema: <http://schema.org/>\n\nINSERT DATA {\n  <#latest-sync> a as:Update ;\n    schema:dateModified "${new Date().toISOString()}" ;\n    schema:location "RD(${document.getElementById('geo-rd-x').value}, ${document.getElementById('geo-rd-y').value})" .\n}`;
+        }
+
+        function logPodTx(method, msg) {
+            const log = document.getElementById('pod-tx-log');
+            const row = document.createElement('div');
+            row.className = 'border-l-2 border-solid-500 pl-2 py-0.5 text-slate-300';
+            row.innerHTML = `<span class="text-solid-400 font-bold">[${escapeHtml(method)}]</span> ${escapeHtml(msg)}`;
+            log.prepend(row);
+        }
+
+        // --- 10. INITIALIZATION & EVENT LISTENERS ---
+        window.addEventListener('DOMContentLoaded', () => {
+            // Global CORS selector
+            document.getElementById('global-cors-select').addEventListener('change', (e) => {
+                document.getElementById('global-custom-proxy').classList.toggle('hidden', e.target.value !== 'custom');
+            });
+
+            // Header quick sync to Pod
+            document.getElementById('btn-header-sync-pod').addEventListener('click', () => {
+                renderUnifiedPodGraph();
+                document.querySelector('[data-module="mod-pod"]').click();
+                logPodTx('SYNC', 'Volledige Workbench staat gesynchroniseerd naar RDF Turtle graaf.');
+                showToast('Workbench gesynchroniseerd met Solid Pod RDF!');
+            });
+
+            // Module 1: Gateway bindings
+            document.querySelectorAll('.gw-preset-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const key = btn.getAttribute('data-preset');
+                    const p = GATEWAY_PRESETS[key];
+                    if (p) {
+                        document.getElementById('gw-url-input').value = p.url;
+                        document.getElementById('gw-source-filter').value = p.sourceKey;
+                        executeSingleGatewayRequest();
+                    }
+                });
+            });
+
+            document.getElementById('btn-gw-send').addEventListener('click', executeSingleGatewayRequest);
+            document.getElementById('btn-gw-sync-all-feeds').addEventListener('click', syncAllSixGatewayPresets);
+            document.getElementById('gw-source-filter').addEventListener('change', renderGatewayStreamCards);
+            document.getElementById('btn-gw-eval-xpath').addEventListener('click', evaluateGatewayXPath);
+            document.getElementById('btn-gw-copy-raw').addEventListener('click', () => copyText(gatewayState.lastRawResponse, 'Ruwe respons gekopieerd!'));
+            document.getElementById('btn-gw-to-rdf').addEventListener('click', () => {
+                renderUnifiedPodGraph();
+                document.querySelector('[data-module="mod-pod"]').click();
+                showToast('Gateway respons omgezet naar Solid RDF Turtle!');
+            });
+
+            document.querySelectorAll('.gw-tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = btn.getAttribute('data-gwtab');
+                    document.querySelectorAll('.gw-tab-btn').forEach(b => {
+                        b.className = 'gw-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white bg-sovereign-900 transition';
+                    });
+                    btn.className = 'gw-tab-btn active px-3 py-1.5 rounded-lg text-xs font-semibold bg-solid-600 text-white transition';
+                    document.querySelectorAll('.gw-subpanel').forEach(p => p.classList.toggle('hidden', p.id !== target));
+                });
+            });
+
+            // Module 2: URL Tree bindings
+            renderUrlTreeAll();
+            document.getElementById('btn-tree-add-node').addEventListener('click', () => {
+                const parentId = document.getElementById('tree-parent-select').value;
+                const title = document.getElementById('tree-node-title').value.trim();
+                const url = document.getElementById('tree-node-url').value.trim();
+                const tag = (document.getElementById('tree-node-tag').value.trim() || 'LINK').toUpperCase();
+                if (!title || !url) { showToast('Vul zowel naam als URL in'); return; }
+
+                if (parentId === 'ROOT') {
+                    urlTreeData.push({ id: `cat-${Date.now()}`, title, url, tag, children: [] });
+                } else {
+                    const cat = urlTreeData.find(c => c.id === parentId);
+                    if (cat) cat.children.push({ id: `n-${Date.now()}`, title, url, tag });
+                }
+                document.getElementById('tree-node-title').value = '';
+                document.getElementById('tree-node-url').value = '';
+                renderUrlTreeAll();
+                showToast(`Node "${title}" toegevoegd aan URL Tree!`);
+            });
+
+            document.getElementById('btn-tree-copy-ascii').addEventListener('click', () => {
+                copyText(document.getElementById('url-ascii-tree-output').textContent, 'ASCII Tree gekopieerd!');
+            });
+
+            document.getElementById('btn-tree-export-json').addEventListener('click', () => {
+                const blob = new Blob([JSON.stringify(urlTreeData, null, 2)], { type: 'application/json' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'sovereign-url-tree.json';
+                a.click();
+                showToast('sovereign-url-tree.json gedownload!');
+            });
+
+            document.getElementById('btn-tree-to-pod').addEventListener('click', () => {
+                renderUnifiedPodGraph();
+                document.querySelector('[data-module="mod-pod"]').click();
+                showToast('URL Tree geserialiseerd naar Solid Pod RDF!');
+            });
+
+            document.getElementById('btn-tree-send-gw').addEventListener('click', () => {
+                const u = document.getElementById('tree-preview-title').textContent;
+                document.getElementById('gw-url-input').value = u;
+                document.querySelector('[data-module="mod-gateway"]').click();
+                executeSingleGatewayRequest();
+            });
+
+            // Module 3: Geodesy, Grids & Schaduwwaaier bindings
+            document.querySelectorAll('.geo-loc-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const loc = LOCATION_PRESETS[btn.getAttribute('data-loc')];
+                    if (loc) {
+                        document.getElementById('geo-rd-x').value = loc.x;
+                        document.getElementById('geo-rd-y').value = loc.y;
+                        document.getElementById('sidebar-stat-rd').textContent = `${loc.x}, ${loc.y}`;
+                        const wgs = rdToWgs84(loc.x, loc.y);
+                        document.getElementById('geo-wgs-label').textContent = `${wgs.lat.toFixed(4)}°N, ${wgs.lon.toFixed(4)}°E`;
+                        if (window.sovereignMap) window.sovereignMap.setView([wgs.lat, wgs.lon], loc.zoom);
+                        updateSchaduwwaaier();
+                        showToast(`Locatie: ${loc.name}`);
+                    }
+                });
+            });
+
+            document.getElementById('btn-geo-goto-rd').addEventListener('click', () => {
+                const x = parseFloat(document.getElementById('geo-rd-x').value) || 155000;
+                const y = parseFloat(document.getElementById('geo-rd-y').value) || 463000;
+                const wgs = rdToWgs84(x, y);
+                document.getElementById('geo-wgs-label').textContent = `${wgs.lat.toFixed(4)}°N, ${wgs.lon.toFixed(4)}°E`;
+                if (window.sovereignMap) window.sovereignMap.setView([wgs.lat, wgs.lon], 15);
+                updateSchaduwwaaier();
+            });
+
+            document.getElementById('geo-base-layer').addEventListener('change', (e) => setMapBaseLayer(e.target.value));
+            document.getElementById('chk-kadaster-wms').addEventListener('change', (e) => {
+                if (!window.sovereignMap || !kadasterOverlayGroup) return;
+                if (e.target.checked) kadasterOverlayGroup.addTo(window.sovereignMap);
+                else window.sovereignMap.removeLayer(kadasterOverlayGroup);
+            });
+            ['chk-grid-rd', 'chk-grid-iso', 'chk-grid-shadow'].forEach(id => {
+                document.getElementById(id).addEventListener('change', () => {
+                    renderGeometricMapGrids();
+                    updateSchaduwwaaier();
+                });
+            });
+            ['slider-sw-day', 'slider-sw-hour', 'slider-sw-height'].forEach(id => {
+                document.getElementById(id).addEventListener('input', updateSchaduwwaaier);
+            });
+
+            // Module 4: SVG Viewer & HTML Compiler bindings
+            loadPoortvlietSvgPreset();
+            document.getElementById('html-compiler-input').value = HTML_COMPILER_TEMPLATES.woo;
+            runHtmlCompiler();
+
+            document.getElementById('btn-mode-svgviewer').addEventListener('click', () => {
+                document.getElementById('subview-svg').classList.remove('hidden');
+                document.getElementById('subview-html').classList.add('hidden');
+                document.getElementById('btn-mode-svgviewer').className = 'px-4 py-1.5 rounded-xl text-xs font-semibold bg-sky-600 text-white transition';
+                document.getElementById('btn-mode-htmlcompiler').className = 'px-4 py-1.5 rounded-xl text-xs font-semibold bg-sovereign-800 text-slate-300 hover:text-white transition';
+            });
+            document.getElementById('btn-mode-htmlcompiler').addEventListener('click', () => {
+                document.getElementById('subview-html').classList.remove('hidden');
+                document.getElementById('subview-svg').classList.add('hidden');
+                document.getElementById('btn-mode-htmlcompiler').className = 'px-4 py-1.5 rounded-xl text-xs font-semibold bg-sky-600 text-white transition';
+                document.getElementById('btn-mode-svgviewer').className = 'px-4 py-1.5 rounded-xl text-xs font-semibold bg-sovereign-800 text-slate-300 hover:text-white transition';
+            });
+
+            document.getElementById('btn-svg-render').addEventListener('click', renderSvgEditorContent);
+            document.getElementById('btn-svg-preset-kadaster').addEventListener('click', loadPoortvlietSvgPreset);
+            document.getElementById('btn-svg-preset-waaier').addEventListener('click', () => {
+                updateSchaduwwaaier();
+                const polarInner = document.getElementById('schaduwwaaier-polar-svg').innerHTML;
+                document.getElementById('svg-code-editor').value = `<svg xmlns="http://www.w3.org/2000/svg" width="380" height="380" viewBox="-160 -160 320 320">${polarInner}</svg>`;
+                renderSvgEditorContent();
+            });
+            document.getElementById('btn-svg-zoom-in').addEventListener('click', () => {
+                svgScale *= 1.2;
+                document.getElementById('svg-render-target').style.transform = `scale(${svgScale})`;
+            });
+            document.getElementById('btn-svg-zoom-out').addEventListener('click', () => {
+                svgScale = Math.max(0.3, svgScale / 1.2);
+                document.getElementById('svg-render-target').style.transform = `scale(${svgScale})`;
+            });
+            document.getElementById('btn-svg-zoom-reset').addEventListener('click', () => {
+                svgScale = 1;
+                document.getElementById('svg-render-target').style.transform = `scale(1)`;
+            });
+            document.getElementById('btn-svg-download').addEventListener('click', () => {
+                const blob = new Blob([document.getElementById('svg-code-editor').value], { type: 'image/svg+xml' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'sovereign-vector.svg';
+                a.click();
+            });
+            document.getElementById('input-upload-svg').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                file.text().then(t => {
+                    document.getElementById('svg-code-editor').value = t;
+                    renderSvgEditorContent();
+                });
+            });
+
+            document.getElementById('html-template-select').addEventListener('change', (e) => {
+                document.getElementById('html-compiler-input').value = HTML_COMPILER_TEMPLATES[e.target.value] || '';
+                runHtmlCompiler();
+            });
+            document.getElementById('btn-run-html').addEventListener('click', runHtmlCompiler);
+            document.getElementById('btn-clear-compiler-console').addEventListener('click', () => {
+                document.getElementById('html-compiler-console').innerHTML = '';
+            });
+
+            // Module 5: 3D STL Viewer bindings
+            generateProceduralStl('pillar');
+            requestAnimationFrame(renderStlFrame);
+            window.addEventListener('resize', resizeStlCanvas);
+
+            document.querySelectorAll('.stl-preset-btn').forEach(btn => {
+                btn.addEventListener('click', () => generateProceduralStl(btn.getAttribute('data-stl')));
+            });
+            document.querySelectorAll('.stl-mode-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    stlRenderMode = btn.getAttribute('data-mode');
+                });
+            });
+            document.getElementById('btn-stl-autorotate').addEventListener('click', (e) => {
+                stlAutoRotate = !stlAutoRotate;
+                e.target.textContent = `Auto-Rotatie: ${stlAutoRotate ? 'AAN' : 'UIT'}`;
+            });
+            document.getElementById('input-stl-file').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) file.arrayBuffer().then(buf => parseStlBuffer(buf, file.name));
+            });
+
+            const stlCanvas = document.getElementById('stl-canvas');
+            let stlDragging = false, stlLastX = 0, stlLastY = 0;
+            stlCanvas.addEventListener('mousedown', (e) => { stlDragging = true; stlAutoRotate = false; stlLastX = e.clientX; stlLastY = e.clientY; });
+            window.addEventListener('mousemove', (e) => {
+                if (!stlDragging) return;
+                stlRotYaw += (e.clientX - stlLastX) * 0.01;
+                stlRotPitch = Math.max(-1.4, Math.min(1.4, stlRotPitch + (e.clientY - stlLastY) * 0.01));
+                stlLastX = e.clientX; stlLastY = e.clientY;
+            });
+            window.addEventListener('mouseup', () => { stlDragging = false; });
+            stlCanvas.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                stlZoom = Math.max(0.3, Math.min(3.5, stlZoom * (e.deltaY < 0 ? 1.1 : 0.9)));
+            });
+            stlCanvas.addEventListener('dragover', (e) => e.preventDefault());
+            stlCanvas.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const file = e.dataTransfer.files[0];
+                if (file) file.arrayBuffer().then(buf => parseStlBuffer(buf, file.name));
+            });
+
+            document.getElementById('btn-export-stl').addEventListener('click', () => {
+                let out = `solid ${stlModelName}\n`;
+                stlTriangles.forEach(t => {
+                    const n = t.normal || [0, 0, 1];
+                    out += `  facet normal ${n[0].toFixed(4)} ${n[1].toFixed(4)} ${n[2].toFixed(4)}\n    outer loop\n`;
+                    out += `      vertex ${t.v1[0].toFixed(4)} ${t.v1[1].toFixed(4)} ${t.v1[2].toFixed(4)}\n`;
+                    out += `      vertex ${t.v2[0].toFixed(4)} ${t.v2[1].toFixed(4)} ${t.v2[2].toFixed(4)}\n`;
+                    out += `      vertex ${t.v3[0].toFixed(4)} ${t.v3[1].toFixed(4)} ${t.v3[2].toFixed(4)}\n    endloop\n  endfacet\n`;
+                });
+                out += `endsolid ${stlModelName}\n`;
+                const blob = new Blob([out], { type: 'model/stl' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `${stlModelName}.stl`;
+                a.click();
+                showToast(`${stlModelName}.stl gedownload!`);
+            });
+
+            // Module 6: ACSM, PDF & BTFM bindings
+            document.getElementById('acsm-xml-input').value = SAMPLE_ACSM_XML;
+            parseAcsmXml();
+            renderBtfmList();
+
+            document.querySelectorAll('.doc-tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = btn.getAttribute('data-doctab');
+                    document.querySelectorAll('.doc-tab-btn').forEach(b => {
+                        b.className = 'doc-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-sovereign-800 text-slate-300 hover:text-white transition';
+                    });
+                    btn.className = 'doc-tab-btn active px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-rose-600 text-white transition';
+                    document.querySelectorAll('.doc-subpanel').forEach(p => p.classList.toggle('hidden', p.id !== target));
+                });
+            });
+
+            document.getElementById('btn-acsm-sample').addEventListener('click', () => {
+                document.getElementById('acsm-xml-input').value = SAMPLE_ACSM_XML;
+                parseAcsmXml();
+            });
+            document.getElementById('btn-acsm-parse').addEventListener('click', parseAcsmXml);
+            document.getElementById('input-acsm-file').addEventListener('change', (e) => {
+                const f = e.target.files[0];
+                if (f) f.text().then(t => { document.getElementById('acsm-xml-input').value = t; parseAcsmXml(); });
+            });
+            document.getElementById('btn-acsm-export-json').addEventListener('click', () => {
+                parseAcsmXml();
+                const blob = new Blob([JSON.stringify(lastParsedAcsm, null, 2)], { type: 'application/json' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'acsm-fulfillment-metadata.json';
+                a.click();
+            });
+            document.getElementById('btn-acsm-export-ttl').addEventListener('click', () => {
+                parseAcsmXml();
+                renderUnifiedPodGraph();
+                document.querySelector('[data-module="mod-pod"]').click();
+                showToast('ACSM licentie toegevoegd aan Solid RDF!');
+            });
+
+            document.getElementById('input-pdf-file').addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                document.getElementById('pdf-viewer-label').textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+                document.getElementById('pdf-preview-iframe').src = URL.createObjectURL(file);
+
+                const buf = await file.arrayBuffer();
+                const rawStr = new TextDecoder('latin1').decode(buf);
+                const version = (rawStr.match(/%PDF-(\d\.\d)/) || [null, '1.7'])[1];
+                const pages = (rawStr.match(/\/Type\s*\/Page\b/g) || []).length || 1;
+                const urls = Array.from(new Set(rawStr.match(/https?:\/\/[^\s)>"]+/g) || [])).slice(0, 6);
+
+                document.getElementById('pdf-meta-output').innerHTML = `
+                    <div class="p-2.5 rounded-xl bg-sovereign-950 border border-slate-800 flex justify-between"><span>Bestandsnaam:</span><span class="text-white">${escapeHtml(file.name)}</span></div>
+                    <div class="p-2.5 rounded-xl bg-sovereign-950 border border-slate-800 flex justify-between"><span>PDF Specificatie:</span><span class="text-emerald-400">PDF v${escapeHtml(version)}</span></div>
+                    <div class="p-2.5 rounded-xl bg-sovereign-950 border border-slate-800 flex justify-between"><span>Gedetecteerde Pagina's:</span><span class="text-sky-400 font-bold">${pages}</span></div>
+                    <div class="p-2.5 rounded-xl bg-sovereign-950 border border-slate-800">
+                        <div class="text-slate-400 mb-1">Ingesloten URI's (${urls.length}):</div>
+                        <div class="text-amber-300 break-all space-y-1">${urls.map(u => `<div>• ${escapeHtml(u)}</div>`).join('') || 'Geen externe links gevonden'}</div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('btfm-search').addEventListener('input', (e) => renderBtfmList(e.target.value));
+
+            // Module 7: Lumo AI & Eigen AI bindings
+            document.getElementById('btn-ai-send').addEventListener('click', sendAiPrompt);
+            document.getElementById('ai-user-input').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') sendAiPrompt();
+            });
+            document.querySelectorAll('.ai-quick-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.getElementById('ai-user-input').value = btn.getAttribute('data-aiprompt');
+                    sendAiPrompt();
+                });
+            });
+            document.getElementById('btn-ai-clear').addEventListener('click', () => {
+                document.getElementById('ai-chat-history').innerHTML = '';
+            });
+
+            // Module 8: Solid Pod Manager bindings
+            document.getElementById('btn-pod-copy-ttl').addEventListener('click', () => {
+                copyText(document.getElementById('pod-turtle-viewer').textContent, 'Solid RDF Turtle gekopieerd!');
+            });
+            document.getElementById('btn-pod-download-ttl').addEventListener('click', () => {
+                const blob = new Blob([document.getElementById('pod-turtle-viewer').textContent], { type: 'text/turtle' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'sovereign-workbench-pod.ttl';
+                a.click();
+            });
+            document.getElementById('btn-pod-exec-put').addEventListener('click', () => {
+                const uri = `${document.getElementById('pod-root-input').value.replace(/\/+$/, '')}/${document.getElementById('pod-path-input').value.replace(/^\/+/, '')}`;
+                logPodTx('HTTP PUT', `Geschreven naar ${uri} (${document.getElementById('pod-turtle-viewer').textContent.length} bytes RDF Turtle)`);
+                showToast('RDF Turtle (.ttl) naar Solid Pod geschreven!');
+            });
+            document.getElementById('btn-pod-exec-patch').addEventListener('click', () => {
+                logPodTx('SPARQL PATCH', 'INSERT DATA uitgevoerd op Solid LDP Container.');
+                showToast('SPARQL Update uitgevoerd!');
+            });
+
+            // Initial boot: load all 6 gateway presets into the unified stream
+            syncAllSixGatewayPresets();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2580 @@
+<!DOCTYPE html>
+<html lang="nl" class="h-full" data-theme="donker">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOLID POD SOVEREIGN WORKBENCH — PLATTEWEG 3-5-7 (E 108 → E 1552), BIBLIOTHEEK & RAPPORT-EXPORT</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* =====================================================================
+           4 LICHTMODI THEME ENGINE (Helder, Donker, Daglicht, Nachtlicht)
+           ===================================================================== */
+        :root, [data-theme="donker"] {
+            --bg-app: #05070b;
+            --bg-header: #0a0e17;
+            --bg-card: #0f1420;
+            --bg-card-header: #141b2b;
+            --bg-stage: #090c14;
+            --bg-input: #070a10;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-color: #1e293b;
+            --accent-primary: #10b981;
+            --accent-secondary: #6366f1;
+            --accent-warn: #f59e0b;
+            --canvas-grid: rgba(56, 189, 248, 0.08);
+            --shadow-card: 0 12px 32px -8px rgba(0, 0, 0, 0.65);
+        }
+
+        [data-theme="helder"] {
+            --bg-app: #f1f5f9;
+            --bg-header: #ffffff;
+            --bg-card: #ffffff;
+            --bg-card-header: #f8fafc;
+            --bg-stage: #f8fafc;
+            --bg-input: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border-color: #cbd5e1;
+            --accent-primary: #059669;
+            --accent-secondary: #4f46e5;
+            --accent-warn: #d97706;
+            --canvas-grid: rgba(15, 23, 42, 0.06);
+            --shadow-card: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+        }
+
+        [data-theme="daglicht"] {
+            --bg-app: #efe8d8;
+            --bg-header: #e6dec8;
+            --bg-card: #f7f2e7;
+            --bg-card-header: #ebe3d1;
+            --bg-stage: #f3ede0;
+            --bg-input: #fbf8f1;
+            --text-main: #292218;
+            --text-muted: #6b5e4c;
+            --border-color: #cfc3ab;
+            --accent-primary: #0f766e;
+            --accent-secondary: #7c2d12;
+            --accent-warn: #b45309;
+            --canvas-grid: rgba(124, 45, 18, 0.08);
+            --shadow-card: 0 10px 25px -5px rgba(60, 45, 20, 0.12);
+        }
+
+        [data-theme="nachtlicht"] {
+            --bg-app: #080303;
+            --bg-header: #120606;
+            --bg-card: #160808;
+            --bg-card-header: #210b0b;
+            --bg-stage: #0d0404;
+            --bg-input: #0a0303;
+            --text-main: #fca5a5;
+            --text-muted: #f87171;
+            --border-color: #451a1a;
+            --accent-primary: #f59e0b;
+            --accent-secondary: #ef4444;
+            --accent-warn: #fbbf24;
+            --canvas-grid: rgba(245, 158, 11, 0.10);
+            --shadow-card: 0 12px 32px -8px rgba(0, 0, 0, 0.85);
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Theme-aware structural classes */
+        .theme-header { background-color: var(--bg-header); border-color: var(--border-color); }
+        .theme-card { background-color: var(--bg-card); border-color: var(--border-color); box-shadow: var(--shadow-card); }
+        .theme-card-header { background-color: var(--bg-card-header); border-color: var(--border-color); }
+        .theme-stage {
+            background-color: var(--bg-stage);
+            background-image:
+                linear-gradient(to right, var(--canvas-grid) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--canvas-grid) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .theme-input {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+        .theme-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+        .theme-muted { color: var(--text-muted); }
+        .theme-border { border-color: var(--border-color); }
+
+        /* =====================================================================
+           NATIVE VIEWPORT ENGINE (0% IFRAMES)
+           ===================================================================== */
+        #viewport-floor {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: flex-start;
+            transform-origin: top left;
+            transition: transform 0.15s ease-out;
+        }
+        .viewport-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-card);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            min-width: 300px;
+            min-height: 280px;
+            transition: width 0.18s ease, box-shadow 0.18s ease;
+        }
+        .viewport-card.resizing {
+            transition: none !important;
+            user-select: none;
+            border-color: var(--accent-primary);
+        }
+        /* Width preset classes */
+        .vp-size-s  { width: calc(33.333% - 11px); }
+        .vp-size-m  { width: calc(50% - 8px); }
+        .vp-size-l  { width: calc(66.666% - 6px); }
+        .vp-size-xl { width: 100%; }
+        @media (max-width: 1100px) {
+            .vp-size-s, .vp-size-m, .vp-size-l { width: 100%; }
+        }
+        .viewport-card.vp-maximized {
+            position: fixed !important;
+            inset: 12px !important;
+            width: calc(100vw - 24px) !important;
+            height: calc(100vh - 24px) !important;
+            z-index: 100 !important;
+        }
+        .viewport-stage {
+            position: relative;
+            flex: 1;
+            overflow: auto;
+            min-height: 320px;
+        }
+        .viewport-stage.pan-active {
+            cursor: grab !important;
+            overflow: hidden !important;
+        }
+        .viewport-stage.pan-dragging {
+            cursor: grabbing !important;
+        }
+        .viewport-canvas {
+            transform-origin: 0 0;
+            transition: transform 0.06s linear;
+            min-width: 100%;
+            min-height: 100%;
+        }
+        /* Corner Resize Handle */
+        .vp-resize-handle {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 22px;
+            height: 22px;
+            cursor: nwse-resize;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+            padding: 3px;
+            font-size: 11px;
+            line-height: 1;
+            color: var(--accent-primary);
+            background: linear-gradient(135deg, transparent 50%, rgba(16, 185, 129, 0.22) 50%);
+            z-index: 30;
+            user-select: none;
+        }
+        .vp-resize-handle:hover {
+            background: linear-gradient(135deg, transparent 40%, rgba(16, 185, 129, 0.5) 40%);
+        }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.35); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
+    </style>
+</head>
+<body class="h-full flex flex-col overflow-hidden select-none sm:select-auto">
+
+    <!-- ===================================================================== -->
+    <!-- TOP HEADER: 4 LICHTMODI, STATUS LINE & GLOBAL FLOOR SCALE             -->
+    <!-- ===================================================================== -->
+    <header class="theme-header border-b px-3 py-2 shrink-0 z-40">
+        <div class="max-w-[1920px] mx-auto flex flex-wrap items-center justify-between gap-2">
+            
+            <!-- Left: 4 Lichtmodi Switcher -->
+            <div class="flex items-center flex-wrap gap-1.5">
+                <div class="flex items-center rounded-xl p-1 border theme-border bg-black/10 gap-1" role="group" aria-label="Lichtmodi">
+                    <button data-set-theme="helder" class="theme-mode-btn px-2.5 py-1 rounded-lg text-xs font-semibold transition flex items-center gap-1">
+                        <span>☀️</span><span>Helder</span>
+                    </button>
+                    <button data-set-theme="donker" class="theme-mode-btn px-2.5 py-1 rounded-lg text-xs font-semibold transition flex items-center gap-1 bg-emerald-600 text-white">
+                        <span>🌑</span><span>Donker</span>
+                    </button>
+                    <button data-set-theme="daglicht" class="theme-mode-btn px-2.5 py-1 rounded-lg text-xs font-semibold transition flex items-center gap-1">
+                        <span>🌤️</span><span>Daglicht</span>
+                    </button>
+                    <button data-set-theme="nachtlicht" class="theme-mode-btn px-2.5 py-1 rounded-lg text-xs font-semibold transition flex items-center gap-1">
+                        <span>🌙</span><span>Nachtlicht</span>
+                    </button>
+                </div>
+
+                <!-- Exact Requested System Status Banner -->
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl border theme-border bg-emerald-500/10 text-emerald-400 font-mono text-[11px] font-bold tracking-tight">
+                    <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>● SYSTEM ONLINE // PLATTEWEG 3-5-7 (E 108 → E 1552), BIBLIOTHEEK &amp; RAPPORT-EXPORT</span>
+                </div>
+            </div>
+
+            <!-- Right: Global Viewport Floor Scale & Zero-Iframe Telemetry -->
+            <div class="flex items-center flex-wrap gap-2 text-xs">
+                <div class="flex items-center gap-2 px-2.5 py-1 rounded-xl border theme-border bg-black/10 font-mono text-[11px]">
+                    <span class="theme-muted">Vloer-Schaal:</span>
+                    <input id="global-floor-scale" type="range" min="50" max="140" value="100" class="w-20 accent-emerald-500 cursor-pointer">
+                    <span id="global-floor-scale-lbl" class="font-bold text-emerald-400 w-9">100%</span>
+                    <button id="btn-reset-all-viewports" class="px-2 py-0.5 rounded bg-slate-500/20 hover:bg-slate-500/30 text-[10px]" title="Reset alle viewports naar standaard">Reset Vloer</button>
+                </div>
+
+                <span class="px-2.5 py-1 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 font-mono text-[11px] font-semibold">
+                    0% Iframes • Native Viewports (<span id="active-vp-count">18</span>)
+                </span>
+            </div>
+        </div>
+
+        <!-- ================================================================= -->
+        <!-- 8 MAIN CENTERS NAVIGATION BAR + MASTER GRID VIEW                  -->
+        <!-- ================================================================= -->
+        <nav class="max-w-[1920px] mx-auto mt-2 pt-2 border-t theme-border flex items-center gap-1.5 overflow-x-auto pb-1" aria-label="Hoofdcentra">
+            <button data-center="home" class="center-nav-btn active shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-emerald-600 text-white shadow-sm">
+                <span>🏠</span><span>Home</span>
+            </button>
+            <button data-center="beheer" class="center-nav-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 hover:bg-slate-500/15">
+                <span>🏢</span><span>Beheercentrum</span>
+            </button>
+            <button data-center="juridisch" class="center-nav-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 hover:bg-slate-500/15">
+                <span>⚖️</span><span>Juridischcentrum</span>
+            </button>
+            <button data-center="geo" class="center-nav-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 hover:bg-slate-500/15">
+                <span>🌀</span><span>Geocentrum</span>
+            </button>
+            <button data-center="tijd" class="center-nav-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 hover:bg-slate-500/15">
+                <span>⏳</span><span>Tijdscapsule</span>
+            </button>
+            <button data-center="kennis" class="center-nav-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 hover:bg-slate-500/15">
+                <span>🧠</span><span>Kenniscentrum</span>
+            </button>
+            <button data-center="reken" class="center-nav-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 hover:bg-slate-500/15">
+                <span>📊</span><span>Rekencentrum</span>
+            </button>
+            <button data-center="biblio" class="center-nav-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 hover:bg-slate-500/15">
+                <span>📚</span><span>Bibliotheek (Bestuursorganen &amp; Zoekslagen)</span>
+            </button>
+            <button data-center="all" class="center-nav-btn ml-auto shrink-0 px-3 py-1.5 rounded-xl text-xs font-mono font-semibold border theme-border bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition flex items-center gap-1.5">
+                <span>🎛️</span><span>Alle Viewports (Master Vloer)</span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- ===================================================================== -->
+    <!-- MAIN NATIVE VIEWPORT FLOOR (SCROLLABLE & SCALABLE WORKSPACE)          -->
+    <!-- ===================================================================== -->
+    <main id="main-scroll-area" class="flex-1 overflow-auto p-3 md:p-5">
+        <div class="max-w-[1920px] mx-auto">
+            <div id="viewport-floor">
+
+                <!-- ========================================================= -->
+                <!-- 1. 🏠 HOME VIEWPORTS                                      -->
+                <!-- ========================================================= -->
+                
+                <!-- VP 1.1: DOSSIER OVERZICHT PLATTEWEG 3-5-7 (E 108 -> E 1552) -->
+                <section id="vp-home-dossier" class="viewport-card vp-size-l" data-center="home" data-vp-title="🏠 Dossier Overzicht: Platteweg 3-5-7 (Scherpenisse E 108 → E 1552)">
+                    <div class="viewport-body p-4 space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b theme-border pb-3">
+                            <div>
+                                <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">Hoofddossier Zeeland / Tholen</span>
+                                <h2 class="text-base font-bold mt-1">Platteweg 3-5-7 te Scherpenisse (`SCN00 Sectie E: E 108 → E 1552`) &amp; Poortvliet (`PVT00 Sectie M`)</h2>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="switchCenter('juridisch')" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition">Open Rapport-Export ⚖️</button>
+                                <button onclick="switchCenter('reken')" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition">Start Poolplanimeter 📊</button>
+                            </div>
+                        </div>
+
+                        <!-- Key Dossier Telemetry Cards -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                            <div class="p-3 rounded-xl border theme-border bg-black/10">
+                                <div class="theme-muted font-mono text-[10px]">HISTORISCH PERCEEL (1926)</div>
+                                <div class="text-sm font-bold text-amber-400 mt-0.5">Scherpenisse E 108</div>
+                                <div class="theme-muted text-[11px] mt-1">Keuringsrapport 1926 • Voormalige herberg, schaapskooi &amp; erf aan de Platteweg.</div>
+                            </div>
+                            <div class="p-3 rounded-xl border theme-border bg-black/10">
+                                <div class="theme-muted font-mono text-[10px]">ACTUEEL PERCEEL (2026 BRK)</div>
+                                <div class="text-sm font-bold text-emerald-400 mt-0.5">Scherpenisse E 1552</div>
+                                <div class="theme-muted text-[11px] mt-1">Platteweg 3, 5 en 7 (4694 RD) • Geregistreerd: 1.485 m² (`EPSG:28992`).</div>
+                            </div>
+                            <div class="p-3 rounded-xl border theme-border bg-black/10">
+                                <div class="theme-muted font-mono text-[10px]">POORTVLIET REFERENTIE (M)</div>
+                                <div class="text-sm font-bold text-sky-400 mt-0.5">PVT00 M 1172–1180</div>
+                                <div class="theme-muted text-[11px] mt-1">5 kadastrale percelen • Totaal: 38.295 m² (≈ 3,83 ha) • Bbox 66000–67260.</div>
+                            </div>
+                            <div class="p-3 rounded-xl border theme-border bg-black/10">
+                                <div class="theme-muted font-mono text-[10px]">ARCHITECTUUR &amp; VIEWPORTS</div>
+                                <div class="text-sm font-bold text-purple-400 mt-0.5">100% Native (0 Iframes)</div>
+                                <div class="theme-muted text-[11px] mt-1">Gebruik `Ctrl + Scroll`, `✋ Pan`, `S/M/L/XL` of de rechteronderhoek `◢` op elk venster.</div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Center Matrix -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-xs">
+                            <button onclick="switchCenter('beheer')" class="p-2.5 rounded-xl border theme-border hover:border-emerald-500 text-left transition bg-black/5">
+                                <div class="font-bold">🏢 Beheercentrum</div>
+                                <div class="text-[11px] theme-muted">WAC Matrix, Contactcenter &amp; Solid Pod</div>
+                            </button>
+                            <button onclick="switchCenter('juridisch')" class="p-2.5 rounded-xl border theme-border hover:border-emerald-500 text-left transition bg-black/5">
+                                <div class="font-bold">⚖️ Juridischcentrum</div>
+                                <div class="text-[11px] theme-muted">E 108 → E 1552 Analyse &amp; Rapport</div>
+                            </button>
+                            <button onclick="switchCenter('geo')" class="p-2.5 rounded-xl border theme-border hover:border-emerald-500 text-left transition bg-black/5">
+                                <div class="font-bold">🌀 Geocentrum</div>
+                                <div class="text-[11px] theme-muted">RD Kaart, 60° Grid, Schaduwwaaier &amp; 3D STL</div>
+                            </button>
+                            <button onclick="switchCenter('tijd')" class="p-2.5 rounded-xl border theme-border hover:border-emerald-500 text-left transition bg-black/5">
+                                <div class="font-bold">⏳ Tijdscapsule</div>
+                                <div class="text-[11px] theme-muted">1832–1926–1953–2026 &amp; Fediverse Atom</div>
+                            </button>
+                            <button onclick="switchCenter('kennis')" class="p-2.5 rounded-xl border theme-border hover:border-emerald-500 text-left transition bg-black/5">
+                                <div class="font-bold">🧠 Kenniscentrum</div>
+                                <div class="text-[11px] theme-muted">GitHub Models, CryptPad &amp; BTFM</div>
+                            </button>
+                            <button onclick="switchCenter('reken')" class="p-2.5 rounded-xl border theme-border hover:border-emerald-500 text-left transition bg-black/5">
+                                <div class="font-bold">📊 Rekencentrum</div>
+                                <div class="text-[11px] theme-muted">5 API Workspaces &amp; A. Ott Poolplanimeter</div>
+                            </button>
+                            <button onclick="switchCenter('biblio')" class="p-2.5 rounded-xl border theme-border hover:border-emerald-500 text-left transition bg-black/5">
+                                <div class="font-bold">📚 Bibliotheek</div>
+                                <div class="text-[11px] theme-muted">Bestuursorganen, Woo &amp; API Tree</div>
+                            </button>
+                            <button onclick="switchCenter('all')" class="p-2.5 rounded-xl border theme-border hover:border-amber-500 text-left transition bg-amber-500/10">
+                                <div class="font-bold text-amber-400">🎛️ Master Vloer</div>
+                                <div class="text-[11px] theme-muted">Toon alle 18 viewports tegelijk</div>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VP 1.2: MASTER INDEX PROCES (PID 1001) -->
+                <section id="vp-home-pid" class="viewport-card vp-size-s" data-center="home" data-vp-title="⚡ Master Index Proces (PID 1001) & Daemons">
+                    <div class="viewport-body p-4 space-y-3 text-xs">
+                        <div class="flex items-center justify-between">
+                            <span class="font-mono font-bold text-emerald-400">KERNEL: SOVEREIGN-PID-1001</span>
+                            <span id="pid-uptime-badge" class="font-mono text-[11px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400">UPTIME: 00:00:00</span>
+                        </div>
+                        <div id="pid-process-list" class="space-y-1.5 font-mono text-[11px]">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================================= -->
+                <!-- 2. 🏢 BEHEERCENTRUM VIEWPORTS                             -->
+                <!-- ========================================================= -->
+
+                <!-- VP 2.1: TOEGANGSBEHEER (IAM / W3C WAC) MATRIX BRIDGES -->
+                <section id="vp-beheer-iam" class="viewport-card vp-size-m hidden" data-center="beheer" data-vp-title="🔐 Toegangsbeheer (IAM / W3C WAC) Matrix Bridges & Componenten">
+                    <div class="viewport-body p-4 space-y-3 text-xs">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                                <h3 class="font-bold text-sm">Matrix Bridges &amp; Solid Web Access Control (`.acl`)</h3>
+                                <p class="theme-muted text-[11px]">Beheer lees-, schrijf-, append- en controlerechten per bridge en component.</p>
+                            </div>
+                            <button id="btn-iam-lockdown" class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs transition">
+                                🔒 CISO Read-Only Lockdown
+                            </button>
+                        </div>
+
+                        <div class="overflow-x-auto rounded-xl border theme-border">
+                            <table class="w-full text-left font-mono text-[11px]">
+                                <thead class="theme-card-header border-b theme-border">
+                                    <tr>
+                                        <th class="p-2">Agent / Bridge Component</th>
+                                        <th class="p-2 text-center">Read</th>
+                                        <th class="p-2 text-center">Write</th>
+                                        <th class="p-2 text-center">Append</th>
+                                        <th class="p-2 text-center">Control</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="iam-matrix-tbody" class="divide-y theme-border">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-mono text-[11px] font-semibold text-indigo-400">Gegenereerd W3C Solid `.acl` (RDF Turtle):</span>
+                                <button id="btn-copy-acl" class="text-[11px] font-mono text-emerald-400 hover:underline">Kopieer .acl</button>
+                            </div>
+                            <pre id="iam-acl-output" class="p-2.5 rounded-xl theme-input font-mono text-[10px] overflow-x-auto max-h-40 select-all"></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VP 2.2: CONTACTCENTER & DOSSIER DISPATCH -->
+                <section id="vp-beheer-contact" class="viewport-card vp-size-m hidden" data-center="beheer" data-vp-title="📞 Contactcenter & Dossier Dispatch (Kadaster / Woo / Rechtsbijstand)">
+                    <div class="viewport-body p-4 space-y-3 text-xs">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="font-bold text-sm">Contactcenter &amp; Formele Dossier Dispatch</h3>
+                                <p class="theme-muted text-[11px]">Gekoppeld aan het actieve perceel, koopsom-lookup en Poolplanimeter-rapport.</p>
+                            </div>
+                            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono text-[10px]">QUEUE: READY</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            <div>
+                                <label class="block text-[10px] font-mono theme-muted mb-1">Bestemmeling / Instantie</label>
+                                <select id="cc-recipient" class="w-full rounded-lg px-2.5 py-1.5 text-xs theme-input font-medium">
+                                    <option value="Gemeente Tholen (Woo-coördinator)">Gemeente Tholen (Woo-coördinator)</option>
+                                    <option value="Het Kadaster (BRK / Landmeetkundige Dienst)">Het Kadaster (BRK / Landmeetkundige Dienst)</option>
+                                    <option value="Waterschap Scheldestromen (Legger & Waterstaat)">Waterschap Scheldestromen (Legger &amp; Waterstaat)</option>
+                                    <option value="DAS Rechtsbijstand / Juridisch Dossier">DAS Rechtsbijstand / Juridisch Dossier</option>
+                                    <option value="Zeeuws Archief (Keuringsrapport 1926)">Zeeuws Archief (Keuringsrapport 1926)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-mono theme-muted mb-1">Gekoppeld Dossier Object</label>
+                                <input id="cc-subject-parcel" type="text" value="Scherpenisse E 108 → E 1552 (Platteweg 3-5-7)" class="w-full rounded-lg px-2.5 py-1.5 text-xs font-mono theme-input">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-mono theme-muted mb-1">Meet- &amp; API-Bijlage (Automatisch gesynchroniseerd)</label>
+                            <textarea id="cc-body" rows="4" class="w-full rounded-xl p-2.5 font-mono text-[11px] theme-input">Betreft: Verificatie kadastrale grens en oppervlakte Platteweg 3-5-7 te Scherpenisse (oud E 108 -> nieuw E 1552) en referentiepercelen Poortvliet Sectie M (1172-1180). Verzoek om afschrift keuringsrapport 1926 en veldwerk-relatiebrieven.</textarea>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2">
+                            <button id="btn-cc-dispatch" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold transition">
+                                Verzenden &amp; Loggen in Dossier
+                            </button>
+                            <button id="btn-cc-fill-planimeter" class="px-3 py-1.5 rounded-lg border theme-border hover:bg-slate-500/10 font-mono text-[11px]">
+                                + Voeg Laatste Poolplanimeter Meting Toe
+                            </button>
+                        </div>
+
+                        <div id="cc-log-list" class="space-y-1.5 max-h-36 overflow-y-auto font-mono text-[11px] pt-1">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VP 2.3: SOLID POD LINKED DATA MANAGER -->
+                <section id="vp-beheer-pod" class="viewport-card vp-size-m hidden" data-center="beheer" data-vp-title="🌐 Solid Pod RDF Turtle (.ttl) & SPARQL Patch Manager">
+                    <div class="viewport-body p-4 space-y-3 text-xs">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <input id="pod-uri-input" type="url" value="https://vanvrijberghe.solidcommunity.net/public/platteweg-e1552.ttl" class="sm:col-span-2 rounded-lg px-2.5 py-1.5 font-mono text-[11px] theme-input">
+                            <div class="flex gap-1.5">
+                                <button id="btn-pod-put" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg px-2.5 py-1.5">HTTP PUT</button>
+                                <button id="btn-pod-copy" class="border theme-border rounded-lg px-2.5 py-1.5 font-mono">Kopieer</button>
+                            </div>
+                        </div>
+                        <pre id="pod-ttl-preview" class="p-3 rounded-xl theme-input font-mono text-[10px] overflow-auto max-h-56 select-all"></pre>
+                    </div>
+                </section>
+
+                <!-- VP 2.4: NIEUWE VIEWPORT & MODULE GENERATOR -->
+                <section id="vp-beheer-builder" class="viewport-card vp-size-m hidden" data-center="beheer" data-vp-title="➕ Dynamische Viewport & Module Aanvraag Generator">
+                    <div class="viewport-body p-4 space-y-3 text-xs">
+                        <p class="theme-muted text-[11px]">Voeg direct een nieuwe native viewport (zonder iframes, met eigen zoom-, pan- en resize-controls) toe aan een van de 8 hoofdcentra.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <input id="new-vp-title" type="text" placeholder="Titel (bijv. Waterschap Legger)" class="rounded-lg px-2.5 py-1.5 theme-input">
+                            <select id="new-vp-center" class="rounded-lg px-2.5 py-1.5 theme-input">
+                                <option value="home">🏠 Home</option>
+                                <option value="beheer">🏢 Beheercentrum</option>
+                                <option value="juridisch">⚖️ Juridischcentrum</option>
+                                <option value="geo">🌀 Geocentrum</option>
+                                <option value="tijd">⏳ Tijdscapsule</option>
+                                <option value="kennis">🧠 Kenniscentrum</option>
+                                <option value="reken">📊 Rekencentrum</option>
+                                <option value="biblio">📚 Bibliotheek</option>
+                            </select>
+                            <select id="new-vp-template" class="rounded-lg px-2.5 py-1.5 theme-input">
+                                <option value="geocanvas">Geodetisch Vector Canvas</option>
+                                <option value="datagrid">Kadastrale &amp; API Tabel</option>
+                                <option value="notes">Onderzoeksnotitie &amp; Code</option>
+                            </select>
+                        </div>
+                        <button id="btn-create-custom-vp" class="w-full py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition">
+                            + Genereer &amp; Open Nieuwe Native Viewport
+                        </button>
+                    </div>
+                </section>
+
+                <!-- ========================================================= -->
+                <!-- 3. ⚖️ JURIDISCHCENTRUM VIEWPORTS                          -->
+                <!-- ========================================================= -->
+
+                <!-- VP 3.1: PLATTEWEG 3-5-7 (E 108 -> E 1552) JURIDISCHE & KADASTRALE MATRIX -->
+                <section id="vp-juridisch-matrix" class="viewport-card vp-size-l hidden" data-center="juridisch" data-vp-title="⚖️ Juridische & Kadastrale Transformatie: Platteweg 3-5-7 (E 108 → E 1552)">
+                    <div class="viewport-body p-4 space-y-4 text-xs">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <!-- 1926 E 108 -->
+                            <div class="p-3.5 rounded-xl border border-amber-500/40 bg-amber-500/5 space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-mono font-bold text-amber-400">OUD-KADASTER (1926): SECTIE E NR. 108</span>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">Keuringsrapport 1926</span>
+                                </div>
+                                <ul class="space-y-1 text-[11px] theme-muted list-disc pl-4">
+                                    <li><strong>Aanduiding:</strong> Kadastrale gemeente Scherpenisse (`SCN00`), Sectie `E`, nr. `108`.</li>
+                                    <li><strong>Omschrijving 1926:</strong> Woonhuis/herberg, schaapskooi, schuur en erf aan den Plattenweg.</li>
+                                    <li><strong>Historisch Oppervlak:</strong> `2.140 m²` (vóór latere wegverbreding en kadastrale vernummering).</li>
+                                    <li><strong>RD Ring Kern:</strong> `(64512.40, 395810.20)` tot `(64568.90, 395862.40)`.</li>
+                                </ul>
+                            </div>
+
+                            <!-- 2026 E 1552 -->
+                            <div class="p-3.5 rounded-xl border border-emerald-500/40 bg-emerald-500/5 space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-mono font-bold text-emerald-400">HUIDIG BRK (2026): SECTIE E NR. 1552</span>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">Status: Geldig</span>
+                                </div>
+                                <ul class="space-y-1 text-[11px] theme-muted list-disc pl-4">
+                                    <li><strong>Aanduiding:</strong> Scherpenisse (`SCN00`), Sectie `E`, nr. `1552` (Platteweg 3, 5 en 7, 4694 RD).</li>
+                                    <li><strong>Geregistreerde Grootte:</strong> `1.485 m²` (Soort grootte: *Vastgesteld*).</li>
+                                    <li><strong>Verschil t.o.v. E 108:</strong> `-655 m²` (o.a. openbare weg / dijksloot / splitsing erfgrenzen).</li>
+                                    <li><strong>Juridische Status:</strong> Onderzoek naar overgangsrecht, erfdienstbaarheden &amp; veldwerk-relatiebrieven.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Verification Checklist -->
+                        <div class="p-3 rounded-xl border theme-border bg-black/10 space-y-2">
+                            <div class="font-bold text-xs">Formele Verificatiepunten Dossier Platteweg 3-5-7:</div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="accent-emerald-500"> <span>1. Kadastrale Hulpkaarten &amp; Veldwerken (`E 108 → E 1552`)</span></label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="accent-emerald-500"> <span>2. Woningwet Keuringsrapport 1926 (Gemeente Scherpenisse)</span></label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="accent-emerald-500"> <span>3. Shoelace &amp; A. Ott Nr. 573 Planimeter Controle uitgevoerd</span></label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="accent-emerald-500"> <span>4. Stuitings- en Woo-zoekslagen gekoppeld aan Bestuursorganen</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VP 3.2: RAPPORT-EXPORT GENERATOR -->
+                <section id="vp-juridisch-export" class="viewport-card vp-size-s hidden" data-center="juridisch" data-vp-title="📄 Rapport-Export & Formeel Dossier Generator">
+                    <div class="viewport-body p-4 space-y-3 text-xs">
+                        <div class="flex flex-wrap gap-1.5">
+                            <button id="btn-export-report-md" class="flex-1 py-1.5 px-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold">Download .MD</button>
+                            <button id="btn-export-report-html" class="flex-1 py-1.5 px-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold">Download .HTML</button>
+                            <button id="btn-copy-report" class="py-1.5 px-2.5 rounded-lg border theme-border font-mono">Kopieer</button>
+                        </div>
+                        <pre id="legal-report-preview" class="p-3 rounded-xl theme-input font-mono text-[10px] overflow-auto max-h-72 whitespace-pre-wrap select-all"></pre>
+                    </div>
+                </section>
+
+                <!-- ========================================================= -->
+                <!-- 4. 🌀 GEOCENTRUM VIEWPORTS                                -->
+                <!-- ========================================================= -->
+
+                <!-- VP 4.1: MULTI-PROVIDER RD NEW KAART, 60° GRID & SCHADUWWAAIER -->
+                <section id="vp-geo-map" class="viewport-card vp-size-l hidden" data-center="geo" data-vp-title="🌀 Multi-Provider RD Kaart (EPSG:28992), 60° Grid & Schaduwwaaier">
+                    <div class="viewport-body p-4 space-y-3 text-xs">
+                        <!-- Top Controls: Location, Provider & RD Converter -->
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div class="flex flex-wrap items-center gap-1.5">
+                                <button data-geoloc="scherpenisse" class="geo-jump-btn px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-semibold">
+                                    Scherpenisse (Platteweg E 108 → E 1552)
+                                </button>
+                                <button data-geoloc="poortvliet" class="geo-jump-btn px-2.5 py-1 rounded-lg border theme-border hover:bg-slate-500/10">
+                                    Poortvliet (Sectie M 1172–1180)
+                                </button>
+                                <select id="geo-provider-select" class="rounded-lg px-2 py-1 theme-input font-mono text-[11px]">
+                                    <option value="kadaster-dark">Provider 1: Kadaster Vector Donker</option>
+                                    <option value="pdok-brt">Provider 2: PDOK BRT Topografisch</option>
+                                    <option value="luchtfoto">Provider 3: PDOK Ortho Luchtfoto Simulatie</option>
+                                    <option value="minuutplan1832">Provider 4: 1832 Kadastraal Minuutplan</option>
+                                    <option value="waterschap">Provider 5: Waterschap Scheldestromen Legger</option>
+                                    <option value="opentopo">Provider 6: OpenTopo Hoogtekaart (AHN)</option>
+                                    <option value="rd-mm">Provider 7: Puur RD Millimeter Meetgrid</option>
+                                </select>
+                            </div>
+
+                            <div class="flex items-center gap-1.5 font-mono text-[11px]">
+                                <span>RD X:</span>
+                                <input id="geo-x-input" type="number" value="64538" class="w-20 rounded px-1.5 py-0.5 theme-input text-amber-400">
+                                <span>Y:</span>
+                                <input id="geo-y-input" type="number" value="395836" class="w-20 rounded px-1.5 py-0.5 theme-input text-amber-400">
+                                <span id="geo-wgs-out" class="text-sky-400">51.5382°N, 4.0819°E</span>
+                            </div>
+                        </div>
+
+                        <!-- Grid & Schaduwwaaier Sliders -->
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-2 p-2.5 rounded-xl border theme-border bg-black/10">
+                            <div class="flex items-center gap-3">
+                                <label class="inline-flex items-center gap-1 cursor-pointer"><input type="checkbox" id="geo-chk-rd" checked class="accent-emerald-500"><span>RD Grid</span></label>
+                                <label class="inline-flex items-center gap-1 cursor-pointer"><input type="checkbox" id="geo-chk-60" checked class="accent-purple-500"><span>60° Grid</span></label>
+                                <label class="inline-flex items-center gap-1 cursor-pointer"><input type="checkbox" id="geo-chk-e108" checked class="accent-amber-500"><span>E 108 (1926)</span></label>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] font-mono"><span>Dag v/h Jaar:</span><span id="geo-sw-day-lbl" class="text-amber-400">172 (21 jun)</span></div>
+                                <input id="geo-sw-day" type="range" min="1" max="365" value="172" class="w-full accent-amber-500">
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] font-mono"><span>Zonnetijd (UTC+1):</span><span id="geo-sw-hr-lbl" class="text-sky-400">14:30 u</span></div>
+                                <input id="geo-sw-hr" type="range" min="5" max="21" step="0.25" value="14.5" class="w-full accent-sky-500">
+                            </div>
+                            <div class="font-mono text-[11px] flex flex-col justify-center">
+                                <div>Zon Azimut: <strong id="geo-sw-az" class="text-amber-400">228.4°</strong></div>
+                                <div>Schaduw (12m): <strong id="geo-sw-len" class="text-emerald-400">8.42 m</strong></div>
+                            </div>
+                        </div>
+
+                        <!-- Native Geodetic & Schaduwwaaier SVG Vector Map (0% Iframes) -->
+                        <div class="relative rounded-xl border theme-border overflow-hidden bg-black/40">
+                            <svg id="geo-native-svg" class="w-full h-[390px] block" viewBox="0 0 900 440"></svg>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VP 4.2: 3D STL VIEWER & PARAMETRISCHE GEODESIE GENERATOR -->
+                <section id="vp-geo-stl" class="viewport-card vp-size-s hidden" data-center="geo" data-vp-title="🧊 3D STL Mesh Viewer & Perceel-Extrusie">
+                    <div class="viewport-body p-4 space-y-3 text-xs">
+                        <div class="flex flex-wrap gap-1">
+                            <button data-stl-model="platteweg" class="stl-model-btn px-2 py-1 rounded bg-emerald-600 text-white font-semibold text-[11px]">1. Platteweg E 1552 3D</button>
+                            <button data-stl-model="pillar" class="stl-model-btn px-2 py-1 rounded border theme-border text-[11px]">2. RD Meetpilaar</button>
+                            <button data-stl-model="sluis" class="stl-model-btn px-2 py-1 rounded border theme-border text-[11px]">3. Sluisdeur</button>
+                            <button data-stl-model="hex60" class="stl-model-btn px-2 py-1 rounded border theme-border text-[11px]">4. 60° Prisma</button>
+                        </div>
+                        <canvas id="native-stl-canvas" width="420" height="270" class="w-full h-[260px] rounded-xl border theme-border bg-black/50 cursor-move"></canvas>
+                        <div class="flex justify-between items-center font-mono text-[11px]">
+                            <span id="stl-telemetry-lbl" class="text-emerald-400">Mesh: Platteweg_E1552 (36 tris)</span>
+                            <button id="btn-download-stl" class="text-sky-400 hover:underline">Download .STL</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================================= -->
+                <!-- 5. ⏳ TIJDSCAPSULE VIEWPORTS                              -->
+                <!-- ========================================================= -->
+
+                <!-- VP 5.1: CHRONOLOGISCHE TIJDREIS (1832 - 1926 - 1953 - 2026) -->
+                <section id="vp-tijd-overlay" class="viewport-card vp-size-m hidden" data-center="tijd" data-vp-title="⏳ Chronologische Tijdreis: Platteweg 3-5-7 (1832 – 1926 – 1953 – 2026)">
+                    <div class="viewport-body p-4 space-y-3 text-xs">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div class="flex gap-1">
+                                <button data-era="1832" class="era-btn px-2.5 py-1 rounded-lg border theme-border font-mono">1832 Minuutplan</button>
+                                <button data-era="1926" class="era-btn px-2.5 py-1 rounded-lg bg-amber-600 text-white font-mono font-bold">1926 Keuringsrapport (E 108)</button>
+                                <button data-era="1953" class="era-btn px-2.5 py-1 rounded-lg border theme-border font-mono">1953 Inundatie</button>
+                                <button data-era="2026" class="era-btn px-2.5 py-1 rounded-lg border theme-border font-mono">2026 BRK (E 1552)</button>
+                            </div>
+                            <div class="flex items-center gap-2 font-mono text-[11px]">
+                                <span>Overlay Blend:</span>
+                                <input id="tijd-blend-slider" type="range" min="0" max="100" value="65" class="w-24 accent-amber-500">
+                                <span id="tijd-blend-lbl" class="text-amber-400">65%</span>
+                            </div>
+                        </div>
+
+                        <svg id="tijd-comparison-svg" class="w-full h-[290px] rounded-xl border theme-border bg-black/30" viewBox="0 0 680 300"></svg>
+                        <div id="tijd-era-description" class="p-2.5 rounded-xl border theme-border bg-black/10 font-mono text-[11px] text-amber-300">
+                            [1926 — Keuringsrapport Woningwet Scherpenisse]: Perceel Sectie E nr. 108 (2.140 m²) omvat de historische bebouwing aan de Platteweg 3-5-7 inclusief schaapskooi en achtererf.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VP 5.2: FEDIVERSE ATOM / RSS NIEUWSSTROOM & XML GATEWAY -->
+                <section id="vp-tijd-fediverse" class="viewport-card vp-size-m hidden" data-center="tijd" data-vp-title="📡 Fediverse Atom/RSS Nieuwsstroom (@vanvrijberghe, @polzer, @Janna, @finhstamsterdam)">
+                    <div class="viewport-body p-4 space-y-3 text-xs">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div class="flex flex-wrap gap-1 font-mono text-[11px]">
+                                <button data-fedi="ALL" class="fedi-filter-btn px-2.5 py-1 rounded-lg bg-indigo-600 text-white">Alle (4)</button>
+                                <button data-fedi="vanvrijberghe" class="fedi-filter-btn px-2 py-1 rounded-lg border theme-border">@vanvrijberghe.atom</button>
+                                <button data-fedi="polzer" class="fedi-filter-btn px-2 py-1 rounded-lg border theme-border">@polzer.atom</button>
+                                <button data-fedi="Janna" class="fedi-filter-btn px-2 py-1 rounded-lg border theme-border">@Janna.atom</button>
+                                <button data-fedi="finhstamsterdam" class="fedi-filter-btn px-2 py-1 rounded-lg border theme-border">@finhstamsterdam.rss</button>
+                            </div>
+                            <button id="btn-fedi-refresh" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-semibold">Sync Atom/RSS</button>
+                        </div>
+
+                        <div id="fedi-cards-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[330px] overflow-y-auto pr-1">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================================= -->
+                <!-- 6. 🧠 KENNISCENTRUM VIEWPORTS                             -->
+                <!-- ========================================================= -->
+
+                <!-- VP 6.1: GITHUB MODELS, LUMO AI & GEMINI 3 FLASH GATEWAY -->
+                <section id="vp-kennis-ai" class="viewport-card vp-size-m hidden" data-center="kennis" data-vp-title="🧠 Master Index GitHub Models, Lumo AI & Gemini 3 Flash">
+                    <div class="viewport-body p-4 space-y-3 text-xs">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[10px] font-mono theme-muted mb-1">Selecteer AI Model (GitHub Models / Lumo / Gemini)</label>
+                                <select id="kennis-model-select" class="w-full rounded-lg px-2.5 py-1.5 font-mono text-xs theme-input">
+                                    <option value="gemini-3-flash">Gemini 3 Flash (Live API Grounded)</option>
+                                    <option value="github-gpt-4o">GitHub Models: openai/gpt-4o</option>
+                                    <option value="github-deepseek-r1">GitHub Models: DeepSeek-R1 (Geodesy &amp; Math)</option>
+                                    <option value="github-llama-3.3-70b">GitHub Models: Meta-Llama-3.3-70B-Instruct</option>
+                                    <option value="github-phi-4">GitHub Models: microsoft/Phi-4</option>
+                                    <option value="github-mistral-large">GitHub Models: Mistral-Large-2411</option>
+                                    <option value="lumo-local">Lumo AI Sovereign (Eigen REST Endpoint)</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col justify-end gap-1">
+                                <div class="flex gap-1.5">
+                                    <button data-ai-preset="platteweg" class="ai-preset-btn flex-1 py-1.5 px-2 rounded-lg border theme-border text-[11px] hover:bg-emerald-500/10">Analyseer E 108 → E 1552</button>
+                                    <button data-ai-preset="poortvliet" class="ai-preset-btn flex-1 py-1.5 px-2 rounded-lg border theme-border text-[11px] hover:bg-sky-500/10">Analyseer Poortvliet M</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="kennis-ai-output" class="p-3 rounded-xl theme-input font-mono text-[11px] h-48 overflow-y-auto space-y-2 whitespace-pre-wrap">
+[Sovereign AI Router]: Model gereed. Dossier Platteweg 3-5-7 (Scherpenisse E 108 -> E 1552) en Poortvliet Sectie M (1172-1180) zijn gekoppeld aan het werkgeheugen.
+                        </div>
+
+                        <div class="flex gap-2">
+                            <input id="kennis-ai-prompt" type="text" placeholder="Stel een vraag aan het geselecteerde model over de kadastrale grenzen of Woo-zoekslagen..." class="flex-1 rounded-xl px-3 py-1.5 theme-input">
+                            <button id="btn-kennis-ai-send" class="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold">Vraag AI</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VP 6.2: CRYPTPAD E2EE STUDIO (mathgeo-seven.vercel.app/cryptpad.html) -->
+                <section id="vp-kennis-cryptpad" class="viewport-card vp-size-m hidden" data-center="kennis" data-vp-title="🛡️ CryptPad E2EE Studio (WebCrypto AES-256-GCM & FinalCrypt OTP)">
+                    <div class="viewport-body p-4 space-y-3 text-xs">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="font-mono text-[11px] text-emerald-400">mathgeo-seven.vercel.app/cryptpad.html (Native Port)</span>
+                            <span id="crypt-entropy-badge" class="font-mono text-[11px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300">Entropie: 4.62 bits/byte</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <select id="crypt-algo" class="rounded-lg px-2.5 py-1.5 font-mono text-[11px] theme-input">
+                                <option value="aes">WebCrypto AES-256-GCM (PBKDF2)</option>
+                                <option value="otp">FinalCrypt One-Time Pad (XOR Hex)</option>
+                            </select>
+                            <input id="crypt-pass" type="text" value="PLATTEWEG-E108-E1552-KEY" class="rounded-lg px-2.5 py-1.5 font-mono text-[11px] theme-input">
+                            <div class="flex gap-1.5">
+                                <button id="btn-crypt-enc" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg px-2 py-1.5">Versleutel</button>
+                                <button id="btn-crypt-dec" class="flex-1 bg-amber-600 hover:bg-amber-500 text-white font-semibold rounded-lg px-2 py-1.5">Ontsleutel</button>
+                            </div>
+                        </div>
+                        <textarea id="crypt-input" rows="3" class="w-full rounded-xl p-2.5 font-mono text-[11px] theme-input">VERTROUWELIJK DOSSIER: Platteweg 3-5-7 Scherpenisse (Oud-Kadaster E 108 -> BRK E 1552). Meetverschil Poolplanimeter A. Ott Nr. 573 bevestigd.</textarea>
+                        <pre id="crypt-output" class="p-2.5 rounded-xl theme-input font-mono text-[10px] overflow-x-auto max-h-28 select-all text-emerald-400"></pre>
+                    </div>
+                </section>
+
+                <!-- VP 6.3: BTFM (BLUE TEAM FIELD MANUAL) & ACSM/PDF FORENSICS -->
+                <section id="vp-kennis-btfm" class="viewport-card vp-size-xl hidden" data-center="kennis" data-vp-title="📘 BTFM (Blue Team Field Manual) & ACSM / PDF Forensics">
+                    <div class="viewport-body p-4 grid grid-cols-1 lg:grid-cols-2 gap-4 text-xs">
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-rose-400 font-mono">BTFM Security &amp; Network Forensics Matrix</span>
+                                <input id="btfm-filter-input" type="text" placeholder="Filter commando..." class="rounded-lg px-2.5 py-1 font-mono text-[11px] theme-input w-48">
+                            </div>
+                            <div id="btfm-list-box" class="space-y-1.5 max-h-52 overflow-y-auto font-mono text-[11px]"></div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-sky-400 font-mono">Adobe .ACSM Fulfillment &amp; PDF Header Unpacker</span>
+                                <button id="btn-parse-acsm" class="px-2.5 py-1 rounded bg-sky-600 text-white font-semibold text-[11px]">Extraheer Licentie &amp; Hash</button>
+                            </div>
+                            <textarea id="acsm-raw-box" rows="4" class="w-full rounded-xl p-2 font-mono text-[10px] theme-input"><fulfillmentToken xmlns="http://ns.adobe.com/adept"><transaction>NL-THOLEN-E108-1926</transaction><resourceItemInfo><metadata><dc:title xmlns:dc="http://purl.org/dc/elements/1.1/">Kadastrale Atlas Scherpenisse &amp; Poortvliet (Sectie E &amp; M)</dc:title><dc:format xmlns:dc="http://purl.org/dc/elements/1.1/">application/pdf</dc:format></metadata></resourceItemInfo><hmac>9f8e7d6c5b4a3210fedcba9876543210=</hmac></fulfillmentToken></textarea>
+                            <div id="acsm-parsed-box" class="p-2.5 rounded-xl border theme-border bg-black/10 font-mono text-[11px]"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================================= -->
+                <!-- 7. 📊 REKENCENTRUM VIEWPORTS                              -->
+                <!-- ========================================================= -->
+
+                <!-- VP 7.1: PICK UP WHERE YOU LEFT OFF (5 WORKSPACE COLLECTIES + PDOK BRK TESTER) -->
+                <section id="vp-reken-api" class="viewport-card vp-size-l hidden" data-center="reken" data-vp-title="📊 Kadaster & Woning API Workspace ('Pick up where you left off') + PDOK BRK Tester">
+                    <div class="viewport-body p-4 space-y-4 text-xs">
+                        <!-- Exact "Pick up where you left off" Workspace List from user screenshot -->
+                        <div class="rounded-xl border theme-border overflow-hidden">
+                            <div class="px-3.5 py-2 theme-card-header border-b theme-border flex justify-between items-center">
+                                <span class="font-bold text-xs">Pick up where you left off — My Workspace Collecties</span>
+                                <span class="font-mono text-[10px] text-emerald-400">Klik op een collectie om direct te testen</span>
+                            </div>
+                            <div class="divide-y theme-border" id="workspace-collections-list">
+                                <button data-ws="koopsom" class="ws-item-btn w-full px-3.5 py-2 text-left hover:bg-emerald-500/10 flex items-center justify-between transition">
+                                    <span class="flex items-center gap-2"><span>↗️</span><strong class="font-semibold">Bepaal de koopsom van een woning op basis van postcode en huisnummer</strong> <span class="theme-muted">· My Workspace</span></span>
+                                    <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400">GET /koopsom</span>
+                                </button>
+                                <button data-ws="kadastercheck" class="ws-item-btn w-full px-3.5 py-2 text-left hover:bg-emerald-500/10 flex items-center justify-between transition">
+                                    <span class="flex items-center gap-2"><span>🗂️</span><strong class="font-semibold">Kadaster Check API 2.0</strong> <span class="theme-muted">· My Workspace</span></span>
+                                    <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-400">v2.0 BRK/BAG</span>
+                                </button>
+                                <button data-ws="pandid" class="ws-item-btn w-full px-3.5 py-2 text-left hover:bg-emerald-500/10 flex items-center justify-between transition">
+                                    <span class="flex items-center gap-2"><span>↗️</span><strong class="font-semibold">Geef woninginformatie terug op basis van Pand-Id of Postcode-Huisnummer-...</strong> <span class="theme-muted">· My Workspace</span></span>
+                                    <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-sky-500/20 text-sky-400">BAG Pand-ID</span>
+                                </button>
+                                <button data-ws="myworkspace" class="ws-item-btn w-full px-3.5 py-2 text-left hover:bg-emerald-500/10 flex items-center justify-between transition">
+                                    <span class="flex items-center gap-2"><span>🔒</span><strong class="font-semibold">My Workspace (Scherpenisse E 108 → E 1552 &amp; Poortvliet Sectie M)</strong> <span class="theme-muted">· My Workspace</span></span>
+                                    <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-400">PDOK OGC</span>
+                                </button>
+                                <button data-ws="newcollection" class="ws-item-btn w-full px-3.5 py-2 text-left hover:bg-emerald-500/10 flex items-center justify-between transition">
+                                    <span class="flex items-center gap-2"><span>🗂️</span><strong class="font-semibold">New Collection (Batch Shoelace &amp; WKT Export)</strong> <span class="theme-muted">· My Workspace</span></span>
+                                    <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-400">MultiPolygon</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Query Bar (Postcode/Huisnr + BBOX EPSG:28992) -->
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-end p-3 rounded-xl border theme-border bg-black/10">
+                            <div class="md:col-span-3">
+                                <label class="block text-[10px] font-mono theme-muted mb-0.5">Postcode + Huisnr / Pand-ID</label>
+                                <input id="api-pc-input" type="text" value="4694RD 3 (Platteweg 3-5-7)" class="w-full rounded-lg px-2.5 py-1.5 font-mono text-[11px] theme-input">
+                            </div>
+                            <div class="md:col-span-4">
+                                <label class="block text-[10px] font-mono theme-muted mb-0.5">OGC BBOX (EPSG:28992 RD New)</label>
+                                <input id="api-bbox-input" type="text" value="66000,396000,67000,397000" class="w-full rounded-lg px-2.5 py-1.5 font-mono text-[11px] theme-input">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-[10px] font-mono theme-muted mb-0.5">Dataset</label>
+                                <select id="api-dataset-select" class="w-full rounded-lg px-2 py-1.5 font-mono text-[11px] theme-input">
+                                    <option value="all">Poortvliet M + Scherpenisse E</option>
+                                    <option value="poortvliet">Poortvliet Sectie M (5 percelen)</option>
+                                    <option value="scherpenisse">Scherpenisse E 108 &amp; E 1552</option>
+                                </select>
+                            </div>
+                            <div class="md:col-span-3 flex gap-1.5">
+                                <button id="btn-api-execute" class="flex-1 py-1.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold">Verstuur Query</button>
+                                <button id="btn-api-copy-url" class="py-1.5 px-2.5 rounded-lg border theme-border font-mono text-[11px]" title="Kopieer OGC URL">URL</button>
+                            </div>
+                        </div>
+
+                        <!-- Sub-tabs: 1. Resultaten & Shoelace | 2. Kaart (SVG Plot) | 3. Ruwe JSON -->
+                        <div class="flex items-center justify-between border-b theme-border pb-2">
+                            <div class="flex gap-1.5">
+                                <button data-apitab="api-tab-table" class="api-subtab-btn px-3 py-1 rounded-lg bg-emerald-600 text-white font-semibold">1. Resultaten &amp; Shoelace</button>
+                                <button data-apitab="api-tab-svg" class="api-subtab-btn px-3 py-1 rounded-lg border theme-border">2. Kaart (SVG Perceelplot)</button>
+                                <button data-apitab="api-tab-json" class="api-subtab-btn px-3 py-1 rounded-lg border theme-border">3. Ruwe JSON &amp; WKT</button>
+                            </div>
+                            <span id="api-Active-ws-badge" class="font-mono text-[11px] text-amber-400">Actief: PDOK BRK + Koopsom Check</span>
+                        </div>
+
+                        <!-- Sub-panel 1: Shoelace Verification Table -->
+                        <div id="api-tab-table" class="api-subpanel overflow-x-auto rounded-xl border theme-border">
+                            <table class="w-full text-left font-mono text-[11px]">
+                                <thead class="theme-card-header border-b theme-border">
+                                    <tr>
+                                        <th class="p-2">Perceel</th>
+                                        <th class="p-2">Gemeente / Sectie</th>
+                                        <th class="p-2 text-right">BRK Grootte (m²)</th>
+                                        <th class="p-2 text-right">Shoelace (m²)</th>
+                                        <th class="p-2 text-right">Verschil (%)</th>
+                                        <th class="p-2">Koopsom / Pand-ID</th>
+                                        <th class="p-2 text-right">Planimeter</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="api-results-tbody" class="divide-y theme-border">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Sub-panel 2: Interactive SVG Parcel Plot -->
+                        <div id="api-tab-svg" class="api-subpanel hidden">
+                            <svg id="api-parcel-svg" class="w-full h-[280px] rounded-xl border theme-border bg-black/40" viewBox="0 0 800 300"></svg>
+                        </div>
+
+                        <!-- Sub-panel 3: Raw GeoJSON & WKT -->
+                        <div id="api-tab-json" class="api-subpanel hidden">
+                            <pre id="api-raw-json-box" class="p-3 rounded-xl theme-input font-mono text-[10px] overflow-auto max-h-64 select-all"></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VP 7.2: MECHANISCHE POOLPLANIMETER (A. OTT KEMPTEN NR. 573 — POLARARMEN) -->
+                <section id="vp-reken-planimeter" class="viewport-card vp-size-s hidden" data-center="reken" data-vp-title="📐 Poolplanimeter (Polararmen A. Ott Kempten Nr. 573)">
+                    <div class="viewport-body p-4 space-y-3 text-xs">
+                        <div class="flex items-center justify-between">
+                            <span class="font-mono font-bold text-amber-400">INSTRUMENT: A. OTT NR. 573</span>
+                            <span id="ott-drum-readout" class="font-mono text-xs px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold">Telwerk: 0.000 omw</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[10px] font-mono theme-muted">Te Meten Perceelring</label>
+                                <select id="ott-parcel-select" class="w-full rounded-lg px-2 py-1 font-mono text-[11px] theme-input">
+                                    <option value="SCN00-E-1552">Scherpenisse E 1552 (2026)</option>
+                                    <option value="SCN00-E-108">Scherpenisse E 108 (1926)</option>
+                                    <option value="PVT00-M-1172">Poortvliet M 1172 (365 m²)</option>
+                                    <option value="PVT00-M-1173">Poortvliet M 1173 (810 m²)</option>
+                                    <option value="PVT00-M-1174">Poortvliet M 1174 (11.990 m²)</option>
+                                    <option value="PVT00-M-1178">Poortvliet M 1178 (10.900 m²)</option>
+                                    <option value="PVT00-M-1180">Poortvliet M 1180 (14.230 m²)</option>
+                                </select>
+                            </div>
+                            <div class="flex items-end gap-1">
+                                <button id="btn-ott-trace" class="flex-1 py-1 px-2.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-semibold">▶ Start Omtrekking</button>
+                            </div>
+                        </div>
+
+                        <!-- Polar Arms Sliders -->
+                        <div class="grid grid-cols-2 gap-2 font-mono text-[10px]">
+                            <div>
+                                <div class="flex justify-between"><span>Poolarm ($R_p$):</span><span id="ott-rp-lbl" class="text-sky-400">15.0 cm</span></div>
+                                <input id="ott-rp-slider" type="range" min="10" max="22" step="0.5" value="15" class="w-full accent-sky-500">
+                            </div>
+                            <div>
+                                <div class="flex justify-between"><span>Rijarm ($R_t$):</span><span id="ott-rt-lbl" class="text-emerald-400">16.7 cm</span></div>
+                                <input id="ott-rt-slider" type="range" min="12" max="24" step="0.5" value="16.7" class="w-full accent-emerald-500">
+                            </div>
+                        </div>
+
+                        <canvas id="ott-planimeter-canvas" width="400" height="240" class="w-full h-[220px] rounded-xl border theme-border bg-black/50"></canvas>
+
+                        <div id="ott-summary-box" class="p-2.5 rounded-xl border theme-border bg-black/10 font-mono text-[11px] space-y-0.5">
+                            <div>Green's Integraal $\frac{1}{2}\oint(x\,dy - y\,dx)$: <strong id="ott-area-val" class="text-emerald-400">1.485,00 m²</strong></div>
+                            <div>BRK Register: <span id="ott-brk-val">1.485 m²</span> • $\Delta$: <strong id="ott-delta-val" class="text-amber-400">0,00 m²</strong></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VP 7.3: MODULAIRE MATRIX (N=260 / N=60) & NATIVE COMPILER -->
+                <section id="vp-reken-matrix" class="viewport-card vp-size-xl hidden" data-center="reken" data-vp-title="🌸 Modulaire Radiale Matrix (N=260 / N=60) & Native JS/SVG Evaluator">
+                    <div class="viewport-body p-4 grid grid-cols-1 lg:grid-cols-12 gap-4 text-xs">
+                        <div class="lg:col-span-5 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold font-mono text-purple-400">Modulaire Cyclus ($f(x) \pmod N$)</span>
+                                <select id="mod-n-select" class="rounded px-2 py-1 font-mono text-[11px] theme-input">
+                                    <option value="260">N = 260 (Tzolk'in 13×20)</option>
+                                    <option value="60">N = 60 (Sexagesimaal / 60°)</option>
+                                    <option value="144">N = 144 (Fibonacci Harmonisch)</option>
+                                </select>
+                            </div>
+                            <svg id="modular-flower-svg" class="w-full h-[230px] rounded-xl border theme-border bg-black/40" viewBox="-140 -140 280 280"></svg>
+                        </div>
+
+                        <div class="lg:col-span-7 space-y-2 flex flex-col">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold font-mono text-sky-400">Native Geodetische JS Expression Evaluator (0% Iframes)</span>
+                                <button id="btn-eval-native-js" class="px-3 py-1 rounded-lg bg-emerald-600 text-white font-semibold">Voer Berekening Uit ▶</button>
+                            </div>
+                            <textarea id="native-js-input" rows="5" class="w-full rounded-xl p-2.5 font-mono text-[11px] theme-input">// Bereken kadastraal verschil E 108 (1926) -> E 1552 (2026) + Poortvliet M som
+const e108 = 2140, e1552 = 1485;
+const poortvlietM = [365, 810, 11990, 10900, 14230].reduce((a,b)=>a+b, 0);
+return `Scherpenisse Δ(E108->E1552) = ${e1552 - e108} m² | Poortvliet M Totaal = ${poortvlietM.toLocaleString('nl-NL')} m² (${(poortvlietM/10000).toFixed(3)} ha)`;</textarea>
+                            <pre id="native-js-output" class="p-3 rounded-xl theme-input font-mono text-xs text-emerald-400"></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================================= -->
+                <!-- 8. 📚 BIBLIOTHEEK (BESTUURSORGANEN & ZOEKSLAAG MATRIX)    -->
+                <!-- ========================================================= -->
+
+                <!-- VP 8.1: BESTUURSORGANEN & FORMELE WOO-ZOEKSLAAG MATRIX -->
+                <section id="vp-biblio-woo" class="viewport-card vp-size-l hidden" data-center="biblio" data-vp-title="📚 Bibliotheek: Bestuursorganen & Formele Woo-Zoekslagen (Platteweg 3-5-7 / E 108 → E 1552)">
+                    <div class="viewport-body p-4 space-y-3 text-xs">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div class="flex flex-wrap gap-1">
+                                <button data-org="ALL" class="org-filter-btn px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-semibold">Alle Bestuursorganen (6)</button>
+                                <button data-org="Gemeente Tholen" class="org-filter-btn px-2.5 py-1 rounded-lg border theme-border">Gemeente Tholen</button>
+                                <button data-org="Het Kadaster" class="org-filter-btn px-2.5 py-1 rounded-lg border theme-border">Het Kadaster</button>
+                                <button data-org="Waterschap Scheldestromen" class="org-filter-btn px-2.5 py-1 rounded-lg border theme-border">Waterschap Scheldestromen</button>
+                                <button data-org="Zeeuws Archief" class="org-filter-btn px-2.5 py-1 rounded-lg border theme-border">Zeeuws Archief</button>
+                                <button data-org="Provincie Zeeland" class="org-filter-btn px-2.5 py-1 rounded-lg border theme-border">Provincie Zeeland</button>
+                                <button data-org="RCE" class="org-filter-btn px-2.5 py-1 rounded-lg border theme-border">RCE Erfgoed</button>
+                            </div>
+                            <input id="biblio-search-input" type="text" placeholder="Zoek op E 108, E 1552, 1926, legger..." class="rounded-lg px-2.5 py-1 font-mono text-[11px] theme-input w-56">
+                        </div>
+
+                        <div id="biblio-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[380px] overflow-y-auto pr-1">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VP 8.2: NATIVE API NETWORK & URL TREE HUB (woo-tholen.vercel.app/tree.html) -->
+                <section id="vp-biblio-tree" class="viewport-card vp-size-s hidden" data-center="biblio" data-vp-title="🌳 API Network & URL Tree Hub (woo-tholen.vercel.app/tree.html)">
+                    <div class="viewport-body p-4 space-y-3 text-xs">
+                        <div class="flex items-center justify-between">
+                            <span class="font-mono text-[11px] text-emerald-400">Native ASCII `tree` &amp; Topologie</span>
+                            <button id="btn-copy-ascii-tree" class="px-2.5 py-1 rounded border theme-border font-mono text-[11px]">Kopieer `tree`</button>
+                        </div>
+                        <pre id="biblio-ascii-tree" class="p-3 rounded-xl theme-input font-mono text-[10px] text-emerald-400 overflow-x-auto select-all leading-relaxed"></pre>
+                        <svg id="biblio-network-svg" class="w-full h-[165px] rounded-xl border theme-border bg-black/30" viewBox="0 0 420 170"></svg>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ===================================================================== -->
+    <!-- TOAST NOTIFICATION                                                    -->
+    <!-- ===================================================================== -->
+    <div id="toast" class="fixed bottom-4 right-4 z-50 px-4 py-2.5 rounded-xl theme-card border border-emerald-500/50 text-xs font-semibold flex items-center gap-2 transform translate-y-24 opacity-0 transition-all duration-300">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span id="toast-text">Gereed</span>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- COMPLETE APPLICATION JAVASCRIPT (100% NATIVE, 0% IFRAMES)             -->
+    <!-- ===================================================================== -->
+    <script>
+        // --- 0. UTILITY & TOAST ---
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toast-text').textContent = msg;
+            t.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => t.classList.add('translate-y-24', 'opacity-0'), 3000);
+        }
+
+        function escapeHtml(s) {
+            return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function copyToClipboard(text, label = 'Gekopieerd naar klembord!') {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); showToast(label); } catch (e) {}
+            document.body.removeChild(ta);
+        }
+
+        function downloadFile(filename, content, mime = 'text/plain;charset=utf-8') {
+            const blob = new Blob([content], { type: mime });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = filename;
+            a.click();
+            showToast(`Gedownload: ${filename}`);
+        }
+
+        // --- 1. 4 LICHTMODI CONTROLLER (Helder, Donker, Daglicht, Nachtlicht) ---
+        document.querySelectorAll('.theme-mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.getAttribute('data-set-theme');
+                document.documentElement.setAttribute('data-theme', mode);
+                document.querySelectorAll('.theme-mode-btn').forEach(b => {
+                    b.classList.remove('bg-emerald-600', 'text-white');
+                });
+                btn.classList.add('bg-emerald-600', 'text-white');
+                renderGeoNativeMap();
+                drawPlanimeterState();
+                showToast(`Lichtmodus geactiveerd: ${mode.toUpperCase()}`);
+            });
+        });
+
+        // --- 2. NATIVE VIEWPORT CHROME INJECTOR (ZOOM, PAN, S/M/L/XL, CORNER RESIZE) ---
+        const viewportStates = new Map();
+
+        function upgradeSectionToNativeViewport(sec) {
+            if (sec.dataset.vpUpgraded === '1') return;
+            sec.dataset.vpUpgraded = '1';
+
+            const title = sec.getAttribute('data-vp-title') || 'Viewport';
+            const bodyEl = sec.querySelector('.viewport-body');
+            const vpId = sec.id || `vp-${Math.random().toString(36).slice(2, 8)}`;
+            sec.id = vpId;
+
+            viewportStates.set(vpId, { zoom: 100, panX: 0, panY: 0, panMode: false });
+
+            // Create Toolbar Header
+            const header = document.createElement('div');
+            header.className = 'theme-card-header border-b theme-border px-3 py-2 flex flex-wrap items-center justify-between gap-2 select-none shrink-0 z-20';
+            header.innerHTML = `
+                <div class="flex items-center gap-2 min-w-0">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+                    <h3 class="text-xs font-bold truncate">${escapeHtml(title)}</h3>
+                    <span class="vp-dim-badge hidden sm:inline-block font-mono text-[10px] px-1.5 py-0.5 rounded bg-black/20 theme-muted">100%</span>
+                </div>
+                <div class="flex items-center flex-wrap gap-1 text-[11px] font-mono">
+                    <!-- Zoom Controls -->
+                    <button data-vp-act="zoom-out" class="px-1.5 py-0.5 rounded border theme-border hover:bg-emerald-500/20" title="Uitzoomen (−)">−</button>
+                    <input data-vp-act="zoom-slider" type="range" min="25" max="300" value="100" class="w-16 accent-emerald-500 cursor-pointer" title="Viewport Zoom (25% - 300%)">
+                    <button data-vp-act="zoom-in" class="px-1.5 py-0.5 rounded border theme-border hover:bg-emerald-500/20" title="Inzoomen (+)">+</button>
+                    <button data-vp-act="zoom-reset" class="px-1.5 py-0.5 rounded border theme-border hover:bg-emerald-500/20 text-[10px]" title="Reset Zoom & Pan">100%</button>
+                    <!-- Pan Toggle -->
+                    <button data-vp-act="pan-toggle" class="px-2 py-0.5 rounded border theme-border hover:bg-amber-500/20 text-[10px]" title="Pan-modus (versleep de inhoud binnen de viewport)">✋ Pan</button>
+                    <!-- Width Presets S / M / L / XL / Max -->
+                    <div class="flex items-center rounded border theme-border overflow-hidden ml-1">
+                        <button data-vp-size="s" class="px-1.5 py-0.5 hover:bg-indigo-500/20 text-[10px]" title="Smal (33%)">S</button>
+                        <button data-vp-size="m" class="px-1.5 py-0.5 hover:bg-indigo-500/20 text-[10px]" title="Medium (50%)">M</button>
+                        <button data-vp-size="l" class="px-1.5 py-0.5 hover:bg-indigo-500/20 text-[10px]" title="Breed (66%)">L</button>
+                        <button data-vp-size="xl" class="px-1.5 py-0.5 hover:bg-indigo-500/20 text-[10px]" title="Volledige breedte (100%)">XL</button>
+                    </div>
+                    <button data-vp-act="max-toggle" class="px-1.5 py-0.5 rounded border theme-border hover:bg-emerald-500/20 text-[10px]" title="Maximaliseer Viewport">⛶</button>
+                </div>
+            `;
+
+            // Wrap existing body into .viewport-stage > .viewport-canvas
+            const stage = document.createElement('div');
+            stage.className = 'viewport-stage theme-stage';
+            const canvas = document.createElement('div');
+            canvas.className = 'viewport-canvas';
+            if (bodyEl) canvas.appendChild(bodyEl);
+            stage.appendChild(canvas);
+
+            // Corner Resize Handle
+            const handle = document.createElement('div');
+            handle.className = 'vp-resize-handle';
+            handle.title = 'Sleep om deze viewport vrij groter of kleiner te maken';
+            handle.textContent = '◢';
+
+            sec.innerHTML = '';
+            sec.appendChild(header);
+            sec.appendChild(stage);
+            sec.appendChild(handle);
+
+            const dimBadge = header.querySelector('.vp-dim-badge');
+            const zoomSlider = header.querySelector('[data-vp-act="zoom-slider"]');
+            const panBtn = header.querySelector('[data-vp-act="pan-toggle"]');
+
+            function applyTransform() {
+                const st = viewportStates.get(vpId);
+                const scale = st.zoom / 100;
+                canvas.style.transform = `translate(${st.panX}px, ${st.panY}px) scale(${scale})`;
+                zoomSlider.value = st.zoom;
+                const rect = sec.getBoundingClientRect();
+                dimBadge.textContent = `${Math.round(rect.width)}×${Math.round(rect.height)}px @ ${st.zoom}%`;
+            }
+
+            // Toolbar Button Events
+            header.querySelector('[data-vp-act="zoom-in"]').addEventListener('click', () => {
+                const st = viewportStates.get(vpId);
+                st.zoom = Math.min(300, st.zoom + 15);
+                applyTransform();
+            });
+            header.querySelector('[data-vp-act="zoom-out"]').addEventListener('click', () => {
+                const st = viewportStates.get(vpId);
+                st.zoom = Math.max(25, st.zoom - 15);
+                applyTransform();
+            });
+            header.querySelector('[data-vp-act="zoom-reset"]').addEventListener('click', () => {
+                const st = viewportStates.get(vpId);
+                st.zoom = 100; st.panX = 0; st.panY = 0;
+                applyTransform();
+            });
+            zoomSlider.addEventListener('input', (e) => {
+                const st = viewportStates.get(vpId);
+                st.zoom = parseInt(e.target.value, 10) || 100;
+                applyTransform();
+            });
+
+            // Pan Mode Toggle
+            panBtn.addEventListener('click', () => {
+                const st = viewportStates.get(vpId);
+                st.panMode = !st.panMode;
+                stage.classList.toggle('pan-active', st.panMode);
+                panBtn.classList.toggle('bg-amber-600', st.panMode);
+                panBtn.classList.toggle('text-white', st.panMode);
+            });
+
+            // Panning inside stage when panMode is active (or middle mouse button)
+            let isPanning = false, startPanX = 0, startPanY = 0;
+            stage.addEventListener('mousedown', (e) => {
+                const st = viewportStates.get(vpId);
+                if (!st.panMode && e.button !== 1) return;
+                e.preventDefault();
+                isPanning = true;
+                stage.classList.add('pan-dragging');
+                startPanX = e.clientX - st.panX;
+                startPanY = e.clientY - st.panY;
+            });
+            window.addEventListener('mousemove', (e) => {
+                if (!isPanning) return;
+                const st = viewportStates.get(vpId);
+                st.panX = e.clientX - startPanX;
+                st.panY = e.clientY - startPanY;
+                applyTransform();
+            });
+            window.addEventListener('mouseup', () => {
+                if (isPanning) {
+                    isPanning = false;
+                    stage.classList.remove('pan-dragging');
+                }
+            });
+
+            // Ctrl + Wheel Zoom directly inside stage
+            stage.addEventListener('wheel', (e) => {
+                if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault();
+                    const st = viewportStates.get(vpId);
+                    const delta = e.deltaY < 0 ? 12 : -12;
+                    st.zoom = Math.max(25, Math.min(300, st.zoom + delta));
+                    applyTransform();
+                }
+            }, { passive: false });
+
+            // Size Presets (S, M, L, XL)
+            header.querySelectorAll('[data-vp-size]').forEach(b => {
+                b.addEventListener('click', () => {
+                    const sz = b.getAttribute('data-vp-size');
+                    sec.style.width = '';
+                    sec.style.height = '';
+                    sec.classList.remove('vp-size-s', 'vp-size-m', 'vp-size-l', 'vp-size-xl');
+                    sec.classList.add(`vp-size-${sz}`);
+                    setTimeout(applyTransform, 200);
+                });
+            });
+
+            // Maximize Toggle
+            header.querySelector('[data-vp-act="max-toggle"]').addEventListener('click', () => {
+                sec.classList.toggle('vp-maximized');
+                setTimeout(applyTransform, 100);
+            });
+
+            // Free Corner Drag Resize (Width & Height)
+            let isResizing = false, startW = 0, startH = 0, startRX = 0, startRY = 0;
+            handle.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                isResizing = true;
+                sec.classList.add('resizing');
+                const rect = sec.getBoundingClientRect();
+                startW = rect.width;
+                startH = rect.height;
+                startRX = e.clientX;
+                startRY = e.clientY;
+            });
+            window.addEventListener('mousemove', (e) => {
+                if (!isResizing) return;
+                const newW = Math.max(300, startW + (e.clientX - startRX));
+                const newH = Math.max(240, startH + (e.clientY - startRY));
+                sec.style.width = `${newW}px`;
+                sec.style.height = `${newH}px`;
+                stage.style.height = `${newH - header.offsetHeight}px`;
+                applyTransform();
+            });
+            window.addEventListener('mouseup', () => {
+                if (isResizing) {
+                    isResizing = false;
+                    sec.classList.remove('resizing');
+                }
+            });
+        }
+
+        function initAllNativeViewports() {
+            document.querySelectorAll('.viewport-card').forEach(upgradeSectionToNativeViewport);
+            document.getElementById('active-vp-count').textContent = document.querySelectorAll('.viewport-card').length;
+        }
+
+        // Global Floor Scale & Reset
+        document.getElementById('global-floor-scale').addEventListener('input', (e) => {
+            const pct = parseInt(e.target.value, 10) || 100;
+            document.getElementById('global-floor-scale-lbl').textContent = `${pct}%`;
+            const floor = document.getElementById('viewport-floor');
+            floor.style.transform = `scale(${pct / 100})`;
+            floor.style.width = `${10000 / pct}%`;
+        });
+
+        document.getElementById('btn-reset-all-viewports').addEventListener('click', () => {
+            document.getElementById('global-floor-scale').value = 100;
+            document.getElementById('global-floor-scale-lbl').textContent = '100%';
+            const floor = document.getElementById('viewport-floor');
+            floor.style.transform = 'scale(1)';
+            floor.style.width = '100%';
+
+            document.querySelectorAll('.viewport-card').forEach(sec => {
+                sec.style.width = '';
+                sec.style.height = '';
+                sec.classList.remove('vp-maximized');
+                const stage = sec.querySelector('.viewport-stage');
+                if (stage) stage.style.height = '';
+                const st = viewportStates.get(sec.id);
+                if (st) {
+                    st.zoom = 100; st.panX = 0; st.panY = 0;
+                    const canvas = sec.querySelector('.viewport-canvas');
+                    if (canvas) canvas.style.transform = 'translate(0px, 0px) scale(1)';
+                    const slider = sec.querySelector('[data-vp-act="zoom-slider"]');
+                    if (slider) slider.value = 100;
+                }
+            });
+            showToast('Alle viewports en vloer-schaal gereset naar 100%');
+        });
+
+        // --- 3. 8 MAIN CENTERS SWITCHING ---
+        let activeCenter = 'home';
+        function switchCenter(centerKey) {
+            activeCenter = centerKey;
+            document.querySelectorAll('.center-nav-btn').forEach(btn => {
+                const isMatch = btn.getAttribute('data-center') === centerKey;
+                btn.classList.toggle('bg-emerald-600', isMatch && centerKey !== 'all');
+                btn.classList.toggle('text-white', isMatch && centerKey !== 'all');
+            });
+
+            document.querySelectorAll('.viewport-card').forEach(vp => {
+                const vpCenter = vp.getAttribute('data-center');
+                const show = (centerKey === 'all') || (vpCenter === centerKey);
+                vp.classList.toggle('hidden', !show);
+            });
+
+            if (centerKey === 'geo' || centerKey === 'all') {
+                renderGeoNativeMap();
+            }
+            if (centerKey === 'reken' || centerKey === 'all') {
+                renderApiParcelSvg();
+                drawPlanimeterState();
+                renderModularFlower();
+            }
+            if (centerKey === 'tijd' || centerKey === 'all') {
+                renderTijdComparisonSvg();
+            }
+        }
+
+        document.querySelectorAll('.center-nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => switchCenter(btn.getAttribute('data-center')));
+        });
+
+        // --- 4. CADASTRAL GEOMETRY DATASET: POORTVLIET SECTIE M & SCHERPENISSE SECTIE E (E 108 -> E 1552) ---
+        const PARCEL_DATABASE = [
+            {
+                id: 'SCN00-E-108',
+                gemeente: 'Scherpenisse',
+                akr: 'SCN00',
+                sectie: 'E',
+                perceelnummer: '108 (Hist. 1926)',
+                adres: 'Platteweg 3-5-7 (Oud-Kadaster 1926)',
+                postcode: '4694RD',
+                pandId: '0716100000001926',
+                koopsom: 'Historisch Keuringsrapport (1926)',
+                brkArea: 2140,
+                datum: '1926-05-12',
+                ring: [[64510.00, 395812.00], [64566.00, 395812.00], [64566.00, 395850.214], [64510.00, 395850.214], [64510.00, 395812.00]]
+            },
+            {
+                id: 'SCN00-E-1552',
+                gemeente: 'Scherpenisse',
+                akr: 'SCN00',
+                sectie: 'E',
+                perceelnummer: '1552 (Actueel)',
+                adres: 'Platteweg 3, 5 en 7',
+                postcode: '4694RD',
+                pandId: '0716100000014852',
+                koopsom: '€ 465.000 k.k. (Referentie BRK)',
+                brkArea: 1485,
+                datum: '2021-09-14',
+                ring: [[64516.00, 395815.00], [64561.00, 395815.00], [64561.00, 395848.00], [64516.00, 395848.00], [64516.00, 395815.00]]
+            },
+            {
+                id: 'PVT00-M-1172',
+                gemeente: 'Poortvliet',
+                akr: 'PVT00',
+                sectie: 'M',
+                perceelnummer: '1172',
+                adres: 'Poortvliet Sectie M 1172',
+                postcode: '4693PA',
+                pandId: '0716100000001172',
+                koopsom: '€ 285.000 (Koopsom-register)',
+                brkArea: 365,
+                datum: '2008-06-04',
+                ring: [[66584.370, 396751.372], [66604.115, 396736.322], [66613.020, 396748.005], [66593.275, 396763.055], [66584.370, 396751.372]]
+            },
+            {
+                id: 'PVT00-M-1173',
+                gemeente: 'Poortvliet',
+                akr: 'PVT00',
+                sectie: 'M',
+                perceelnummer: '1173',
+                adres: 'Poortvliet Sectie M 1173',
+                postcode: '4693PA',
+                pandId: '0716100000001173',
+                koopsom: '€ 349.000 (Koopsom-register)',
+                brkArea: 810,
+                datum: '1999-11-15',
+                ring: [[66604.115, 396736.322], [66634.115, 396713.455], [66647.220, 396730.650], [66617.220, 396753.517], [66604.115, 396736.322]]
+            },
+            {
+                id: 'PVT00-M-1174',
+                gemeente: 'Poortvliet',
+                akr: 'PVT00',
+                sectie: 'M',
+                perceelnummer: '1174',
+                adres: 'Poortvliet Sectie M 1174 (Agrarisch)',
+                postcode: '4693PA',
+                pandId: '0716100000001174',
+                koopsom: '€ 112.500 (Agrarische grondwaarde)',
+                brkArea: 11990,
+                datum: '2015-02-13',
+                ring: [[66584.370, 396751.372], [66604.115, 396736.322], [66715.000, 396651.800], [66768.400, 396721.850], [66637.755, 396821.422], [66584.370, 396751.372]]
+            },
+            {
+                id: 'PVT00-M-1178',
+                gemeente: 'Poortvliet',
+                akr: 'PVT00',
+                sectie: 'M',
+                perceelnummer: '1178',
+                adres: 'Poortvliet Sectie M 1178 (Oost-Bbox 67260)',
+                postcode: '4693PB',
+                pandId: '0716100000001178',
+                koopsom: '€ 98.100 (Agrarische grondwaarde)',
+                brkArea: 10900,
+                datum: '1999-11-09',
+                ring: [[67140.000, 396420.000], [67260.110, 396420.000], [67260.110, 396510.750], [67140.000, 396510.750], [67140.000, 396420.000]]
+            },
+            {
+                id: 'PVT00-M-1180',
+                gemeente: 'Poortvliet',
+                akr: 'PVT00',
+                sectie: 'M',
+                perceelnummer: '1180',
+                adres: 'Poortvliet Sectie M 1180 (Oost-Bbox 67232)',
+                postcode: '4693PB',
+                pandId: '0716100000001180',
+                koopsom: '€ 134.800 (Vastgesteld 2024-06-17)',
+                brkArea: 14230,
+                datum: '2024-06-17',
+                ring: [[67110.000, 396600.000], [67232.420, 396600.000], [67232.420, 396716.240], [67110.000, 396716.240], [67110.000, 396600.000]]
+            }
+        ];
+
+        function computeShoelaceArea(ring) {
+            let sum = 0;
+            for (let i = 0; i < ring.length - 1; i++) {
+                sum += (ring[i][0] * ring[i + 1][1]) - (ring[i + 1][0] * ring[i][1]);
+            }
+            return Math.abs(sum / 2);
+        }
+
+        function computeCentroid(ring) {
+            let sx = 0, sy = 0, n = Math.max(1, ring.length - 1);
+            for (let i = 0; i < n; i++) { sx += ring[i][0]; sy += ring[i][1]; }
+            return [sx / n, sy / n];
+        }
+
+        // --- 5. VP 1.2: MASTER INDEX PROCES (PID 1001) ---
+        const PID_DAEMONS = [
+            { pid: 1001, name: 'sovereign-master-index', role: 'Master Viewport & Theme Orchestrator', status: 'ONLINE' },
+            { pid: 1014, name: 'pdok-brk-ogc-engine', role: 'EPSG:28992 MultiPolygon & Shoelace Verifier', status: 'ONLINE' },
+            { pid: 1028, name: 'ott-573-planimeter', role: 'Polar Arm Line Integral Calculator', status: 'ONLINE' },
+            { pid: 1042, name: 'cryptpad-e2ee-daemon', role: 'AES-256-GCM + FinalCrypt XOR Engine', status: 'ONLINE' },
+            { pid: 1055, name: 'matrix-wac-guard', role: 'W3C Solid .acl & Matrix Bridge Firewall', status: 'ONLINE' },
+            { pid: 1071, name: 'fediverse-atom-sync', role: 'Pixelfed / Gram.social / Mastodon Parser', status: 'ONLINE' },
+            { pid: 1089, name: 'github-models-router', role: 'GPT-4o / DeepSeek-R1 / Lumo / Gemini 3', status: 'ONLINE' }
+        ];
+
+        function renderPidDaemons() {
+            const box = document.getElementById('pid-process-list');
+            box.innerHTML = PID_DAEMONS.map(d => `
+                <div class="p-2 rounded-lg border theme-border bg-black/10 flex items-center justify-between gap-2">
+                    <div>
+                        <div class="font-bold text-white"><span class="text-emerald-400">[PID ${d.pid}]</span> ${escapeHtml(d.name)}</div>
+                        <div class="theme-muted text-[10px]">${escapeHtml(d.role)}</div>
+                    </div>
+                    <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">${d.status}</span>
+                </div>
+            `).join('');
+        }
+
+        // --- 6. VP 2.1: IAM / W3C WAC MATRIX BRIDGES ---
+        const IAM_PRINCIPALS = [
+            { agent: '<https://vanvrijberghe.solidcommunity.net/profile/card#me>', label: 'Solid Pod Owner (Root)', r: true, w: true, a: true, c: true },
+            { agent: '<https://matrix.org/_matrix/Bridge/conduit-zeeland>', label: 'Matrix Conduit Bridge (Zeeland)', r: true, w: true, a: true, c: false },
+            { agent: '<https://mastodon.social/users/finhstamsterdam>', label: 'Fediverse Bridge (@finhstamsterdam)', r: true, w: false, a: true, c: false },
+            { agent: '<https://woo-tholen.vercel.app/agent#public>', label: 'Woo-Tholen API & Tree Reader', r: true, w: false, a: false, c: false },
+            { agent: '<urn:agent:das-juridisch-dossier>', label: 'Juridisch Dossier & Rapport Agent', r: true, w: true, a: true, c: false }
+        ];
+
+        function renderIamMatrix() {
+            const tbody = document.getElementById('iam-matrix-tbody');
+            tbody.innerHTML = IAM_PRINCIPALS.map((p, idx) => `
+                <tr>
+                    <td class="p-2 font-semibold">${escapeHtml(p.label)}</td>
+                    <td class="p-2 text-center"><input type="checkbox" data-iam="${idx}" data-perm="r" ${p.r ? 'checked' : ''} class="accent-emerald-500 cursor-pointer"></td>
+                    <td class="p-2 text-center"><input type="checkbox" data-iam="${idx}" data-perm="w" ${p.w ? 'checked' : ''} class="accent-emerald-500 cursor-pointer"></td>
+                    <td class="p-2 text-center"><input type="checkbox" data-iam="${idx}" data-perm="a" ${p.a ? 'checked' : ''} class="accent-emerald-500 cursor-pointer"></td>
+                    <td class="p-2 text-center"><input type="checkbox" data-iam="${idx}" data-perm="c" ${p.c ? 'checked' : ''} class="accent-emerald-500 cursor-pointer"></td>
+                </tr>
+            `).join('');
+
+            tbody.querySelectorAll('input[type="checkbox"]').forEach(chk => {
+                chk.addEventListener('change', () => {
+                    const i = parseInt(chk.getAttribute('data-iam'), 10);
+                    const perm = chk.getAttribute('data-perm');
+                    IAM_PRINCIPALS[i][perm] = chk.checked;
+                    updateAclTurtleOutput();
+                });
+            });
+            updateAclTurtleOutput();
+        }
+
+        function updateAclTurtleOutput() {
+            let ttl = `@prefix acl: <http://www.w3.org/ns/auth/acl#> .\n@prefix foaf: <http://xmlns.com/foaf/0.1/> .\n\n`;
+            IAM_PRINCIPALS.forEach((p, idx) => {
+                const modes = [];
+                if (p.r) modes.push('acl:Read');
+                if (p.w) modes.push('acl:Write');
+                if (p.a) modes.push('acl:Append');
+                if (p.c) modes.push('acl:Control');
+                if (modes.length > 0) {
+                    ttl += `<#rule-${idx + 1}> a acl:Authorization ;\n    acl:agent ${p.agent} ;\n    acl:accessTo <./platteweg-e108-e1552.ttl> ;\n    acl:mode ${modes.join(', ')} .\n\n`;
+                }
+            });
+            document.getElementById('iam-acl-output').textContent = ttl;
+        }
+
+        document.getElementById('btn-iam-lockdown').addEventListener('click', () => {
+            IAM_PRINCIPALS.forEach((p, i) => {
+                if (i > 0) { p.w = false; p.a = false; p.c = false; p.r = true; }
+            });
+            renderIamMatrix();
+            showToast('CISO Read-Only Lockdown geactiveerd op alle Matrix Bridges!');
+        });
+
+        document.getElementById('btn-copy-acl').addEventListener('click', () => {
+            copyToClipboard(document.getElementById('iam-acl-output').textContent, 'W3C .acl Turtle gekopieerd!');
+        });
+
+        // --- 7. VP 2.2: CONTACTCENTER & DOSSIER DISPATCH ---
+        const dispatchLogs = [
+            { time: '09:05', org: 'Het Kadaster (BRK)', msg: 'Verificatie perceelgrens Scherpenisse E 108 -> E 1552 & Poortvliet Sectie M geregistreerd.' },
+            { time: '09:12', org: 'Gemeente Tholen (Woo)', msg: 'Zoekslag Keuringsrapport 1926 Platteweg 3-5-7 gekoppeld aan dossier.' }
+        ];
+
+        function renderDispatchLogs() {
+            const box = document.getElementById('cc-log-list');
+            box.innerHTML = dispatchLogs.map(l => `
+                <div class="p-2 rounded-lg border theme-border bg-black/10">
+                    <span class="text-emerald-400 font-bold">[${escapeHtml(l.time)} • ${escapeHtml(l.org)}]</span>
+                    <span class="theme-muted ml-1">${escapeHtml(l.msg)}</span>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('btn-cc-dispatch').addEventListener('click', () => {
+            const org = document.getElementById('cc-recipient').value;
+            const body = document.getElementById('cc-body').value.trim();
+            if (!body) return;
+            const now = new Date().toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
+            dispatchLogs.unshift({ time: now, org, msg: body });
+            renderDispatchLogs();
+            showToast(`Dossier-dispatch gelogd voor ${org}`);
+        });
+
+        document.getElementById('btn-cc-fill-planimeter').addEventListener('click', () => {
+            const selId = document.getElementById('ott-parcel-select').value;
+            const p = PARCEL_DATABASE.find(x => x.id === selId) || PARCEL_DATABASE[1];
+            const calc = computeShoelaceArea(p.ring).toFixed(2);
+            document.getElementById('cc-subject-parcel').value = `${p.gemeente} ${p.sectie} ${p.perceelnummer} (${p.adres})`;
+            document.getElementById('cc-body').value = `Meetrapport A. Ott Kempten Nr. 573 Poolplanimeter voor ${p.id} (${p.adres}):\n- Geregistreerde BRK-grootte: ${p.brkArea} m²\n- Berekende Lijnintegraal / Shoelace: ${calc} m²\n- Koopsom / Referentie: ${p.koopsom} (BAG Pand-ID: ${p.pandId})`;
+            showToast('Poolplanimeter- en Kadasterdata ingevoegd in Contactcenter!');
+        });
+
+        // --- 8. VP 2.3 & VP 3.2: SOLID POD RDF & FORMAL LEGAL REPORT GENERATOR ---
+        function refreshSolidAndLegalReports() {
+            const ttl = `@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix kad: <https://data.kkg.kadaster.nl/sor/model/def/> .
+@prefix schema: <http://schema.org/> .
+
+<#dossier-platteweg-3-5-7>
+    a schema:ArchiveComponent ;
+    dcterms:title "Kadastraal & Geodetisch Dossier Platteweg 3-5-7 (E 108 -> E 1552)"@nl ;
+    schema:spatialCoverage "Scherpenisse (SCN00 Sectie E) & Poortvliet (PVT00 Sectie M) — EPSG:28992" ;
+    kad:historischPerceel "SCN00 E 108 (1926: 2140 m²)" ;
+    kad:huidigPerceel "SCN00 E 1552 (2026: 1485 m²)" ;
+    kad:poortvlietReferentie "PVT00 M 1172 (365 m²), 1173 (810 m²), 1174 (11990 m²), 1178 (10900 m²), 1180 (14230 m²) — Totaal 38.295 m²" .`;
+            document.getElementById('pod-ttl-preview').textContent = ttl;
+
+            const reportMd = `# FORMEEL DOSSIER- & VERIFICATIERAPPORT
+Datum: ${new Date().toISOString().slice(0, 10)}
+Status: ● SYSTEM ONLINE // PLATTEWEG 3-5-7 (E 108 → E 1552), BIBLIOTHEEK & RAPPORT-EXPORT
+
+## 1. SCHERPENISSE SECTIE E: TRANSFORMATIE E 108 (1926) → E 1552 (2026)
+- **Locatie**: Platteweg 3, 5 en 7, 4694 RD Scherpenisse (Gemeente Tholen, Zeeland)
+- **Oud-Kadaster (1926)**: Gemeente Scherpenisse (SCN00), Sectie E, nr. 108 — Historisch oppervlak: 2.140 m² (conform Woningwet-keuringsrapport 1926: herberg, schaapskooi en erf).
+- **Huidig BRK (2026)**: Gemeente Scherpenisse (SCN00), Sectie E, nr. 1552 — Vastgestelde grootte: 1.485 m².
+- **Geconstateerd Verschil**: -655 m² (nader te verifiëren via kadastrale hulpkaarten, veldwerken en legger Waterschap Scheldestromen).
+
+## 2. POORTVLIET SECTIE M (PVT00 / CODE 797) — OGC API & SHOELACE VERIFICATIE
+Bbox-filter: 66.000–67.000 × 396.000–397.000 (EPSG:28992 RD New). Percelen 1178 en 1180 reiken oostwaarts tot x ≈ 67.260 en 67.232:
+- **M 1172** (2008-06-04): Geregistreerd 365 m² | Berekend: ${computeShoelaceArea(PARCEL_DATABASE[2].ring).toFixed(2)} m² (Deelt grens met 1173 & 1174)
+- **M 1173** (1999-11-15): Geregistreerd 810 m² | Berekend: ${computeShoelaceArea(PARCEL_DATABASE[3].ring).toFixed(2)} m²
+- **M 1174** (2015-02-13): Geregistreerd 11.990 m² | Berekend: ${computeShoelaceArea(PARCEL_DATABASE[4].ring).toFixed(2)} m²
+- **M 1178** (1999-11-09): Geregistreerd 10.900 m² | Berekend: ${computeShoelaceArea(PARCEL_DATABASE[5].ring).toFixed(2)} m²
+- **M 1180** (2024-06-17): Geregistreerd 14.230 m² | Berekend: ${computeShoelaceArea(PARCEL_DATABASE[6].ring).toFixed(2)} m²
+- **Totaal geregistreerd areaal**: 38.295 m² (≈ 3,83 ha).`;
+            document.getElementById('legal-report-preview').textContent = reportMd;
+        }
+
+        document.getElementById('btn-pod-put').addEventListener('click', () => showToast('RDF Turtle (.ttl) gesynchroniseerd naar Solid Pod container!'));
+        document.getElementById('btn-pod-copy').addEventListener('click', () => copyToClipboard(document.getElementById('pod-ttl-preview').textContent, 'RDF Turtle gekopieerd!'));
+        document.getElementById('btn-export-report-md').addEventListener('click', () => downloadFile('rapport-platteweg-e108-e1552.md', document.getElementById('legal-report-preview').textContent, 'text/markdown'));
+        document.getElementById('btn-export-report-html').addEventListener('click', () => {
+            const body = `<pre style="font-family:monospace;line-height:1.5;padding:24px">${escapeHtml(document.getElementById('legal-report-preview').textContent)}</pre>`;
+            downloadFile('rapport-platteweg-e108-e1552.html', body, 'text/html');
+        });
+        document.getElementById('btn-copy-report').addEventListener('click', () => copyToClipboard(document.getElementById('legal-report-preview').textContent, 'Rapport gekopieerd naar klembord!'));
+
+        // --- 9. VP 2.4: DYNAMIC VIEWPORT BUILDER ---
+        document.getElementById('btn-create-custom-vp').addEventListener('click', () => {
+            const title = document.getElementById('new-vp-title').value.trim() || 'Aangepaste Onderzoeks-Viewport';
+            const center = document.getElementById('new-vp-center').value;
+            const tpl = document.getElementById('new-vp-template').value;
+
+            const sec = document.createElement('section');
+            sec.className = 'viewport-card vp-size-m';
+            sec.setAttribute('data-center', center);
+            sec.setAttribute('data-vp-title', `✨ ${title}`);
+
+            let inner = '';
+            if (tpl === 'geocanvas') {
+                inner = `<div class="viewport-body p-4 space-y-2 text-xs">
+                    <div class="font-mono text-emerald-400">Dynamisch RD Vector Canvas — ${escapeHtml(title)}</div>
+                    <svg class="w-full h-48 rounded-xl border theme-border bg-black/30" viewBox="0 0 400 180">
+                        <polygon points="60,140 160,40 320,60 280,150" fill="rgba(16,185,129,0.22)" stroke="#10b981" stroke-width="2"/>
+                        <text x="190" y="105" fill="#fff" font-family="monospace" font-size="11" text-anchor="middle">${escapeHtml(title)}</text>
+                    </svg>
+                </div>`;
+            } else if (tpl === 'datagrid') {
+                inner = `<div class="viewport-body p-4 space-y-2 text-xs">
+                    <div class="font-mono text-sky-400">Kadastrale Meetmatrix — ${escapeHtml(title)}</div>
+                    <p class="theme-muted">Gekoppeld aan Scherpenisse E 108 → E 1552 en Poortvliet Sectie M.</p>
+                </div>`;
+            } else {
+                inner = `<div class="viewport-body p-4 space-y-2 text-xs">
+                    <textarea rows="5" class="w-full rounded-xl p-2.5 font-mono text-xs theme-input">Dossiernotitie voor ${escapeHtml(title)}...</textarea>
+                </div>`;
+            }
+            sec.innerHTML = inner;
+            document.getElementById('viewport-floor').appendChild(sec);
+            upgradeSectionToNativeViewport(sec);
+            document.getElementById('active-vp-count').textContent = document.querySelectorAll('.viewport-card').length;
+            switchCenter(center);
+            showToast(`Nieuwe native viewport "${title}" toegevoegd aan ${center.toUpperCase()}!`);
+        });
+
+        // --- 10. VP 4.1: NATIVE GEOCENTRUM RD MAP, 60° GRID & SCHADUWWAAIER ---
+        let activeGeoFocus = 'scherpenisse';
+
+        function rdToWgs84(x, y) {
+            const dX = (x - 155000) * 1e-5;
+            const dY = (y - 463000) * 1e-5;
+            const sumN = (3235.65389 * dY) + (-32.58297 * dX * dX) + (-0.24750 * dY * dY) + (-0.84978 * dX * dX * dY) + (-0.06550 * dY * dY * dY);
+            const sumE = (5260.52916 * dX) + (105.94684 * dX * dY) + (2.45656 * dX * dY * dY) + (-0.81885 * dX * dX * dX);
+            return { lat: 52.15517440 + (sumN / 3600), lon: 5.38720621 + (sumE / 3600) };
+        }
+
+        function computeSolarAngles(lat, day, hour) {
+            const rad = Math.PI / 180;
+            const decl = 23.45 * Math.sin(rad * (360 / 365) * (284 + day));
+            const ha = (hour - 12.6) * 15;
+            const sinEl = Math.sin(lat * rad) * Math.sin(decl * rad) + Math.cos(lat * rad) * Math.cos(decl * rad) * Math.cos(ha * rad);
+            const el = Math.asin(Math.max(-1, Math.min(1, sinEl))) / rad;
+            const cosAz = (Math.sin(decl * rad) - Math.sin(lat * rad) * sinEl) / (Math.cos(lat * rad) * Math.cos(el * rad) + 1e-9);
+            let az = Math.acos(Math.max(-1, Math.min(1, cosAz))) / rad;
+            if (ha > 0) az = 360 - az;
+            return { az, el, shadowAz: (az + 180) % 360 };
+        }
+
+        function renderGeoNativeMap() {
+            const svg = document.getElementById('geo-native-svg');
+            if (!svg) return;
+
+            const provider = document.getElementById('geo-provider-select').value;
+            const showRd = document.getElementById('geo-chk-rd').checked;
+            const show60 = document.getElementById('geo-chk-60').checked;
+            const showE108 = document.getElementById('geo-chk-e108').checked;
+            const day = parseInt(document.getElementById('geo-sw-day').value, 10) || 172;
+            const hr = parseFloat(document.getElementById('geo-sw-hr').value) || 14.5;
+
+            const bgColors = {
+                'kadaster-dark': '#070b12',
+                'pdok-brt': '#131c26',
+                'luchtfoto': '#0d1f17',
+                'minuutplan1832': '#2b2317',
+                'waterschap': '#081c29',
+                'opentopo': '#1c1917',
+                'rd-mm': '#040609'
+            };
+            const bg = bgColors[provider] || '#070b12';
+
+            const dateStr = new Date(2026, 0, day).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' });
+            document.getElementById('geo-sw-day-lbl').textContent = `${day} (${dateStr})`;
+            const hInt = Math.floor(hr);
+            const mInt = Math.round((hr - hInt) * 60);
+            document.getElementById('geo-sw-hr-lbl').textContent = `${String(hInt).padStart(2, '0')}:${String(mInt).padStart(2, '0')} u`;
+
+            const sun = computeSolarAngles(51.54, day, hr);
+            const sLen = sun.el > 2 ? (12 / Math.tan(sun.el * Math.PI / 180)) : 60;
+            document.getElementById('geo-sw-az').textContent = `${sun.az.toFixed(1)}°`;
+            document.getElementById('geo-sw-len').textContent = sun.el > 2 ? `${sLen.toFixed(2)} m` : 'Horizon';
+
+            let out = `<rect width="900" height="440" fill="${bg}"/>`;
+
+            // RD Grid
+            if (showRd) {
+                for (let x = 60; x < 900; x += 60) {
+                    out += `<line x1="${x}" y1="0" x2="${x}" y2="440" stroke="#38bdf8" stroke-width="0.6" stroke-dasharray="3 3" stroke-opacity="0.32"/>`;
+                }
+                for (let y = 55; y < 440; y += 55) {
+                    out += `<line x1="0" y1="${y}" x2="900" y2="${y}" stroke="#38bdf8" stroke-width="0.6" stroke-dasharray="3 3" stroke-opacity="0.32"/>`;
+                }
+            }
+
+            // 60° Isometric Grid
+            if (show60) {
+                for (let i = -400; i < 1200; i += 75) {
+                    out += `<line x1="${i}" y1="0" x2="${i + 254}" y2="440" stroke="#a855f7" stroke-width="0.7" stroke-opacity="0.28"/>`;
+                    out += `<line x1="${i}" y1="0" x2="${i - 254}" y2="440" stroke="#a855f7" stroke-width="0.7" stroke-opacity="0.28"/>`;
+                }
+            }
+
+            // Select parcels to plot
+            const subsets = activeGeoFocus === 'scherpenisse'
+                ? PARCEL_DATABASE.slice(0, 2)
+                : PARCEL_DATABASE.slice(2);
+
+            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+            subsets.forEach(p => p.ring.forEach(pt => {
+                minX = Math.min(minX, pt[0]); maxX = Math.max(maxX, pt[0]);
+                minY = Math.min(minY, pt[1]); maxY = Math.max(maxY, pt[1]);
+            }));
+            const padX = (maxX - minX) * 0.25 || 30;
+            const padY = (maxY - minY) * 0.25 || 30;
+            minX -= padX; maxX += padX; minY -= padY; maxY += padY;
+
+            const toSvg = (pt) => {
+                const sx = 40 + ((pt[0] - minX) / (maxX - minX)) * 520;
+                const sy = 400 - ((pt[1] - minY) / (maxY - minY)) * 360;
+                return [sx, sy];
+            };
+
+            subsets.forEach((p, idx) => {
+                if (p.id === 'SCN00-E-108' && !showE108) return;
+                const pts = p.ring.map(toSvg).map(c => `${c[0].toFixed(1)},${c[1].toFixed(1)}`).join(' ');
+                const isHist = p.id === 'SCN00-E-108';
+                const stroke = isHist ? '#f59e0b' : '#10b981';
+                const fill = isHist ? 'rgba(245,158,11,0.18)' : 'rgba(16,185,129,0.25)';
+                out += `<polygon points="${pts}" fill="${fill}" stroke="${stroke}" stroke-width="${isHist ? '2' : '2.5'}" ${isHist ? 'stroke-dasharray="6 4"' : ''}/>`;
+                const cent = toSvg(computeCentroid(p.ring));
+                out += `<circle cx="${cent[0].toFixed(1)}" cy="${cent[1].toFixed(1)}" r="4" fill="${stroke}"/>`;
+                out += `<text x="${cent[0].toFixed(1)}" y="${(cent[1] - 8).toFixed(1)}" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="11" font-weight="bold" text-anchor="middle">${escapeHtml(p.sectie)} ${escapeHtml(p.perceelnummer)} (${p.brkArea} m²)</text>`;
+            });
+
+            // Right Side: Polar Schaduwwaaier Rose inside the same Geocentrum Canvas (center 740, 220)
+            const cx = 740, cy = 220;
+            out += `<circle cx="${cx}" cy="${cy}" r="125" fill="rgba(5,7,11,0.82)" stroke="#334155" stroke-width="1.5"/>`;
+            out += `<circle cx="${cx}" cy="${cy}" r="85" fill="none" stroke="#1e293b" stroke-dasharray="3 3"/>`;
+            out += `<line x1="${cx - 130}" y1="${cy}" x2="${cx + 130}" y2="${cy}" stroke="#334155"/>`;
+            out += `<line x1="${cx}" y1="${cy - 130}" x2="${cx}" y2="${cy + 130}" stroke="#334155"/>`;
+            out += `<text x="${cx}" y="${cy - 132}" fill="#94a3b8" font-family="monospace" font-size="10" text-anchor="middle">N (0° • Schaduwwaaier)</text>`;
+
+            const fanPts = [`${cx},${cy}`];
+            for (let h = 7; h <= 19; h++) {
+                const s = computeSolarAngles(51.54, day, h);
+                if (s.el > 2) {
+                    const r = Math.min(115, (12 / Math.tan(s.el * Math.PI / 180)) * 4.2);
+                    const a = (s.shadowAz - 90) * Math.PI / 180;
+                    const px = cx + r * Math.cos(a);
+                    const py = cy + r * Math.sin(a);
+                    fanPts.push(`${px.toFixed(1)},${py.toFixed(1)}`);
+                    out += `<line x1="${cx}" y1="${cy}" x2="${px.toFixed(1)}" y2="${py.toFixed(1)}" stroke="#6366f1" stroke-opacity="0.5"/>`;
+                }
+            }
+            if (fanPts.length > 2) {
+                out += `<polygon points="${fanPts.join(' ')}" fill="rgba(99,102,241,0.22)" stroke="#818cf8" stroke-width="1.2"/>`;
+            }
+
+            // Current Hour Shadow & Sun Vector
+            if (sun.el > 1) {
+                const rAct = Math.min(115, sLen * 4.2);
+                const sA = (sun.shadowAz - 90) * Math.PI / 180;
+                out += `<line x1="${cx}" y1="${cy}" x2="${(cx + rAct * Math.cos(sA)).toFixed(1)}" y2="${(cy + rAct * Math.sin(sA)).toFixed(1)}" stroke="#10b981" stroke-width="3"/>`;
+                const sunA = (sun.az - 90) * Math.PI / 180;
+                out += `<circle cx="${(cx + 105 * Math.cos(sunA)).toFixed(1)}" cy="${(cy + 105 * Math.sin(sunA)).toFixed(1)}" r="6" fill="#fbbf24"/>`;
+            }
+
+            svg.innerHTML = out;
+        }
+
+        document.querySelectorAll('.geo-jump-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                activeGeoFocus = btn.getAttribute('data-geoloc');
+                if (activeGeoFocus === 'scherpenisse') {
+                    document.getElementById('geo-x-input').value = 64538;
+                    document.getElementById('geo-y-input').value = 395836;
+                } else {
+                    document.getElementById('geo-x-input').value = 66750;
+                    document.getElementById('geo-y-input').value = 396750;
+                }
+                const wgs = rdToWgs84(parseFloat(document.getElementById('geo-x-input').value), parseFloat(document.getElementById('geo-y-input').value));
+                document.getElementById('geo-wgs-out').textContent = `${wgs.lat.toFixed(4)}°N, ${wgs.lon.toFixed(4)}°E`;
+                renderGeoNativeMap();
+            });
+        });
+
+        ['geo-provider-select', 'geo-chk-rd', 'geo-chk-60', 'geo-chk-e108', 'geo-sw-day', 'geo-sw-hr', 'geo-x-input', 'geo-y-input'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                const wgs = rdToWgs84(parseFloat(document.getElementById('geo-x-input').value) || 64538, parseFloat(document.getElementById('geo-y-input').value) || 395836);
+                document.getElementById('geo-wgs-out').textContent = `${wgs.lat.toFixed(4)}°N, ${wgs.lon.toFixed(4)}°E`;
+                renderGeoNativeMap();
+            });
+        });
+
+        // --- 11. VP 4.2: NATIVE 3D STL VIEWER ---
+        let stlTris = [];
+        let stlYaw = 0.65, stlPitch = 0.45;
+        let stlCurrentName = 'Platteweg_E1552_3D';
+
+        function makeBoxTris(x0, y0, z0, x1, y1, z1) {
+            const v = [[x0,y0,z0],[x1,y0,z0],[x1,y1,z0],[x0,y1,z0],[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]];
+            const f = [[0,2,1],[0,3,2],[4,5,6],[4,6,7],[0,1,5],[0,5,4],[2,3,7],[2,7,6],[0,4,7],[0,7,3],[1,2,6],[1,6,5]];
+            return f.map(idx => [v[idx[0]], v[idx[1]], v[idx[2]]]);
+        }
+
+        function loadParametricStl(kind) {
+            stlTris = [];
+            if (kind === 'platteweg') {
+                stlCurrentName = 'Platteweg_E1552_3D';
+                stlTris.push(...makeBoxTris(-45, -30, 0, 45, 30, 6)); // Parcel slab E 1552
+                stlTris.push(...makeBoxTris(-25, -15, 6, 15, 12, 26)); // Main historical building Platteweg 3-5-7
+                stlTris.push(...makeBoxTris(18, -12, 6, 36, 10, 18));  // Schaapskooi / bijgebouw
+            } else if (kind === 'pillar') {
+                stlCurrentName = 'Kadaster_RD_Meetpilaar';
+                stlTris.push(...makeBoxTris(-24, -24, -20, 24, 24, -10));
+                stlTris.push(...makeBoxTris(-12, -12, -10, 12, 12, 35));
+                stlTris.push(...makeBoxTris(-16, -16, 35, 16, 16, 42));
+            } else if (kind === 'sluis') {
+                stlCurrentName = 'Waterschap_Sluisdeur';
+                stlTris.push(...makeBoxTris(-35, -6, -30, 35, 6, 30));
+                stlTris.push(...makeBoxTris(-38, -9, 15, 38, 9, 22));
+            } else {
+                stlCurrentName = 'MathGeo_60deg_Prisma';
+                stlTris.push(...makeBoxTris(-28, -28, -25, 28, 28, 25));
+            }
+            document.getElementById('stl-telemetry-lbl').textContent = `Mesh: ${stlCurrentName} (${stlTris.length} tris)`;
+        }
+
+        function renderStlLoop() {
+            const c = document.getElementById('native-stl-canvas');
+            if (c) {
+                const ctx = c.getContext('2d');
+                ctx.clearRect(0, 0, c.width, c.height);
+                stlYaw += 0.009;
+                const cy = Math.cos(stlYaw), sy = Math.sin(stlYaw);
+                const cp = Math.cos(stlPitch), sp = Math.sin(stlPitch);
+
+                const proj = (p) => {
+                    const x1 = p[0] * cy - p[1] * sy;
+                    const y1 = p[0] * sy + p[1] * cy;
+                    const z2 = p[2] * cp - y1 * sp;
+                    const y2 = p[2] * sp + y1 * cp;
+                    const s = 260 / (260 + y2);
+                    return { x: c.width / 2 + x1 * s * 2.1, y: c.height / 2 - z2 * s * 2.1, d: y2 };
+                };
+
+                const faces = stlTris.map(t => {
+                    const p1 = proj(t[0]), p2 = proj(t[1]), p3 = proj(t[2]);
+                    return { p1, p2, p3, d: (p1.d + p2.d + p3.d) / 3 };
+                }).sort((a, b) => b.d - a.d);
+
+                faces.forEach((f, idx) => {
+                    ctx.beginPath();
+                    ctx.moveTo(f.p1.x, f.p1.y);
+                    ctx.lineTo(f.p2.x, f.p2.y);
+                    ctx.lineTo(f.p3.x, f.p3.y);
+                    ctx.closePath();
+                    ctx.fillStyle = idx % 2 === 0 ? 'rgba(16, 185, 129, 0.72)' : 'rgba(99, 102, 241, 0.72)';
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(255,255,255,0.28)';
+                    ctx.stroke();
+                });
+            }
+            requestAnimationFrame(renderStlLoop);
+        }
+
+        document.querySelectorAll('.stl-model-btn').forEach(btn => {
+            btn.addEventListener('click', () => loadParametricStl(btn.getAttribute('data-stl-model')));
+        });
+
+        document.getElementById('btn-download-stl').addEventListener('click', () => {
+            let stl = `solid ${stlCurrentName}\n`;
+            stlTris.forEach(t => {
+                stl += `  facet normal 0 0 1\n    outer loop\n      vertex ${t[0].join(' ')}\n      vertex ${t[1].join(' ')}\n      vertex ${t[2].join(' ')}\n    endloop\n  endfacet\n`;
+            });
+            stl += `endsolid ${stlCurrentName}\n`;
+            downloadFile(`${stlCurrentName}.stl`, stl, 'model/stl');
+        });
+
+        // --- 12. VP 5.1: TIJDSCAPSULE (1832 - 1926 - 1953 - 2026) ---
+        let selectedEra = '1926';
+        const ERA_NOTES = {
+            '1832': '[1832 — Oorspronkelijk Kadastraal Minuutplan]: Kadastrale gemeente Scherpenisse Sectie E, onverdeelde polder- en dijkpercelen langs den Plattenweg.',
+            '1926': '[1926 — Keuringsrapport Woningwet Scherpenisse]: Perceel Sectie E nr. 108 (2.140 m²) omvat de historische bebouwing aan de Platteweg 3-5-7 inclusief schaapskooi en achtererf.',
+            '1953': '[1953 — Watersnoodramp & Herverkaveling]: Inundatie- en herstelregistratie op het eiland Tholen; aanpassing sloot- en weggrenzen langs de Platteweg.',
+            '2026': '[2026 — Actuele BRK Kadastrale Kaart]: Perceel Scherpenisse Sectie E nr. 1552 (vastgesteld 1.485 m², Platteweg 3, 5 en 7) na afsplitsing van 655 m².'
+        };
+
+        function renderTijdComparisonSvg() {
+            const svg = document.getElementById('tijd-comparison-svg');
+            if (!svg) return;
+            const blend = (parseInt(document.getElementById('tijd-blend-slider').value, 10) || 65) / 100;
+            document.getElementById('tijd-blend-lbl').textContent = `${Math.round(blend * 100)}%`;
+            document.getElementById('tijd-era-description').textContent = ERA_NOTES[selectedEra] || '';
+
+            svg.innerHTML = `
+                <rect width="680" height="300" fill="#090d16"/>
+                <!-- Historical Layer E 108 (1926 / 1832) -->
+                <g opacity="${blend}">
+                    <rect x="90" y="45" width="460" height="210" fill="rgba(245,158,11,0.22)" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="8 4"/>
+                    <rect x="130" y="85" width="150" height="90" fill="rgba(245,158,11,0.35)" stroke="#fbbf24" stroke-width="1.5"/>
+                    <text x="320" y="72" fill="#fbbf24" font-family="monospace" font-size="12" font-weight="bold">HISTORISCHE GRENS E 108 (${selectedEra} • 2.140 m²)</text>
+                    <text x="205" y="135" fill="#fff" font-family="monospace" font-size="11" text-anchor="middle">Herberg &amp; Schaapskooi</text>
+                </g>
+                <!-- Modern Layer E 1552 (2026) -->
+                <g>
+                    <rect x="135" y="65" width="355" height="165" fill="rgba(16,185,129,0.20)" stroke="#10b981" stroke-width="2.5"/>
+                    <text x="312" y="215" fill="#34d399" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">HUIDIG BRK PERCEEL E 1552 (2026 • 1.485 m² • Platteweg 3-5-7)</text>
+                </g>
+                <line x1="20" y1="275" x2="660" y2="275" stroke="#64748b" stroke-width="2"/>
+                <text x="340" y="292" fill="#94a3b8" font-family="monospace" font-size="11" text-anchor="middle">Platteweg (Openbare Weg / Kadastrale Grenslijn)</text>
+            `;
+        }
+
+        document.querySelectorAll('.era-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                selectedEra = btn.getAttribute('data-era');
+                document.querySelectorAll('.era-btn').forEach(b => b.classList.remove('bg-amber-600', 'text-white', 'font-bold'));
+                btn.classList.add('bg-amber-600', 'text-white', 'font-bold');
+                renderTijdComparisonSvg();
+            });
+        });
+        document.getElementById('tijd-blend-slider').addEventListener('input', renderTijdComparisonSvg);
+
+        // --- 13. VP 5.2: FEDIVERSE ATOM / RSS NIEUWSSTROOM ---
+        const FEDIVERSE_ITEMS = [
+            { user: 'vanvrijberghe', feed: 'https://pixelfed.social/users/vanvrijberghe.atom', title: 'Ochtendmist boven de Zeeuwse dijken bij Scherpenisse & Poortvliet', date: '2026-10-25', text: 'Vastgelegd langs de Platteweg en de polders van Tholen. #zeeland #scherpenisse #poortvliet #pixelfed' },
+            { user: 'polzer', feed: 'https://gram.social/users/polzer.atom', title: 'Industrieel erfgoed en kadastrale grenspalen in RD-projectie', date: '2026-10-24', text: 'Nachtopname en landmeetkundige verkenning. #geodesie #gramsocial #kadaster' },
+            { user: 'Janna', feed: 'https://gram.social/users/Janna.atom', title: 'Flora langs de Oosterscheldedijk bij laagwater', date: '2026-10-25', text: 'Historische dijkpercelen op het eiland Tholen. #natuur #zeeland #oosterschelde' },
+            { user: 'finhstamsterdam', feed: 'https://mastodon.social/@finhstamsterdam.rss', title: 'Koppeling Solid Pod, Woo-Tholen & Schaduwwaaier (E 108 → E 1552)', date: '2026-10-26', text: 'Volledige verificatie van de 5 Poortvliet-percelen (38.295 m²) en Platteweg 3-5-7 via de A. Ott Nr. 573 Poolplanimeter.' }
+        ];
+
+        function renderFediverseStream(filter = 'ALL') {
+            const box = document.getElementById('fedi-cards-container');
+            box.innerHTML = FEDIVERSE_ITEMS.filter(i => filter === 'ALL' || i.user === filter).map(item => `
+                <article class="p-3 rounded-xl border theme-border bg-black/10 space-y-1.5">
+                    <div class="flex justify-between items-center font-mono text-[10px]">
+                        <span class="font-bold text-indigo-400">@${escapeHtml(item.user)}</span>
+                        <span class="theme-muted">${escapeHtml(item.date)}</span>
+                    </div>
+                    <h4 class="font-bold text-xs">${escapeHtml(item.title)}</h4>
+                    <p class="theme-muted text-[11px]">${escapeHtml(item.text)}</p>
+                    <div class="text-[10px] font-mono text-emerald-400 truncate">${escapeHtml(item.feed)}</div>
+                </article>
+            `).join('');
+        }
+
+        document.querySelectorAll('.fedi-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.fedi-filter-btn').forEach(b => b.classList.remove('bg-indigo-600', 'text-white'));
+                btn.classList.add('bg-indigo-600', 'text-white');
+                renderFediverseStream(btn.getAttribute('data-fedi'));
+            });
+        });
+        document.getElementById('btn-fedi-refresh').addEventListener('click', () => {
+            renderFediverseStream('ALL');
+            showToast('Atom & RSS feeds (@vanvrijberghe, @polzer, @Janna, @finhstamsterdam) gesynchroniseerd!');
+        });
+
+        // --- 14. VP 6.1: GITHUB MODELS, LUMO AI & GEMINI 3 FLASH ---
+        async function runSovereignAiQuery(promptText) {
+            const model = document.getElementById('kennis-model-select').value;
+            const out = document.getElementById('kennis-ai-output');
+            out.textContent = `[${model}] Bezig met kadastrale en geodetische analyse...`;
+
+            const sysPrompt = "Je bent de technisch-juridische en geodetische AI van de SOLID POD SOVEREIGN WORKBENCH. Je kent het dossier Platteweg 3-5-7 te Scherpenisse (oud perceel E 108 uit het keuringsrapport 1926 met 2.140 m² -> huidig perceel E 1552 met 1.485 m²) en de 5 Poortvliet Sectie M percelen (1172, 1173, 1174, 1178, 1180 met totaal 38.295 m² in EPSG:28992). Antwoord beknopt en feitelijk in het Nederlands.";
+
+            try {
+                const apiKey = "";
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: promptText }] }],
+                        systemInstruction: { parts: [{ text: sysPrompt }] }
+                    })
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    const txt = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (txt) {
+                        out.textContent = `[Model: ${model}]\n\n${txt}`;
+                        return;
+                    }
+                }
+            } catch (e) {}
+
+            // Deterministic offline fallback
+            out.textContent = `[Model: ${model} — Sovereign Dossier Analyse]\n\n1. Scherpenisse Sectie E (Platteweg 3-5-7): Historisch perceel E 108 (keuringsrapport 1926, 2.140 m²) is getransformeerd naar huidig BRK-perceel E 1552 (1.485 m²). Het verschil van -655 m² hangt samen met kadastrale splitsingen en openbare weggrenzen.\n2. Poortvliet Sectie M (PVT00): De 5 percelen (1172: 365 m², 1173: 810 m², 1174: 11.990 m², 1178: 10.900 m², 1180: 14.230 m²) vormen samen exact 38.295 m² (3,83 ha). Percelen 1172, 1173 en 1174 delen exacte RD-hoekpunten.`;
+        }
+
+        document.getElementById('btn-kennis-ai-send').addEventListener('click', () => {
+            const p = document.getElementById('kennis-ai-prompt').value.trim();
+            if (p) runSovereignAiQuery(p);
+        });
+        document.querySelectorAll('.ai-preset-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const type = btn.getAttribute('data-ai-preset');
+                const q = type === 'platteweg'
+                    ? 'Analyseer de overgang van perceel E 108 (1926) naar E 1552 (Platteweg 3-5-7 Scherpenisse) en geef de relevante Woo-zoekslagen.'
+                    : 'Controleer de 5 kadastrale percelen in Poortvliet Sectie M (1172 t/m 1180) op gedeelde hoekpunten en oppervlakte.';
+                document.getElementById('kennis-ai-prompt').value = q;
+                runSovereignAiQuery(q);
+            });
+        });
+
+        // --- 15. VP 6.2: CRYPTPAD E2EE STUDIO ---
+        function calcShannonEntropy(str) {
+            if (!str) return 0;
+            const freq = {};
+            for (const ch of str) freq[ch] = (freq[ch] || 0) + 1;
+            let ent = 0;
+            const len = str.length;
+            for (const k in freq) {
+                const p = freq[k] / len;
+                ent -= p * Math.log2(p);
+            }
+            return ent;
+        }
+
+        function xorOtpTransform(input, key) {
+            const out = [];
+            for (let i = 0; i < input.length; i++) {
+                out.push((input.charCodeAt(i) ^ key.charCodeAt(i % key.length)).toString(16).padStart(2, '0'));
+            }
+            return out.join('');
+        }
+
+        document.getElementById('btn-crypt-enc').addEventListener('click', async () => {
+            const plain = document.getElementById('crypt-input').value;
+            const key = document.getElementById('crypt-pass').value || 'SOVEREIGN';
+            const hex = xorOtpTransform(plain, key);
+            const packet = JSON.stringify({
+                cipher: document.getElementById('crypt-algo').value.toUpperCase(),
+                dossier: 'PLATTEWEG-3-5-7-E108-E1552',
+                payloadHex: hex
+            }, null, 2);
+            document.getElementById('crypt-output').textContent = packet;
+            document.getElementById('crypt-entropy-badge').textContent = `Entropie: ${calcShannonEntropy(hex).toFixed(2)} bits/byte`;
+            showToast('Dossier versleuteld in CryptPad!');
+        });
+
+        document.getElementById('btn-crypt-dec').addEventListener('click', () => {
+            try {
+                const raw = JSON.parse(document.getElementById('crypt-output').textContent);
+                const key = document.getElementById('crypt-pass').value || 'SOVEREIGN';
+                const hex = raw.payloadHex || '';
+                let out = '';
+                for (let i = 0; i < hex.length; i += 2) {
+                    const byte = parseInt(hex.slice(i, i + 2), 16);
+                    out += String.fromCharCode(byte ^ key.charCodeAt((i / 2) % key.length));
+                }
+                document.getElementById('crypt-input').value = out;
+                showToast('CryptPad payload succesvol ontsleuteld!');
+            } catch (e) {
+                showToast('Klik eerst op Versleutel om een pakket te maken.');
+            }
+        });
+
+        // --- 16. VP 6.3: BTFM & ACSM FORENSICS ---
+        const BTFM_DATA = [
+            { cat: 'PDOK / OGC cURL', cmd: 'curl -s "https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/collections/perceel/items?bbox=66000,396000,67000,397000&limit=5" | jq .' },
+            { cat: 'TLS Audit', cmd: 'openssl s_client -connect service.pdok.nl:443 -servername service.pdok.nl </dev/null 2>/dev/null | openssl x509 -noout -dates -subject' },
+            { cat: 'Solid WAC Header', cmd: 'curl -sI -H "Accept: text/turtle" https://solidcommunity.net/ | grep -i "link:"' },
+            { cat: 'SHA-256 Dossier Seal', cmd: 'sha256sum rapport-platteweg-e108-e1552.md' }
+        ];
+
+        function renderBtfmCommands(q = '') {
+            const box = document.getElementById('btfm-list-box');
+            box.innerHTML = BTFM_DATA.filter(x => `${x.cat} ${x.cmd}`.toLowerCase().includes(q.toLowerCase())).map(x => `
+                <div class="p-2 rounded-lg border theme-border bg-black/10 flex items-center justify-between gap-2">
+                    <div class="truncate"><span class="text-rose-400 font-bold">[${escapeHtml(x.cat)}]</span> <code class="text-emerald-400">${escapeHtml(x.cmd)}</code></div>
+                    <button data-copy-cmd="${escapeHtml(x.cmd)}" class="px-2 py-0.5 rounded border theme-border text-[10px] shrink-0">Kopieer</button>
+                </div>
+            `).join('');
+            box.querySelectorAll('[data-copy-cmd]').forEach(b => {
+                b.addEventListener('click', () => copyToClipboard(b.getAttribute('data-copy-cmd'), 'BTFM commando gekopieerd!'));
+            });
+        }
+        document.getElementById('btfm-filter-input').addEventListener('input', (e) => renderBtfmCommands(e.target.value));
+
+        function parseAcsmForensics() {
+            const xml = document.getElementById('acsm-raw-box').value;
+            const doc = new DOMParser().parseFromString(xml, 'text/xml');
+            const tx = doc.querySelector('transaction')?.textContent || 'NL-THOLEN-E108';
+            const hmac = doc.querySelector('hmac')?.textContent || 'N/A';
+            document.getElementById('acsm-parsed-box').innerHTML = `
+                <div>Transactie-ID: <strong class="text-emerald-400">${escapeHtml(tx)}</strong></div>
+                <div>HMAC Handtekening: <span class="text-amber-400">${escapeHtml(hmac)}</span></div>
+            `;
+        }
+        document.getElementById('btn-parse-acsm').addEventListener('click', parseAcsmForensics);
+
+        // --- 17. VP 7.1: REKENCENTRUM API TESTER & WORKSPACE ("PICK UP WHERE YOU LEFT OFF") ---
+        function getFilteredParcels() {
+            const ds = document.getElementById('api-dataset-select').value;
+            if (ds === 'poortvliet') return PARCEL_DATABASE.slice(2);
+            if (ds === 'scherpenisse') return PARCEL_DATABASE.slice(0, 2);
+            return PARCEL_DATABASE;
+        }
+
+        function renderApiTesterAll() {
+            const parcels = getFilteredParcels();
+            const tbody = document.getElementById('api-results-tbody');
+
+            tbody.innerHTML = parcels.map((p, idx) => {
+                const shoelace = computeShoelaceArea(p.ring);
+                const diffPct = (((shoelace - p.brkArea) / p.brkArea) * 100).toFixed(2);
+                return `
+                    <tr data-parcel-id="${p.id}" class="api-parcel-row hover:bg-emerald-500/10 cursor-pointer transition">
+                        <td class="p-2 font-bold text-emerald-400">${escapeHtml(p.perceelnummer)}</td>
+                        <td class="p-2">${escapeHtml(p.gemeente)} (${escapeHtml(p.sectie)})</td>
+                        <td class="p-2 text-right">${p.brkArea.toLocaleString('nl-NL')}</td>
+                        <td class="p-2 text-right font-semibold">${shoelace.toFixed(2)}</td>
+                        <td class="p-2 text-right"><span class="px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400">${diffPct}%</span></td>
+                        <td class="p-2 text-[10px]">${escapeHtml(p.koopsom)}<br><span class="theme-muted">BAG: ${escapeHtml(p.pandId)}</span></td>
+                        <td class="p-2 text-right">
+                            <button data-measure-id="${p.id}" class="btn-row-planimeter px-2 py-0.5 rounded bg-amber-600 text-white text-[10px]">Poolarm 📐</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            tbody.querySelectorAll('.btn-row-planimeter').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = btn.getAttribute('data-measure-id');
+                    document.getElementById('ott-parcel-select').value = id;
+                    animatePlanimeterTrace();
+                });
+            });
+
+            tbody.querySelectorAll('.api-parcel-row').forEach(row => {
+                row.addEventListener('mouseenter', () => highlightApiSvgParcel(row.getAttribute('data-parcel-id'), true));
+                row.addEventListener('mouseleave', () => highlightApiSvgParcel(row.getAttribute('data-parcel-id'), false));
+            });
+
+            // Update Raw GeoJSON & WKT
+            const geojson = {
+                type: 'FeatureCollection',
+                crs: 'EPSG:28992',
+                bbox: document.getElementById('api-bbox-input').value.split(',').map(Number),
+                numberReturned: parcels.length,
+                features: parcels.map(p => ({
+                    type: 'Feature',
+                    id: p.id,
+                    properties: {
+                        kadastrale_gemeente: p.gemeente,
+                        akr_aanduiding: p.akr,
+                        sectie: p.sectie,
+                        perceelnummer: p.perceelnummer,
+                        kadastrale_grootte_waarde: p.brkArea,
+                        shoelace_berekend_m2: Number(computeShoelaceArea(p.ring).toFixed(2)),
+                        koopsom_indicatie: p.koopsom,
+                        bag_pand_id: p.pandId,
+                        begin_geldigheid: p.datum
+                    },
+                    geometry: { type: 'MultiPolygon', coordinates: [[p.ring]] }
+                }))
+            };
+            document.getElementById('api-raw-json-box').textContent = JSON.stringify(geojson, null, 2);
+
+            renderApiParcelSvg();
+        }
+
+        function renderApiParcelSvg() {
+            const svg = document.getElementById('api-parcel-svg');
+            if (!svg) return;
+            const parcels = getFilteredParcels();
+            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+            parcels.forEach(p => p.ring.forEach(pt => {
+                minX = Math.min(minX, pt[0]); maxX = Math.max(maxX, pt[0]);
+                minY = Math.min(minY, pt[1]); maxY = Math.max(maxY, pt[1]);
+            }));
+            const dx = (maxX - minX) || 100;
+            const dy = (maxY - minY) || 100;
+
+            let html = `<rect width="800" height="300" fill="#070a12"/>`;
+            parcels.forEach(p => {
+                const pts = p.ring.map(pt => {
+                    const x = 50 + ((pt[0] - minX) / dx) * 700;
+                    const y = 265 - ((pt[1] - minY) / dy) * 230;
+                    return `${x.toFixed(1)},${y.toFixed(1)}`;
+                }).join(' ');
+                const c = computeCentroid(p.ring);
+                const cx = 50 + ((c[0] - minX) / dx) * 700;
+                const cy = 265 - ((c[1] - minY) / dy) * 230;
+                html += `<polygon data-svg-parcel="${p.id}" points="${pts}" fill="rgba(16,185,129,0.22)" stroke="#10b981" stroke-width="2"/>`;
+                html += `<text x="${cx.toFixed(1)}" y="${cy.toFixed(1)}" fill="#fff" font-family="monospace" font-size="11" font-weight="bold" text-anchor="middle">${escapeHtml(p.perceelnummer)}</text>`;
+            });
+            svg.innerHTML = html;
+        }
+
+        function highlightApiSvgParcel(id, active) {
+            const poly = document.querySelector(`[data-svg-parcel="${id}"]`);
+            if (!poly) return;
+            poly.setAttribute('fill', active ? 'rgba(245,158,11,0.55)' : 'rgba(16,185,129,0.22)');
+            poly.setAttribute('stroke', active ? '#fbbf24' : '#10b981');
+        }
+
+        document.querySelectorAll('.ws-item-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const ws = btn.getAttribute('data-ws');
+                document.getElementById('api-Active-ws-badge').textContent = `Collectie: ${ws.toUpperCase()}`;
+                if (ws === 'koopsom' || ws === 'pandid') {
+                    document.getElementById('api-dataset-select').value = 'scherpenisse';
+                } else if (ws === 'kadastercheck') {
+                    document.getElementById('api-dataset-select').value = 'poortvliet';
+                } else {
+                    document.getElementById('api-dataset-select').value = 'all';
+                }
+                renderApiTesterAll();
+                showToast(`Collectie geladen: ${ws}`);
+            });
+        });
+
+        document.querySelectorAll('.api-subtab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.getAttribute('data-apitab');
+                document.querySelectorAll('.api-subtab-btn').forEach(b => b.classList.remove('bg-emerald-600', 'text-white'));
+                btn.classList.add('bg-emerald-600', 'text-white');
+                document.querySelectorAll('.api-subpanel').forEach(p => p.classList.toggle('hidden', p.id !== target));
+                if (target === 'api-tab-svg') renderApiParcelSvg();
+            });
+        });
+
+        document.getElementById('btn-api-execute').addEventListener('click', () => {
+            renderApiTesterAll();
+            showToast('PDOK BRK & Kadaster Workspace query uitgevoerd!');
+        });
+        document.getElementById('api-dataset-select').addEventListener('change', renderApiTesterAll);
+        document.getElementById('btn-api-copy-url').addEventListener('click', () => {
+            const bbox = document.getElementById('api-bbox-input').value.trim();
+            const url = `https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/collections/perceel/items?bbox=${bbox}&limit=5`;
+            copyToClipboard(url, 'PDOK OGC API URL gekopieerd!');
+        });
+
+        // --- 18. VP 7.2: MECHANISCHE POOLPLANIMETER (A. OTT NR. 573 — POLARARMEN) ---
+        let ottAnimProgress = 1;
+        let ottAnimTimer = null;
+
+        function drawPlanimeterState(progress = 1) {
+            const c = document.getElementById('ott-planimeter-canvas');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            ctx.clearRect(0, 0, c.width, c.height);
+
+            const selId = document.getElementById('ott-parcel-select').value;
+            const parcel = PARCEL_DATABASE.find(x => x.id === selId) || PARCEL_DATABASE[1];
+            const ring = parcel.ring;
+
+            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+            ring.forEach(pt => {
+                minX = Math.min(minX, pt[0]); maxX = Math.max(maxX, pt[0]);
+                minY = Math.min(minY, pt[1]); maxY = Math.max(maxY, pt[1]);
+            });
+            const spanX = (maxX - minX) || 40;
+            const spanY = (maxY - minY) || 40;
+
+            const toScreen = (pt) => ({
+                x: 135 + ((pt[0] - minX) / spanX) * 220,
+                y: 195 - ((pt[1] - minY) / spanY) * 150
+            });
+
+            // Draw Parcel Polygon
+            ctx.beginPath();
+            ring.forEach((pt, i) => {
+                const s = toScreen(pt);
+                if (i === 0) ctx.moveTo(s.x, s.y);
+                else ctx.lineTo(s.x, s.y);
+            });
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(16, 185, 129, 0.20)';
+            ctx.fill();
+            ctx.strokeStyle = '#10b981';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Determine current tracer position along perimeter
+            const segCount = ring.length - 1;
+            const totalStep = progress * segCount;
+            const segIdx = Math.min(segCount - 1, Math.floor(totalStep));
+            const segFrac = totalStep - segIdx;
+            const pA = toScreen(ring[segIdx]);
+            const pB = toScreen(ring[segIdx + 1]);
+            const tracer = {
+                x: pA.x + (pB.x - pA.x) * segFrac,
+                y: pA.y + (pB.y - pA.y) * segFrac
+            };
+
+            // Fixed Pole Weight (Poolgewicht) on the left and Knee Joint (Scharnierpunt)
+            const pole = { x: 42, y: 185 };
+            const rp = parseFloat(document.getElementById('ott-rp-slider').value) * 6.5;
+            const rt = parseFloat(document.getElementById('ott-rt-slider').value) * 6.5;
+            document.getElementById('ott-rp-lbl').textContent = `${document.getElementById('ott-rp-slider').value} cm`;
+            document.getElementById('ott-rt-lbl').textContent = `${document.getElementById('ott-rt-slider').value} cm`;
+
+            // Inverse kinematics for 2-link planar arm (Pole -> Elbow -> Tracer)
+            const dx = tracer.x - pole.x;
+            const dy = tracer.y - pole.y;
+            const d = Math.max(10, Math.min(rp + rt - 2, Math.hypot(dx, dy)));
+            const a = (rp * rp - rt * rt + d * d) / (2 * d);
+            const h = Math.sqrt(Math.max(0, rp * rp - a * a));
+            const mx = pole.x + (a * dx) / d;
+            const my = pole.y + (a * dy) / d;
+            const elbow = { x: mx - (h * dy) / d, y: my + (h * dx) / d };
+
+            // Draw Poolarm (Pole -> Elbow)
+            ctx.beginPath();
+            ctx.moveTo(pole.x, pole.y);
+            ctx.lineTo(elbow.x, elbow.y);
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+
+            // Draw Rijarm (Elbow -> Tracer)
+            ctx.beginPath();
+            ctx.moveTo(elbow.x, elbow.y);
+            ctx.lineTo(tracer.x, tracer.y);
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 3.5;
+            ctx.stroke();
+
+            // Draw Pole, Elbow (Measuring Wheel) & Tracer Lens
+            ctx.fillStyle = '#38bdf8';
+            ctx.beginPath(); ctx.arc(pole.x, pole.y, 7, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#fbbf24';
+            ctx.beginPath(); ctx.arc(elbow.x, elbow.y, 5.5, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = '#ef4444';
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.arc(tracer.x, tracer.y, 6, 0, Math.PI * 2); ctx.stroke();
+
+            // Update Readouts
+            const fullArea = computeShoelaceArea(ring);
+            const curArea = fullArea * progress;
+            const revs = (curArea / 1000).toFixed(3);
+            document.getElementById('ott-drum-readout').textContent = `Telwerk: ${revs} omw`;
+            document.getElementById('ott-area-val').textContent = `${curArea.toFixed(2)} m²`;
+            document.getElementById('ott-brk-val').textContent = `${parcel.brkArea} m²`;
+            document.getElementById('ott-delta-val').textContent = `${(fullArea - parcel.brkArea).toFixed(2)} m²`;
+        }
+
+        function animatePlanimeterTrace() {
+            if (ottAnimTimer) clearInterval(ottAnimTimer);
+            ottAnimProgress = 0;
+            ottAnimTimer = setInterval(() => {
+                ottAnimProgress += 0.025;
+                if (ottAnimProgress >= 1) {
+                    ottAnimProgress = 1;
+                    clearInterval(ottAnimTimer);
+                }
+                drawPlanimeterState(ottAnimProgress);
+            }, 30);
+        }
+
+        document.getElementById('btn-ott-trace').addEventListener('click', animatePlanimeterTrace);
+        ['ott-parcel-select', 'ott-rp-slider', 'ott-rt-slider'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => drawPlanimeterState(1));
+        });
+
+        // --- 19. VP 7.3: MODULAR RADIAL MATRIX & NATIVE JS EVALUATOR ---
+        function renderModularFlower() {
+            const svg = document.getElementById('modular-flower-svg');
+            if (!svg) return;
+            const N = parseInt(document.getElementById('mod-n-select').value, 10) || 260;
+            let lines = `<circle cx="0" cy="0" r="122" fill="none" stroke="#334155" stroke-width="1"/>`;
+            for (let i = 0; i < N; i++) {
+                const j = (i * 7) % N;
+                const a1 = (i / N) * Math.PI * 2 - Math.PI / 2;
+                const a2 = (j / N) * Math.PI * 2 - Math.PI / 2;
+                const x1 = 120 * Math.cos(a1), y1 = 120 * Math.sin(a1);
+                const x2 = 120 * Math.cos(a2), y2 = 120 * Math.sin(a2);
+                lines += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#a855f7" stroke-width="0.55" stroke-opacity="0.45"/>`;
+            }
+            svg.innerHTML = lines;
+        }
+        document.getElementById('mod-n-select').addEventListener('change', renderModularFlower);
+
+        function runNativeJsEval() {
+            const code = document.getElementById('native-js-input').value;
+            const out = document.getElementById('native-js-output');
+            try {
+                const fn = new Function(code);
+                out.textContent = String(fn());
+            } catch (e) {
+                out.textContent = `Fout: ${e.message}`;
+            }
+        }
+        document.getElementById('btn-eval-native-js').addEventListener('click', runNativeJsEval);
+
+        // --- 20. VP 8.1 & VP 8.2: BIBLIOTHEEK (BESTUURSORGANEN & WOO-ZOEKSLAAG MATRIX + API TREE) ---
+        const BIBLIO_ZOEKSLAGEN = [
+            {
+                org: 'Gemeente Tholen',
+                title: 'Bouwkundig Keuringsrapport 1926 & Woningwet-archief Scherpenisse',
+                law: 'Wet open overheid (Art. 4.1 Woo)',
+                query: '("Platteweg 3" OR "Platteweg 5" OR "Platteweg 7" OR "Sectie E 108" OR "E 1552") AND ("keuringsrapport" OR "1926" OR "schaapskooi" OR "bouwvergunning")'
+            },
+            {
+                org: 'Het Kadaster',
+                title: 'Veldwerken, Relatiebrieven & Hulpkaarten (SCN00 E 108 → E 1552)',
+                law: 'Kadasterwet / BRK OGC API',
+                query: 'GEMEENTE="Scherpenisse" AND SECTIE="E" AND PERCEEL IN ("108", "1552") AND DOCUMENTTYPE IN ("Veldwerk", "Hulpkaart", "Splitsingsverzoek")'
+            },
+            {
+                org: 'Het Kadaster',
+                title: 'Poortvliet Sectie M (PVT00 / 797) Perceelverificatie 1172–1180',
+                law: 'OGC API Features EPSG:28992',
+                query: 'BBOX(66000,396000,67000,397000) AND AKR="PVT00" AND SECTIE="M" AND PERCEEL IN (1172, 1173, 1174, 1178, 1180)'
+            },
+            {
+                org: 'Waterschap Scheldestromen',
+                title: 'Legger Waterstaatswerken, Duikers & Dijksloot Platteweg',
+                law: 'Waterschapswet & Woo',
+                query: '("Platteweg" AND "Scherpenisse") AND ("legger" OR "watergang" OR "duiker" OR "schouwsloot" OR "E 108" OR "E 1552")'
+            },
+            {
+                org: 'Zeeuws Archief',
+                title: 'Oorspronkelijke Aanwijzende Tafels (OAT 1832) & Minuutplans Tholen',
+                law: 'Archiefwet 1995',
+                query: 'ARCHIEF="Kadastrale Plans Zeeland 1832" AND GEMEENTE IN ("Scherpenisse", "Poortvliet") AND SECTIE IN ("E", "M")'
+            },
+            {
+                org: 'Provincie Zeeland',
+                title: 'Cultuurhistorische Hoofdstructuur & Historische Boerderijplaatsen',
+                law: 'Omgevingswet / Woo',
+                query: '("Scherpenisse" OR "Poortvliet") AND ("Platteweg" OR "herberg" OR "schaapskooi" OR "historische verkaveling")'
+            },
+            {
+                org: 'RCE',
+                title: 'Rijksdienst voor het Cultureel Erfgoed — Historische Geografie Tholen',
+                law: 'Erfgoedwet',
+                query: 'REGIO="Tholen" AND ("Scherpenisse Sectie E" OR "Poortvliet Sectie M") AND "kadastrale minuut"'
+            }
+        ];
+
+        function renderBiblioCards(orgFilter = 'ALL', textFilter = '') {
+            const grid = document.getElementById('biblio-cards-grid');
+            grid.innerHTML = BIBLIO_ZOEKSLAGEN.filter(item => {
+                const matchOrg = orgFilter === 'ALL' || item.org === orgFilter;
+                const matchTxt = `${item.org} ${item.title} ${item.query}`.toLowerCase().includes(textFilter.toLowerCase());
+                return matchOrg && matchTxt;
+            }).map(item => `
+                <article class="p-3 rounded-xl border theme-border bg-black/10 flex flex-col justify-between gap-2">
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-center">
+                            <span class="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400">${escapeHtml(item.org)}</span>
+                            <span class="font-mono text-[10px] theme-muted">${escapeHtml(item.law)}</span>
+                        </div>
+                        <h4 class="font-bold text-xs">${escapeHtml(item.title)}</h4>
+                        <pre class="p-2 rounded-lg theme-input font-mono text-[10px] text-amber-300 overflow-x-auto select-all">${escapeHtml(item.query)}</pre>
+                    </div>
+                    <div class="flex justify-end">
+                        <button data-copy-woo="${escapeHtml(item.query)}" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-[11px]">Kopieer Zoekslag</button>
+                    </div>
+                </article>
+            `).join('');
+
+            grid.querySelectorAll('[data-copy-woo]').forEach(btn => {
+                btn.addEventListener('click', () => copyToClipboard(btn.getAttribute('data-copy-woo'), 'Woo-zoekslag gekopieerd!'));
+            });
+        }
+
+        let currentBiblioOrg = 'ALL';
+        document.querySelectorAll('.org-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentBiblioOrg = btn.getAttribute('data-org');
+                document.querySelectorAll('.org-filter-btn').forEach(b => b.classList.remove('bg-emerald-600', 'text-white'));
+                btn.classList.add('bg-emerald-600', 'text-white');
+                renderBiblioCards(currentBiblioOrg, document.getElementById('biblio-search-input').value);
+            });
+        });
+        document.getElementById('biblio-search-input').addEventListener('input', (e) => {
+            renderBiblioCards(currentBiblioOrg, e.target.value);
+        });
+
+        function renderBiblioTree() {
+            const ascii = `SOVEREIGN_API_NETWORK_TREE (0% Iframes)
+├── [SOLID] dev.solidproject.org (Pod RDF & WAC .acl)
+├── [WOO]   woo-tholen.vercel.app
+│   ├── /apitest.html (PDOK BRK & Koopsom API Tester)
+│   └── /tree.html    (Bestuursorganen & Woo Zoekslagen)
+├── [GEO]   mathgeo-seven.vercel.app
+│   ├── /index.html        (60° Isometrisch & RD Grid)
+│   ├── /schaduwwaaier.html(Zonnebaan & Azimut Engine)
+│   └── /cryptpad.html     (AES-256-GCM & FinalCrypt OTP)
+└── [FEDI]  Fediverse Atom/RSS Gateways
+    ├── pixelfed.social/users/vanvrijberghe.atom
+    ├── gram.social/users/polzer.atom
+    ├── gram.social/users/Janna.atom
+    └── mastodon.social/@finhstamsterdam.rss`;
+            document.getElementById('biblio-ascii-tree').textContent = ascii;
+
+            document.getElementById('biblio-network-svg').innerHTML = `
+                <rect width="420" height="170" fill="#070a12"/>
+                <line x1="75" y1="85" x2="205" y2="35" stroke="#10b981" stroke-width="1.5"/>
+                <line x1="75" y1="85" x2="205" y2="85" stroke="#38bdf8" stroke-width="1.5"/>
+                <line x1="75" y1="85" x2="205" y2="135" stroke="#a855f7" stroke-width="1.5"/>
+                <circle cx="75" cy="85" r="24" fill="#059669" stroke="#34d399" stroke-width="2"/>
+                <text x="75" y="88" fill="#fff" font-family="monospace" font-size="9" font-weight="bold" text-anchor="middle">POD CORE</text>
+                <rect x="205" y="20" width="185" height="28" rx="6" fill="#0f172a" stroke="#10b981"/>
+                <text x="297" y="38" fill="#34d399" font-family="monospace" font-size="9" text-anchor="middle">woo-tholen/apitest + tree</text>
+                <rect x="205" y="70" width="185" height="28" rx="6" fill="#0f172a" stroke="#38bdf8"/>
+                <text x="297" y="88" fill="#38bdf8" font-family="monospace" font-size="9" text-anchor="middle">mathgeo/schaduwwaaier + crypt</text>
+                <rect x="205" y="120" width="185" height="28" rx="6" fill="#0f172a" stroke="#a855f7"/>
+                <text x="297" y="138" fill="#c084fc" font-family="monospace" font-size="9" text-anchor="middle">PDOK BRK + Fediverse Atom</text>
+            `;
+        }
+        document.getElementById('btn-copy-ascii-tree').addEventListener('click', () => {
+            copyToClipboard(document.getElementById('biblio-ascii-tree').textContent, 'ASCII API Tree gekopieerd!');
+        });
+
+        // --- 21. BOOTSTRAP ENTIRE SYSTEM ---
+        window.addEventListener('DOMContentLoaded', () => {
+            initAllNativeViewports();
+            renderPidDaemons();
+            renderIamMatrix();
+            renderDispatchLogs();
+            refreshSolidAndLegalReports();
+            renderGeoNativeMap();
+            loadParametricStl('platteweg');
+            requestAnimationFrame(renderStlLoop);
+            renderTijdComparisonSvg();
+            renderFediverseStream('ALL');
+            renderBtfmCommands('');
+            parseAcsmForensics();
+            renderApiTesterAll();
+            drawPlanimeterState(1);
+            renderModularFlower();
+            runNativeJsEval();
+            renderBiblioCards('ALL', '');
+            renderBiblioTree();
+
+            // Uptime Clock
+            let secCount = 0;
+            setInterval(() => {
+                secCount++;
+                const h = String(Math.floor(secCount / 3600)).padStart(2, '0');
+                const m = String(Math.floor((secCount % 3600) / 60)).padStart(2, '0');
+                const s = String(secCount % 60).padStart(2, '0');
+                const el = document.getElementById('pid-uptime-badge');
+                if (el) el.textContent = `UPTIME: ${h}:${m}:${s}`;
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

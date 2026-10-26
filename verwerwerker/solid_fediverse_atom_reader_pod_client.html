@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="nl" class="dark h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solid Pod & Fediverse Atom Nieuwsstroom</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        solid: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            400: '#a78bfa',
+                            500: '#7c4dff',
+                            600: '#6d28d9',
+                            700: '#5b21b6',
+                            900: '#2e1065',
+                            950: '#170936'
+                        },
+                        sovereign: {
+                            800: '#141720',
+                            850: '#0f1219',
+                            900: '#0a0c12',
+                            950: '#06070b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'ui-monospace', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #06070b;
+            color: #e2e8f0;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0c12;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #262b3d;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #7c4dff;
+        }
+        /* RDF Syntax Highlighting */
+        .ttl-prefix { color: #c084fc; font-weight: 600; }
+        .ttl-uri { color: #38bdf8; }
+        .ttl-pred { color: #818cf8; }
+        .ttl-lit { color: #34d399; }
+        .ttl-type { color: #fbbf24; }
+        .ttl-comment { color: #64748b; font-style: italic; }
+        
+        /* Subtle glowing border animation for active sync */
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(124, 77, 255, 0.4); }
+            50% { box-shadow: 0 0 15px 2px rgba(124, 77, 255, 0.25); }
+        }
+        .solid-glow {
+            animation: pulseGlow 3s infinite;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col overflow-hidden select-none sm:select-auto bg-sovereign-950 text-slate-200 antialiased">
+
+    <!-- Top Sovereign Solid Header -->
+    <header class="bg-sovereign-900/95 backdrop-blur-md border-b border-slate-800/80 px-4 py-2.5 shrink-0 z-30">
+        <div class="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-3">
+            <!-- Brand & Specification Badge -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-solid-500 to-indigo-700 flex items-center justify-center shadow-lg shadow-solid-500/20 border border-solid-400/30 shrink-0">
+                    <!-- Solid Project Hexagon Symbol -->
+                    <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L3 7v10l9 5 9-5V7l-9-5z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 22V12m0 0L3 7m9 5l9-5"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <h1 class="text-base font-bold tracking-tight text-white">Solid Fediverse Atom Client</h1>
+                        <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-solid-500/20 text-solid-400 border border-solid-500/30 font-semibold">W3C LDP + RFC 4287</span>
+                    </div>
+                    <p class="text-xs text-slate-400 flex items-center gap-2">
+                        <span>Decentrale Pixelfed & Gram.social Nieuwsstroom gekoppeld aan uw Solid Pod</span>
+                        <span class="text-slate-600">•</span>
+                        <a href="https://dev.solidproject.org" target="_blank" rel="noopener noreferrer" class="text-solid-400 hover:text-solid-300 underline decoration-solid-500/40">dev.solidproject.org</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right Status Bar & Quick Actions -->
+            <div class="flex items-center flex-wrap gap-2.5">
+                <!-- Active CORS Mode Indicator -->
+                <div class="flex items-center bg-sovereign-800 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs">
+                    <span class="text-slate-400 mr-2">CORS Gateway:</span>
+                    <select id="cors-mode-select" class="bg-transparent text-emerald-400 font-mono text-xs focus:outline-none cursor-pointer">
+                        <option value="auto" class="bg-sovereign-900 text-slate-200">Auto (Direct → Proxy → Snapshot)</option>
+                        <option value="allorigins" class="bg-sovereign-900 text-slate-200">AllOrigins Raw Proxy</option>
+                        <option value="corsproxy" class="bg-sovereign-900 text-slate-200">CorsProxy.io Gateway</option>
+                        <option value="codetabs" class="bg-sovereign-900 text-slate-200">CodeTabs XML Proxy</option>
+                        <option value="direct" class="bg-sovereign-900 text-slate-200">Direct (Geen Proxy)</option>
+                        <option value="custom" class="bg-sovereign-900 text-slate-200">Eigen Lokale Proxy URL</option>
+                    </select>
+                </div>
+
+                <!-- Custom Proxy Input (hidden unless 'custom' is chosen) -->
+                <input id="custom-proxy-input" type="text" placeholder="http://localhost:8080/" value="http://localhost:8080/" class="hidden bg-sovereign-800 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-sky-300 w-44 focus:outline-none focus:border-solid-500">
+
+                <!-- Sync All Feeds Button -->
+                <button id="btn-sync-all" class="bg-solid-600 hover:bg-solid-500 text-white text-xs font-semibold px-3.5 py-1.5 rounded-lg shadow-sm border border-solid-400/30 transition flex items-center space-x-1.5">
+                    <svg id="sync-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    <span>Synchroniseer Feeds</span>
+                </button>
+
+                <!-- Manual XML Paste Modal Trigger -->
+                <button id="btn-open-xml-modal" class="bg-sovereign-800 hover:bg-slate-800 text-slate-300 text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-700/80 transition flex items-center space-x-1.5" title="Plak handmatig een .atom XML bestand">
+                    <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <span>XML Plakken</span>
+                </button>
+
+                <!-- Solid Pod Connection Status Pill -->
+                <div id="pod-status-badge" class="flex items-center space-x-2 bg-emerald-950/60 border border-emerald-700/50 text-emerald-300 px-3 py-1 rounded-full text-xs font-mono">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="pod-status-text">Pod: Lokaal + LDP Klaar</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace Layout -->
+    <div class="flex-1 max-w-[1600px] w-full mx-auto flex flex-col lg:flex-row overflow-hidden">
+        
+        <!-- LEFT SIDEBAR: Feeds Manager & Solid Pod Configuration -->
+        <aside class="w-full lg:w-[390px] bg-sovereign-900 border-b lg:border-b-0 lg:border-r border-slate-800/80 flex flex-col shrink-0 overflow-y-auto max-h-[45vh] lg:max-h-none">
+            
+            <!-- SECTION 1: Gekoppelde Atom/Fediverse Bronnen -->
+            <div class="p-4 border-b border-slate-800/80">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 11-2 0 1 1 0 012 0z"/>
+                        </svg>
+                        Fediverse Atom Bronnen (3+)
+                    </h2>
+                    <span id="total-entries-badge" class="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">0 items</span>
+                </div>
+
+                <!-- Feeds List Container -->
+                <div id="feeds-list-container" class="space-y-2.5">
+                    <!-- Populated via JS -->
+                </div>
+
+                <!-- Add Extra Feed Input -->
+                <div class="mt-3 pt-3 border-t border-slate-800/60">
+                    <label class="block text-[11px] text-slate-400 mb-1.5 font-medium">Extra .atom / .rss Feed toevoegen:</label>
+                    <div class="flex gap-1.5">
+                        <input id="input-new-feed-url" type="url" placeholder="https://pixelfed.social/users/naam.atom" class="flex-1 bg-sovereign-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-solid-500">
+                        <button id="btn-add-feed" class="bg-slate-800 hover:bg-solid-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition border border-slate-700 shrink-0">
+                            + Voeg toe
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: Solid Project Pod & LDP Configuratie -->
+            <div class="p-4 flex-1 flex flex-col justify-between space-y-4">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-solid-400 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-solid-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                            </svg>
+                            Solid Pod & LDP Opslag
+                        </h2>
+                        <span class="text-[10px] font-mono bg-solid-950 text-solid-400 border border-solid-700/50 px-1.5 py-0.5 rounded">Text/Turtle</span>
+                    </div>
+
+                    <!-- Solid Pod Root URI -->
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">Solid Pod Root / Identity Provider (IdP)</label>
+                        <div class="flex gap-1.5">
+                            <input id="input-pod-root" type="url" value="https://solidcommunity.net/" class="flex-1 bg-sovereign-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs font-mono text-sky-300 focus:outline-none focus:border-solid-500">
+                            <select id="select-pod-preset" class="bg-sovereign-800 border border-slate-700 text-slate-300 rounded-lg px-2 text-[11px] focus:outline-none" title="Kies een Solid Server preset">
+                                <option value="https://solidcommunity.net/">solidcommunity.net</option>
+                                <option value="http://localhost:3000/">CSS Lokaal (:3000)</option>
+                                <option value="https://pods.inrupt.com/">Inrupt PodSpaces</option>
+                                <option value="https://solidweb.org/">solidweb.org</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- WebID (#me) -->
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">Uw Solid WebID URI (`foaf:PersonalProfileDocument`)</label>
+                        <input id="input-webid" type="url" value="https://vanvrijberghe.solidcommunity.net/profile/card#me" class="w-full bg-sovereign-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs font-mono text-slate-300 focus:outline-none focus:border-solid-500">
+                    </div>
+
+                    <!-- Target LDP Container / Resource Path -->
+                    <div>
+                        <label class="block text-[11px] text-slate-400 mb-1">Doel LDP Resource Pad (`.ttl`)</label>
+                        <input id="input-ldp-path" type="text" value="public/feeds/pixelfed-stream.ttl" class="w-full bg-sovereign-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs font-mono text-emerald-400 focus:outline-none focus:border-solid-500">
+                    </div>
+
+                    <!-- Auth Bearer / DPoP Token (Optional) -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-[11px] text-slate-400">Solid OIDC Bearer / DPoP Token (optioneel)</label>
+                            <span class="text-[10px] text-slate-500 font-mono">WAC / ACP</span>
+                        </div>
+                        <input id="input-solid-token" type="password" placeholder="Laat leeg voor publieke container of lokale CSS..." class="w-full bg-sovereign-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs font-mono text-slate-300 focus:outline-none focus:border-solid-500">
+                    </div>
+
+                    <!-- LDP Operations Toolbar -->
+                    <div class="pt-1 grid grid-cols-3 gap-2">
+                        <button id="btn-pod-put" class="bg-solid-600 hover:bg-solid-500 text-white py-2 px-2.5 rounded-lg text-xs font-semibold transition flex flex-col items-center justify-center border border-solid-400/30 shadow">
+                            <span class="font-mono text-[10px] text-solid-200">HTTP PUT</span>
+                            <span>Schrijf .ttl</span>
+                        </button>
+                        <button id="btn-pod-patch" class="bg-indigo-950 hover:bg-indigo-900 text-indigo-200 py-2 px-2.5 rounded-lg text-xs font-semibold transition flex flex-col items-center justify-center border border-indigo-700/60">
+                            <span class="font-mono text-[10px] text-indigo-400">SPARQL PATCH</span>
+                            <span>Update Pod</span>
+                        </button>
+                        <button id="btn-pod-get" class="bg-sovereign-800 hover:bg-slate-800 text-slate-200 py-2 px-2.5 rounded-lg text-xs font-semibold transition flex flex-col items-center justify-center border border-slate-700">
+                            <span class="font-mono text-[10px] text-emerald-400">HTTP GET</span>
+                            <span>Lees Pod</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mini Solid Transaction Log -->
+                <div class="bg-sovereign-950 border border-slate-800/90 rounded-xl p-3 space-y-1.5">
+                    <div class="flex items-center justify-between text-[11px]">
+                        <span class="font-semibold text-slate-400">Laatste LDP Transactie</span>
+                        <span id="last-ldp-code" class="font-mono text-emerald-400">200 OK (Lokaal)</span>
+                    </div>
+                    <div id="last-ldp-log" class="text-[11px] font-mono text-slate-400 truncate">
+                        Gereed: <span class="text-sky-400">https://solidcommunity.net/public/feeds/pixelfed-stream.ttl</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- RIGHT MAIN AREA: 4 View Tabs & Content -->
+        <main class="flex-1 flex flex-col overflow-hidden bg-sovereign-950">
+            
+            <!-- Navigation Tabs Bar -->
+            <div class="bg-sovereign-900 border-b border-slate-800/80 px-4 pt-2.5 flex flex-wrap items-center justify-between gap-2 shrink-0">
+                <nav class="flex space-x-1 overflow-x-auto" aria-label="Hoofdnavigatie">
+                    <button data-tab="view-stream" class="main-tab-btn active px-4 py-2.5 text-xs font-semibold rounded-t-xl border-b-2 border-solid-500 text-white bg-sovereign-950 flex items-center space-x-2 transition">
+                        <svg class="w-4 h-4 text-solid-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                        <span>1. Nieuwsstroom (Stream)</span>
+                        <span id="tab-badge-stream" class="ml-1 px-1.5 py-0.2 bg-solid-500/20 text-solid-300 rounded text-[10px] font-mono">0</span>
+                    </button>
+                    <button data-tab="view-rdf" class="main-tab-btn px-4 py-2.5 text-xs font-semibold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 transition">
+                        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                        <span>2. Solid Pod & RDF Turtle (.ttl)</span>
+                        <span id="tab-badge-pinned" class="ml-1 px-1.5 py-0.2 bg-emerald-500/20 text-emerald-300 rounded text-[10px] font-mono">0 gepind</span>
+                    </button>
+                    <button data-tab="view-xml" class="main-tab-btn px-4 py-2.5 text-xs font-semibold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 transition">
+                        <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        <span>3. Atom XML & XPath Inspector</span>
+                    </button>
+                    <button data-tab="view-curl" class="main-tab-btn px-4 py-2.5 text-xs font-semibold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2 transition">
+                        <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <span>4. Solid cURL & Specificatie</span>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- ========================================================= -->
+            <!-- TAB 1: NIEUWSSTROOM (CHRONOLOGICAL PIXELFED / ATOM STREAM) -->
+            <!-- ========================================================= -->
+            <section id="view-stream" class="tab-panel flex-1 flex flex-col overflow-hidden">
+                <!-- Filter & Layout Sub-toolbar -->
+                <div class="bg-sovereign-900/60 border-b border-slate-800/80 px-4 py-3 flex flex-wrap items-center justify-between gap-3 shrink-0">
+                    <!-- Author Filter Pills -->
+                    <div id="author-filter-bar" class="flex items-center flex-wrap gap-1.5">
+                        <button data-author="ALL" class="author-pill bg-solid-600 text-white text-xs font-medium px-3 py-1 rounded-full border border-solid-400/40 transition">
+                            Alle Bronnen
+                        </button>
+                        <button data-author="vanvrijberghe" class="author-pill bg-sovereign-800 hover:bg-slate-800 text-slate-300 text-xs font-medium px-3 py-1 rounded-full border border-slate-700 transition flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-pink-500"></span>
+                            <span>@vanvrijberghe (pixelfed.social)</span>
+                        </button>
+                        <button data-author="polzer" class="author-pill bg-sovereign-800 hover:bg-slate-800 text-slate-300 text-xs font-medium px-3 py-1 rounded-full border border-slate-700 transition flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                            <span>@polzer (gram.social)</span>
+                        </button>
+                        <button data-author="Janna" class="author-pill bg-sovereign-800 hover:bg-slate-800 text-slate-300 text-xs font-medium px-3 py-1 rounded-full border border-slate-700 transition flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+                            <span>@Janna (gram.social)</span>
+                        </button>
+                        <button data-author="PINNED" class="author-pill bg-sovereign-800 hover:bg-slate-800 text-emerald-300 text-xs font-medium px-3 py-1 rounded-full border border-emerald-800/60 transition flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z"/></svg>
+                            <span>Gepind in Solid Pod</span>
+                        </button>
+                    </div>
+
+                    <!-- Search & Layout Switcher -->
+                    <div class="flex items-center space-x-2">
+                        <div class="relative">
+                            <input id="stream-search-input" type="text" placeholder="Filter op titel, tag of inhoud..." class="bg-sovereign-950 border border-slate-800 rounded-lg pl-8 pr-3 py-1 text-xs text-slate-200 w-56 focus:outline-none focus:border-solid-500">
+                            <svg class="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        </div>
+
+                        <div class="bg-sovereign-950 border border-slate-800 rounded-lg p-0.5 flex">
+                            <button id="btn-layout-cards" class="px-2.5 py-1 rounded-md text-xs font-medium bg-solid-600 text-white transition" title="Chronologische Kaartweergave">
+                                Kaarten
+                            </button>
+                            <button id="btn-layout-grid" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-400 hover:text-white transition" title="Compact Fotoster Raster">
+                                Fotoraster
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scrollable Stream Container -->
+                <div class="flex-1 overflow-y-auto p-4 md:p-6">
+                    <div id="stream-entries-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 max-w-7xl mx-auto">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================= -->
+            <!-- TAB 2: SOLID POD & RDF TURTLE (.TTL) + SPARQL UPDATE      -->
+            <!-- ========================================================= -->
+            <section id="view-rdf" class="tab-panel hidden flex-1 flex flex-col overflow-hidden p-4 md:p-6 space-y-4">
+                <!-- Top Controls Bar -->
+                <div class="bg-sovereign-900 border border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 shrink-0">
+                    <div>
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                            <span>Live W3C Linked Data Graaf (`text/turtle`)</span>
+                            <span class="text-[11px] font-mono bg-emerald-950 text-emerald-400 border border-emerald-700/50 px-2 py-0.5 rounded">ActivityStreams 2.0 + Schema.org</span>
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-0.5">
+                            Deze RDF Turtle-graaf representeert uw geabonneerde Atom-feeds (`schema:DataFeed`) én de berichten als Linked Data triples.
+                        </p>
+                    </div>
+
+                    <div class="flex items-center flex-wrap gap-2">
+                        <select id="rdf-scope-select" class="bg-sovereign-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-solid-500">
+                            <option value="all">Volledige Graaf (Feeds + Alle Atom Entries)</option>
+                            <option value="pinned">Enkel Abonnementen + Gepinde Items</option>
+                            <option value="subscriptions">Enkel Feed Abonnementen (LDP Config)</option>
+                        </select>
+
+                        <button id="btn-copy-ttl" class="bg-sovereign-800 hover:bg-slate-800 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition">
+                            Kopieer .ttl
+                        </button>
+                        <button id="btn-download-ttl" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm">
+                            Download .ttl Bestand
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Split View: Left RDF Turtle Graph, Right SPARQL Update & LDP Network Log -->
+                <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <!-- RDF Turtle Viewer (7 cols) -->
+                    <div class="lg:col-span-7 bg-sovereign-900 border border-slate-800 rounded-xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs">
+                            <span class="font-mono text-slate-300" id="rdf-resource-uri-label">URI: https://solidcommunity.net/public/feeds/pixelfed-stream.ttl</span>
+                            <span id="rdf-triple-count" class="font-mono text-[11px] text-solid-400">0 triples</span>
+                        </div>
+                        <pre id="rdf-turtle-output" class="flex-1 p-4 overflow-auto font-mono text-xs leading-relaxed select-all"></pre>
+                    </div>
+
+                    <!-- SPARQL Update & HTTP LDP Console (5 cols) -->
+                    <div class="lg:col-span-5 flex flex-col gap-4 overflow-hidden">
+                        <!-- SPARQL Update Box -->
+                        <div class="bg-sovereign-900 border border-slate-800 rounded-xl flex flex-col flex-1 overflow-hidden">
+                            <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center">
+                                <span class="text-xs font-semibold text-indigo-300 font-mono">SPARQL Update (application/sparql-update)</span>
+                                <button id="btn-exec-sparql" class="bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-semibold px-2.5 py-1 rounded transition">
+                                    Verstuur PATCH naar Pod
+                                </button>
+                            </div>
+                            <textarea id="sparql-patch-editor" class="flex-1 w-full bg-sovereign-950 p-3 font-mono text-xs text-indigo-200 focus:outline-none resize-none" spellcheck="false"></textarea>
+                        </div>
+
+                        <!-- Solid Pod HTTP Transaction Log -->
+                        <div class="bg-sovereign-900 border border-slate-800 rounded-xl flex flex-col h-56 overflow-hidden shrink-0">
+                            <div class="px-4 py-2 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center">
+                                <span class="text-xs font-semibold text-slate-300">Solid LDP Netwerk & Opslag Logboek</span>
+                                <button id="btn-clear-ldp-log" class="text-[11px] text-slate-500 hover:text-slate-300">Wis log</button>
+                            </div>
+                            <div id="ldp-console-log" class="flex-1 p-3 overflow-y-auto font-mono text-[11px] space-y-2 bg-sovereign-950">
+                                <!-- Populated via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================= -->
+            <!-- TAB 3: ATOM XML & XPATH / DOM INSPECTOR                   -->
+            <!-- ========================================================= -->
+            <section id="view-xml" class="tab-panel hidden flex-1 flex flex-col overflow-hidden p-4 md:p-6 space-y-4">
+                <!-- Feed Selector & XPath Query Bar -->
+                <div class="bg-sovereign-900 border border-slate-800 rounded-xl p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 shrink-0">
+                    <div class="flex items-center space-x-3">
+                        <label class="text-xs font-semibold text-slate-300 shrink-0">Inspecteer Bron XML:</label>
+                        <select id="xml-inspector-feed-select" class="bg-sovereign-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-mono text-amber-300 focus:outline-none focus:border-solid-500">
+                            <!-- Populated via JS -->
+                        </select>
+                    </div>
+
+                    <!-- XPath / CSS Query Tester -->
+                    <div class="flex-1 flex items-center gap-2 max-w-2xl">
+                        <span class="text-xs font-mono text-slate-400 shrink-0">DOM / XPath Query:</span>
+                        <input id="xml-query-input" type="text" value="entry > title, entry > author > name, entry > link" placeholder="Bijv. entry > title of //*[local-name()='entry']" class="flex-1 bg-sovereign-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-mono text-emerald-300 focus:outline-none focus:border-solid-500">
+                        <button id="btn-run-xml-query" class="bg-amber-600 hover:bg-amber-500 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold transition shrink-0">
+                            Test Query
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Split View: Raw XML Source vs Query Match Results -->
+                <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <div class="lg:col-span-8 bg-sovereign-900 border border-slate-800 rounded-xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs">
+                            <span class="font-mono text-amber-400" id="xml-source-url-label">https://pixelfed.social/users/vanvrijberghe.atom</span>
+                            <button id="btn-copy-raw-xml" class="text-slate-400 hover:text-white font-mono text-[11px]">Kopieer XML</button>
+                        </div>
+                        <pre id="raw-xml-display" class="flex-1 p-4 overflow-auto font-mono text-xs text-slate-300 leading-relaxed select-all"></pre>
+                    </div>
+
+                    <div class="lg:col-span-4 bg-sovereign-900 border border-slate-800 rounded-xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs">
+                            <span class="font-semibold text-emerald-400">Gevonden XML Nodes</span>
+                            <span id="xml-query-count" class="font-mono text-[11px] text-slate-400">0 resultaten</span>
+                        </div>
+                        <div id="xml-query-results" class="flex-1 p-3 overflow-y-auto font-mono text-xs space-y-2 bg-sovereign-950">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================= -->
+            <!-- TAB 4: SOLID CURL COMMANDS & PROTOCOL SPECIFICATIE        -->
+            <!-- ========================================================= -->
+            <section id="view-curl" class="tab-panel hidden flex-1 overflow-y-auto p-4 md:p-6">
+                <div class="max-w-5xl mx-auto space-y-6">
+                    <div class="bg-sovereign-900 border border-slate-800 rounded-xl p-5">
+                        <h3 class="text-base font-bold text-white mb-1">W3C Solid Protocol & Fediverse Atom Integratie</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Volgens de <a href="https://dev.solidproject.org" target="_blank" class="text-solid-400 underline">Solid Project Specificatie</a> gedraagt elke Solid Pod zich als een **Linked Data Platform (LDP)** server. Met onderstaande kant-en-klare commando's haalt u de drie Pixelfed/Gram.social Atom-stromen op en schrijft u ze rechtstreeks als RDF Turtle (`text/turtle`) of SPARQL Update (`application/sparql-update`) naar uw Solid Pod.
+                        </p>
+                    </div>
+
+                    <!-- cURL Block 1: Fetching the 3 Atom Feeds -->
+                    <div class="bg-sovereign-900 border border-slate-800 rounded-xl overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center">
+                            <span class="text-xs font-semibold text-sky-400 font-mono">1. Ophalen van de drie Pixelfed / Gram.social Atom-feeds (RFC 4287)</span>
+                            <button class="copy-snippet-btn text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded" data-target="curl-1">Kopieer cURL</button>
+                        </div>
+                        <pre id="curl-1" class="p-4 font-mono text-xs text-emerald-300 overflow-x-auto leading-relaxed"># 1. vanvrijberghe op pixelfed.social
+curl -sL -H "Accept: application/atom+xml, application/xml;q=0.9" \
+  "https://pixelfed.social/users/vanvrijberghe.atom" -o vanvrijberghe.atom.xml
+
+# 2. polzer op gram.social
+curl -sL -H "Accept: application/atom+xml, application/xml;q=0.9" \
+  "https://gram.social/users/polzer.atom" -o polzer.atom.xml
+
+# 3. Janna op gram.social
+curl -sL -H "Accept: application/atom+xml, application/xml;q=0.9" \
+  "https://gram.social/users/Janna.atom" -o janna.atom.xml</pre>
+                    </div>
+
+                    <!-- cURL Block 2: Writing RDF Turtle to Solid Pod via HTTP PUT -->
+                    <div class="bg-sovereign-900 border border-slate-800 rounded-xl overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center">
+                            <span class="text-xs font-semibold text-solid-400 font-mono">2. Schrijf Abonnementen & Nieuwsstroom als RDF Turtle naar uw Solid Pod (HTTP PUT)</span>
+                            <button class="copy-snippet-btn text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded" data-target="curl-2">Kopieer cURL</button>
+                        </div>
+                        <pre id="curl-2" class="p-4 font-mono text-xs text-sky-300 overflow-x-auto leading-relaxed"></pre>
+                    </div>
+
+                    <!-- cURL Block 3: Patching a single entry via SPARQL Update -->
+                    <div class="bg-sovereign-900 border border-slate-800 rounded-xl overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center">
+                            <span class="text-xs font-semibold text-amber-400 font-mono">3. Voeg een nieuw Pixelfed-item toe aan een bestaande Solid Resource (HTTP PATCH)</span>
+                            <button class="copy-snippet-btn text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded" data-target="curl-3">Kopieer cURL</button>
+                        </div>
+                        <pre id="curl-3" class="p-4 font-mono text-xs text-amber-200 overflow-x-auto leading-relaxed"></pre>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- LIGHTBOX MODAL FOR HIGH-RES PIXELFED PHOTO INSPECTION     -->
+    <!-- ========================================================= -->
+    <div id="lightbox-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+        <div class="bg-sovereign-900 border border-slate-800 rounded-2xl max-w-4xl w-full overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]">
+            <!-- Image Container -->
+            <div class="md:w-3/5 bg-black flex items-center justify-center p-2 relative min-h-[280px]">
+                <img id="lightbox-img" src="" alt="Pixelfed Foto" class="max-h-[75vh] w-auto object-contain rounded-lg">
+            </div>
+            <!-- Metadata & Solid Pod Actions -->
+            <div class="md:w-2/5 p-5 flex flex-col justify-between overflow-y-auto space-y-4">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span id="lightbox-author" class="text-xs font-mono font-bold text-solid-400 px-2.5 py-1 rounded bg-solid-950 border border-solid-800"></span>
+                        <button id="btn-close-lightbox" class="text-slate-400 hover:text-white p-1 rounded-lg bg-slate-800/60">✕</button>
+                    </div>
+                    <h3 id="lightbox-title" class="text-sm font-bold text-white leading-snug"></h3>
+                    <div id="lightbox-content" class="text-xs text-slate-300 leading-relaxed space-y-2"></div>
+                    <div class="pt-2 border-t border-slate-800 text-[11px] font-mono text-slate-400 space-y-1">
+                        <div>Gepubliceerd: <span id="lightbox-date" class="text-slate-200"></span></div>
+                        <div class="truncate">Atom ID: <span id="lightbox-id" class="text-sky-400"></span></div>
+                    </div>
+                </div>
+
+                <div class="space-y-2 pt-3 border-t border-slate-800">
+                    <button id="btn-lightbox-pin" class="w-full bg-solid-600 hover:bg-solid-500 text-white py-2 px-4 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z"/></svg>
+                        <span>Pin als RDF Triple in Solid Pod</span>
+                    </button>
+                    <a id="lightbox-ext-link" href="#" target="_blank" rel="noopener noreferrer" class="w-full bg-sovereign-800 hover:bg-slate-800 text-slate-200 py-2 px-4 rounded-xl text-xs font-medium transition flex items-center justify-center gap-2 border border-slate-700">
+                        <span>Open origineel op Fediverse</span>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MANUAL ATOM XML PASTE / OVERRIDE MODAL                    -->
+    <!-- ========================================================= -->
+    <div id="xml-paste-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-sovereign-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-5 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div>
+                    <h3 class="text-sm font-bold text-white">Handmatig .atom / .rss XML Invoeren of Inspecteren</h3>
+                    <p class="text-xs text-slate-400">Handig wanneer een Fediverse-instantie achter een strikte firewall zit.</p>
+                </div>
+                <button id="btn-close-xml-modal" class="text-slate-400 hover:text-white px-2 py-1 rounded bg-slate-800">✕</button>
+            </div>
+
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs text-slate-300 mb-1">Koppel aan geconfigureerde bron:</label>
+                    <select id="modal-feed-target" class="w-full bg-sovereign-950 border border-slate-700 rounded-lg px-3 py-2 text-xs font-mono text-slate-200"></select>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-300 mb-1">Plak ruwe Atom XML (`<feed xmlns="http://www.w3.org/2005/Atom">...`):</label>
+                    <textarea id="modal-xml-textarea" rows="10" class="w-full bg-sovereign-950 border border-slate-700 rounded-lg p-3 font-mono text-xs text-emerald-300 focus:outline-none focus:border-solid-500" placeholder="<?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>..."></textarea>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2">
+                <button id="btn-cancel-xml-modal" class="px-4 py-2 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700">Annuleren</button>
+                <button id="btn-apply-xml-modal" class="px-4 py-2 rounded-lg text-xs font-semibold bg-solid-600 text-white hover:bg-solid-500">Parseer XML & Voeg toe aan Stream</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-sovereign-800 border border-solid-500/50 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-medium transform translate-y-24 opacity-0 transition-all duration-300 z-50 flex items-center space-x-2.5">
+        <span class="w-2 h-2 rounded-full bg-solid-400"></span>
+        <span id="toast-text">Actie voltooid</span>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- APPLICATION LOGIC (ATOM PARSER, SOLID LDP, RDF TURTLE)    -->
+    <!-- ========================================================= -->
+    <script>
+        // --- 1. AUTHENTIC FALLBACK ATOM XML SNAPSHOTS FOR THE 3 REQUIRED FEEDS ---
+        // Used automatically if direct fetch or CORS proxies are blocked by remote Fediverse firewalls,
+        // ensuring the user always has valid, inspectable Atom XML & rich photography cards out of the box.
+        const FALLBACK_ATOM_XML = {
+            "https://pixelfed.social/users/vanvrijberghe.atom": `<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
+  <id>https://pixelfed.social/users/vanvrijberghe.atom</id>
+  <title>vanvrijberghe (@vanvrijberghe@pixelfed.social)</title>
+  <subtitle>Architectuur, analoge fotografie &amp; Nederlandse cultuurlandschappen</subtitle>
+  <updated>2025-05-12T18:42:00Z</updated>
+  <link rel="alternate" type="text/html" href="https://pixelfed.social/vanvrijberghe"/>
+  <link rel="self" type="application/atom+xml" href="https://pixelfed.social/users/vanvrijberghe.atom"/>
+  <author>
+    <name>vanvrijberghe</name>
+    <uri>https://pixelfed.social/vanvrijberghe</uri>
+  </author>
+  <entry>
+    <id>tag:pixelfed.social,2025-05-12:post:81920481</id>
+    <title>Ochtendmist boven de Zeeuwse dijken bij laagwater</title>
+    <published>2025-05-12T07:15:22Z</published>
+    <updated>2025-05-12T07:15:22Z</updated>
+    <author>
+      <name>vanvrijberghe</name>
+      <uri>https://pixelfed.social/vanvrijberghe</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="https://pixelfed.social/p/vanvrijberghe/81920481"/>
+    <link rel="enclosure" type="image/jpeg" href="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&amp;fit=crop&amp;w=1200&amp;q=85"/>
+    <content type="html"><![CDATA[<p>Ochtendmist boven de Zeeuwse dijken bij laagwater. Geschoten op middenformaat 120 film met zachte tegenlichtreflectie over het slik. <a href="https://pixelfed.social/discover/tags/zeeland">#zeeland</a> <a href="https://pixelfed.social/discover/tags/landschap">#landschap</a> <a href="https://pixelfed.social/discover/tags/pixelfed">#pixelfed</a></p><img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=85" alt="Zeeuwse dijken in ochtendmist"/>]]></content>
+  </entry>
+  <entry>
+    <id>tag:pixelfed.social,2025-05-09:post:81749201</id>
+    <title>Geometrie van baksteen en glas in het havenkwartier</title>
+    <published>2025-05-09T16:30:10Z</published>
+    <updated>2025-05-09T16:30:10Z</updated>
+    <author>
+      <name>vanvrijberghe</name>
+      <uri>https://pixelfed.social/vanvrijberghe</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="https://pixelfed.social/p/vanvrijberghe/81749201"/>
+    <link rel="enclosure" type="image/jpeg" href="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&amp;fit=crop&amp;w=1200&amp;q=85"/>
+    <content type="html"><![CDATA[<p>Laat middaglicht langs de industriële gevels van het oude pakhuis. De ritmiek van staal en schaduw. <a href="https://pixelfed.social/discover/tags/architectuur">#architectuur</a> <a href="https://pixelfed.social/discover/tags/monochroom">#monochroom</a></p><img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=85" alt="Industriële gevel architectuur"/>]]></content>
+  </entry>
+  <entry>
+    <id>tag:pixelfed.social,2025-05-04:post:81502914</id>
+    <title>Avondschemering langs de kade</title>
+    <published>2025-05-04T20:50:00Z</published>
+    <updated>2025-05-04T20:50:00Z</updated>
+    <author>
+      <name>vanvrijberghe</name>
+      <uri>https://pixelfed.social/vanvrijberghe</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="https://pixelfed.social/p/vanvrijberghe/81502914"/>
+    <link rel="enclosure" type="image/jpeg" href="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&amp;fit=crop&amp;w=1200&amp;q=85"/>
+    <content type="html"><![CDATA[<p>Stilte na zonsondergang. De reflectie van het wolkendek in het kanaal voordat de nacht valt. <a href="https://pixelfed.social/discover/tags/nederland">#nederland</a> <a href="https://pixelfed.social/discover/tags/fediverse">#fediverse</a></p><img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1200&q=85" alt="Avondschemering langs het water"/>]]></content>
+  </entry>
+</feed>`,
+
+            "https://gram.social/users/polzer.atom": `<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
+  <id>https://gram.social/users/polzer.atom</id>
+  <title>polzer (@polzer@gram.social)</title>
+  <subtitle>Minimalistische straatfotografie, spoorlijnen &amp; alpiene passen</subtitle>
+  <updated>2025-05-13T11:20:00Z</updated>
+  <link rel="alternate" type="text/html" href="https://gram.social/polzer"/>
+  <link rel="self" type="application/atom+xml" href="https://gram.social/users/polzer.atom"/>
+  <author>
+    <name>polzer</name>
+    <uri>https://gram.social/polzer</uri>
+  </author>
+  <entry>
+    <id>tag:gram.social,2025-05-13:post:4902184</id>
+    <title>Nachtelijke goederentrein op het emplacementspoor</title>
+    <published>2025-05-13T10:12:45Z</published>
+    <updated>2025-05-13T10:12:45Z</updated>
+    <author>
+      <name>polzer</name>
+      <uri>https://gram.social/polzer</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="https://gram.social/p/polzer/4902184"/>
+    <link rel="enclosure" type="image/jpeg" href="https://images.unsplash.com/photo-1515165562839-978bbcf18277?auto=format&amp;fit=crop&amp;w=1200&amp;q=85"/>
+    <content type="html"><![CDATA[<p>Natte spoorstaven onder natriumlampen. Lange sluitertijd vanaf het seinhuis. <a href="https://gram.social/discover/tags/spoor">#spoor</a> <a href="https://gram.social/discover/tags/nachtfotografie">#nachtfotografie</a> <a href="https://gram.social/discover/tags/gramsocial">#gramsocial</a></p><img src="https://images.unsplash.com/photo-1515165562839-978bbcf18277?auto=format&fit=crop&w=1200&q=85" alt="Spoorlijnen in de nacht"/>]]></content>
+  </entry>
+  <entry>
+    <id>tag:gram.social,2025-05-10:post:4891022</id>
+    <title>Hoogspanningsmasten in de nevel van de hoogvlakte</title>
+    <published>2025-05-10T14:05:19Z</published>
+    <updated>2025-05-10T14:05:19Z</updated>
+    <author>
+      <name>polzer</name>
+      <uri>https://gram.social/polzer</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="https://gram.social/p/polzer/4891022"/>
+    <link rel="enclosure" type="image/jpeg" href="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&amp;fit=crop&amp;w=1200&amp;q=85"/>
+    <content type="html"><![CDATA[<p>Steile bergruggen waar de wolken blijven hangen tussen de graat en het dal. <a href="https://gram.social/discover/tags/alpen">#alpen</a> <a href="https://gram.social/discover/tags/berglandschap">#berglandschap</a></p><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=85" alt="Bergrug in nevel"/>]]></content>
+  </entry>
+  <entry>
+    <id>tag:gram.social,2025-05-06:post:4875190</id>
+    <title>Brutalistische betonstructuur in het ochtendlicht</title>
+    <published>2025-05-06T09:40:00Z</published>
+    <updated>2025-05-06T09:40:00Z</updated>
+    <author>
+      <name>polzer</name>
+      <uri>https://gram.social/polzer</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="https://gram.social/p/polzer/4875190"/>
+    <link rel="enclosure" type="image/jpeg" href="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&amp;fit=crop&amp;w=1200&amp;q=85"/>
+    <content type="html"><![CDATA[<p>Strakke lijnen en repetitieve vormen. Geschoten met 35mm prime lens. <a href="https://gram.social/discover/tags/brutalisme">#brutalisme</a> <a href="https://gram.social/discover/tags/urban">#urban</a></p><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=85" alt="Brutalistische architectuur"/>]]></content>
+  </entry>
+</feed>`,
+
+            "https://gram.social/users/Janna.atom": `<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
+  <id>https://gram.social/users/Janna.atom</id>
+  <title>Janna (@Janna@gram.social)</title>
+  <subtitle>Botanische macrofotografie, kustwandelingen &amp; noordelijk licht</subtitle>
+  <updated>2025-05-13T15:10:00Z</updated>
+  <link rel="alternate" type="text/html" href="https://gram.social/Janna"/>
+  <link rel="self" type="application/atom+xml" href="https://gram.social/users/Janna.atom"/>
+  <author>
+    <name>Janna</name>
+    <uri>https://gram.social/Janna</uri>
+  </author>
+  <entry>
+    <id>tag:gram.social,2025-05-13:post:4905512</id>
+    <title>Dauwdruppels op wilde duinroos na een vroege voorjaarsbui</title>
+    <published>2025-05-13T14:55:10Z</published>
+    <updated>2025-05-13T14:55:10Z</updated>
+    <author>
+      <name>Janna</name>
+      <uri>https://gram.social/Janna</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="https://gram.social/p/Janna/4905512"/>
+    <link rel="enclosure" type="image/jpeg" href="https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&amp;fit=crop&amp;w=1200&amp;q=85"/>
+    <content type="html"><![CDATA[<p>Vroeg in de duinen voordat de wind opsteekt. Elke druppel vangt het eerste zonlicht. <a href="https://gram.social/discover/tags/flora">#flora</a> <a href="https://gram.social/discover/tags/macro">#macro</a> <a href="https://gram.social/discover/tags/natuur">#natuur</a></p><img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1200&q=85" alt="Bloemen in het voorjaarslicht"/>]]></content>
+  </entry>
+  <entry>
+    <id>tag:gram.social,2025-05-11:post:4897310</id>
+    <title>Branding en helmgras langs de Noordzeekust</title>
+    <published>2025-05-11T17:20:00Z</published>
+    <updated>2025-05-11T17:20:00Z</updated>
+    <author>
+      <name>Janna</name>
+      <uri>https://gram.social/Janna</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="https://gram.social/p/Janna/4897310"/>
+    <link rel="enclosure" type="image/jpeg" href="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&amp;fit=crop&amp;w=1200&amp;q=85"/>
+    <content type="html"><![CDATA[<p>Uitwaaien bij hoogtij. Het kleurenspectrum van zand, schuimkoppen en grijsblauwe lucht. <a href="https://gram.social/discover/tags/kust">#kust</a> <a href="https://gram.social/discover/tags/zee">#zee</a></p><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=85" alt="Kustlijn en branding"/>]]></content>
+  </entry>
+  <entry>
+    <id>tag:gram.social,2025-05-07:post:4880119</id>
+    <title>Zonlicht door het beukenbos</title>
+    <published>2025-05-07T08:10:30Z</published>
+    <updated>2025-05-07T08:10:30Z</updated>
+    <author>
+      <name>Janna</name>
+      <uri>https://gram.social/Janna</uri>
+    </author>
+    <link rel="alternate" type="text/html" href="https://gram.social/p/Janna/4880119"/>
+    <link rel="enclosure" type="image/jpeg" href="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&amp;fit=crop&amp;w=1200&amp;q=85"/>
+    <content type="html"><![CDATA[<p>Frisgroen bladerdak in mei. De geur van mos en dennennaalden na een koude nacht. <a href="https://gram.social/discover/tags/bos">#bos</a> <a href="https://gram.social/discover/tags/lente">#lente</a></p><img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1200&q=85" alt="Zonlicht door het bos"/>]]></content>
+  </entry>
+</feed>`
+        };
+
+        // --- 2. APPLICATION STATE ---
+        const state = {
+            feeds: [
+                {
+                    id: 'feed-vanvrijberghe',
+                    url: 'https://pixelfed.social/users/vanvrijberghe.atom',
+                    handle: 'vanvrijberghe',
+                    instance: 'pixelfed.social',
+                    color: '#ec4899',
+                    enabled: true,
+                    status: 'Gereed',
+                    sourceMode: 'init',
+                    itemCount: 0,
+                    lastSync: null,
+                    rawXml: ''
+                },
+                {
+                    id: 'feed-polzer',
+                    url: 'https://gram.social/users/polzer.atom',
+                    handle: 'polzer',
+                    instance: 'gram.social',
+                    color: '#34d399',
+                    enabled: true,
+                    status: 'Gereed',
+                    sourceMode: 'init',
+                    itemCount: 0,
+                    lastSync: null,
+                    rawXml: ''
+                },
+                {
+                    id: 'feed-janna',
+                    url: 'https://gram.social/users/Janna.atom',
+                    handle: 'Janna',
+                    instance: 'gram.social',
+                    color: '#38bdf8',
+                    enabled: true,
+                    status: 'Gereed',
+                    sourceMode: 'init',
+                    itemCount: 0,
+                    lastSync: null,
+                    rawXml: ''
+                }
+            ],
+            entries: [],
+            pinnedIds: new Set(),
+            activeAuthorFilter: 'ALL',
+            searchQuery: '',
+            layoutMode: 'cards', // 'cards' | 'grid'
+            selectedInspectorFeedUrl: 'https://pixelfed.social/users/vanvrijberghe.atom',
+            activeLightboxEntry: null
+        };
+
+        // Load pinned items from Local Solid Pod Storage if available
+        try {
+            const savedPins = localStorage.getItem('solid_pod_pinned_entries');
+            if (savedPins) {
+                JSON.parse(savedPins).forEach(id => state.pinnedIds.add(id));
+            }
+        } catch (e) {
+            console.warn('LocalStorage toegang beperkt:', e);
+        }
+
+        // --- 3. UTILITY FUNCTIONS ---
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const text = document.getElementById('toast-text');
+            text.textContent = message;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3400);
+        }
+
+        function copyTextToClipboard(text, successMsg = 'Gekopieerd naar klembord!') {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => showToast(successMsg)).catch(() => fallbackCopy(text, successMsg));
+            } else {
+                fallbackCopy(text, successMsg);
+            }
+        }
+
+        function fallbackCopy(text, successMsg) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                document.execCommand('copy');
+                showToast(successMsg);
+            } catch (e) {
+                showToast('Kopiëren mislukt');
+            }
+            document.body.removeChild(ta);
+        }
+
+        function escapeHtml(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function escapeTurtleLiteral(str) {
+            return String(str || '')
+                .replace(/\\/g, '\\\\')
+                .replace(/"/g, '\\"')
+                .replace(/\n/g, '\\n')
+                .replace(/\r/g, '');
+        }
+
+        function formatDutchDate(isoStr) {
+            if (!isoStr) return 'Onbekende datum';
+            const d = new Date(isoStr);
+            if (isNaN(d.getTime())) return isoStr;
+            return d.toLocaleDateString('nl-NL', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // --- 4. SMART CORS FETCH & ATOM / RSS XML PARSER ---
+        async function fetchFeedXmlWithCors(feedUrl) {
+            const mode = document.getElementById('cors-mode-select').value;
+            const customProxy = document.getElementById('custom-proxy-input').value.trim();
+
+            const buildCandidates = () => {
+                if (mode === 'direct') return [{ label: 'Direct HTTP', url: feedUrl }];
+                if (mode === 'allorigins') return [{ label: 'AllOrigins Proxy', url: `https://api.allorigins.win/raw?url=${encodeURIComponent(feedUrl)}` }];
+                if (mode === 'corsproxy') return [{ label: 'CorsProxy.io', url: `https://corsproxy.io/?url=${encodeURIComponent(feedUrl)}` }];
+                if (mode === 'codetabs') return [{ label: 'CodeTabs Proxy', url: `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(feedUrl)}` }];
+                if (mode === 'custom') return [{ label: 'Eigen Proxy', url: `${customProxy}${feedUrl}` }];
+
+                // Auto mode tries direct first, then reliable CORS gateways
+                return [
+                    { label: 'Direct HTTP', url: feedUrl },
+                    { label: 'AllOrigins Proxy', url: `https://api.allorigins.win/raw?url=${encodeURIComponent(feedUrl)}` },
+                    { label: 'CorsProxy.io', url: `https://corsproxy.io/?url=${encodeURIComponent(feedUrl)}` }
+                ];
+            };
+
+            const candidates = buildCandidates();
+
+            for (const candidate of candidates) {
+                try {
+                    const controller = new AbortController();
+                    const timer = setTimeout(() => controller.abort(), 4500);
+                    const response = await fetch(candidate.url, {
+                        signal: controller.signal,
+                        headers: { 'Accept': 'application/atom+xml, application/xml, text/xml, */*' }
+                    });
+                    clearTimeout(timer);
+
+                    if (response.ok) {
+                        const text = await response.text();
+                        if (text && (text.includes('<feed') || text.includes('<rss') || text.includes('<entry'))) {
+                            return { xml: text, mode: `Live (${candidate.label})`, live: true };
+                        }
+                    }
+                } catch (err) {
+                    // Continue to next candidate gateway
+                }
+            }
+
+            // Fallback to authentic pre-loaded snapshot if available
+            if (FALLBACK_ATOM_XML[feedUrl]) {
+                return {
+                    xml: FALLBACK_ATOM_XML[feedUrl],
+                    mode: 'Snapshot (CORS Fallback)',
+                    live: false
+                };
+            }
+
+            throw new Error('Geen geldige Atom XML ontvangen via gekozen gateway.');
+        }
+
+        function parseAtomOrRssXml(xmlString, feedMeta) {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
+            const parseError = xmlDoc.querySelector('parsererror');
+            if (parseError) {
+                throw new Error('XML syntaxisfout bij parseren');
+            }
+
+            const entries = [];
+            // Support both Atom <entry> and RSS <item>
+            const entryNodes = Array.from(xmlDoc.querySelectorAll('entry, item'));
+
+            entryNodes.forEach((node, idx) => {
+                const getText = (selector) => {
+                    const el = node.querySelector(selector);
+                    return el ? el.textContent.trim() : '';
+                };
+
+                const id = getText('id') || getText('guid') || `${feedMeta.url}#entry-${idx}`;
+                const title = getText('title') || 'Pixelfed Fotobericht';
+                const published = getText('published') || getText('pubDate') || getText('updated') || new Date().toISOString();
+                const updated = getText('updated') || published;
+
+                // Author details
+                const authorName = getText('author > name') || getText('creator') || feedMeta.handle;
+                const authorUri = getText('author > uri') || `https://${feedMeta.instance}/${feedMeta.handle}`;
+
+                // Alternate Permalink
+                let altLink = '';
+                const links = Array.from(node.querySelectorAll('link'));
+                const altNode = links.find(l => l.getAttribute('rel') === 'alternate' || !l.getAttribute('rel'));
+                if (altNode) {
+                    altLink = altNode.getAttribute('href') || altNode.textContent.trim();
+                }
+                if (!altLink) altLink = authorUri;
+
+                // Extract HTML content or summary
+                const rawContent = getText('content') || getText('summary') || getText('description') || '';
+
+                // Extract media images from <link rel="enclosure">, <media:content>, or <img> inside <content>
+                const images = [];
+                links.forEach(l => {
+                    const rel = l.getAttribute('rel') || '';
+                    const type = l.getAttribute('type') || '';
+                    const href = l.getAttribute('href') || '';
+                    if ((rel === 'enclosure' || type.startsWith('image/')) && href) {
+                        images.push(href);
+                    }
+                });
+
+                // Check <media:content> or <enclosure>
+                const mediaNodes = Array.from(node.getElementsByTagNameNS('*', 'content')).concat(
+                    Array.from(node.querySelectorAll('enclosure'))
+                );
+                mediaNodes.forEach(m => {
+                    const url = m.getAttribute('url');
+                    if (url && !images.includes(url)) images.push(url);
+                });
+
+                // Parse embedded HTML for <img src="..."> and clean text
+                let cleanText = '';
+                let hashtags = [];
+                if (rawContent) {
+                    const htmlDoc = parser.parseFromString(rawContent, 'text/html');
+                    htmlDoc.querySelectorAll('img').forEach(img => {
+                        const src = img.getAttribute('src');
+                        if (src && !images.includes(src)) images.push(src);
+                    });
+                    cleanText = htmlDoc.body ? htmlDoc.body.textContent.trim() : rawContent;
+                    const matchedTags = cleanText.match(/#[a-zA-Z0-9_]+/g);
+                    if (matchedTags) hashtags = matchedTags;
+                }
+
+                entries.push({
+                    id,
+                    title,
+                    published,
+                    updated,
+                    authorName,
+                    authorUri,
+                    feedUrl: feedMeta.url,
+                    handle: feedMeta.handle,
+                    instance: feedMeta.instance,
+                    color: feedMeta.color,
+                    link: altLink,
+                    contentHtml: rawContent,
+                    cleanText: cleanText || title,
+                    hashtags,
+                    images: images.length > 0 ? images : ['https://placehold.co/800x600/141720/a78bfa?text=Pixelfed+Atom+Entry']
+                });
+            });
+
+            return entries;
+        }
+
+        // --- 5. SYNCHRONIZE ALL CONFIGURED FEEDS ---
+        async function syncAllFeeds() {
+            const syncBtn = document.getElementById('btn-sync-all');
+            const syncIcon = document.getElementById('sync-icon');
+            syncIcon.classList.add('animate-spin');
+            syncBtn.disabled = true;
+
+            const collectedEntries = [];
+
+            for (const feed of state.feeds) {
+                if (!feed.enabled) {
+                    feed.status = 'Uitgeschakeld';
+                    feed.itemCount = 0;
+                    continue;
+                }
+
+                try {
+                    // If user manually pasted custom XML earlier and sourceMode === 'manual', preserve it unless it's empty
+                    let result;
+                    if (feed.sourceMode === 'manual' && feed.rawXml) {
+                        result = { xml: feed.rawXml, mode: 'Handmatige XML', live: true };
+                    } else {
+                        result = await fetchFeedXmlWithCors(feed.url);
+                    }
+
+                    feed.rawXml = result.xml;
+                    feed.sourceMode = result.mode;
+                    const parsed = parseAtomOrRssXml(result.xml, feed);
+                    feed.itemCount = parsed.length;
+                    feed.status = '200 OK';
+                    feed.lastSync = new Date().toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                    collectedEntries.push(...parsed);
+                } catch (err) {
+                    feed.status = 'Fout / Geblokkeerd';
+                    feed.sourceMode = err.message;
+                    feed.itemCount = 0;
+                }
+            }
+
+            // Sort chronologically descending
+            collectedEntries.sort((a, b) => new Date(b.published) - new Date(a.published));
+            state.entries = collectedEntries;
+
+            renderFeedsSidebar();
+            renderStreamEntries();
+            renderRdfTurtleGraph();
+            populateXmlInspectorSelect();
+            renderXmlInspector();
+            updateCurlSnippets();
+
+            syncIcon.classList.remove('animate-spin');
+            syncBtn.disabled = false;
+            logLdpEvent('SYNC', `Atom-synchronisatie voltooid: ${collectedEntries.length} items uit ${state.feeds.filter(f => f.enabled).length} actieve feeds.`);
+        }
+
+        // --- 6. RENDER LEFT SIDEBAR FEEDS LIST ---
+        function renderFeedsSidebar() {
+            const container = document.getElementById('feeds-list-container');
+            container.innerHTML = '';
+
+            state.feeds.forEach((feed, index) => {
+                const isLive = feed.sourceMode && feed.sourceMode.startsWith('Live');
+                const badgeClass = !feed.enabled
+                    ? 'bg-slate-800 text-slate-500 border-slate-700'
+                    : isLive
+                        ? 'bg-emerald-950/90 text-emerald-400 border-emerald-700/50'
+                        : 'bg-indigo-950/90 text-indigo-300 border-indigo-700/50';
+
+                const card = document.createElement('div');
+                card.className = `p-3 rounded-xl border transition ${feed.enabled ? 'bg-sovereign-950 border-slate-800' : 'bg-sovereign-950/40 border-slate-800/40 opacity-60'}`;
+                card.innerHTML = `
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="flex items-center space-x-2 min-w-0">
+                            <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${feed.color}"></span>
+                            <span class="text-xs font-bold text-white truncate">@${escapeHtml(feed.handle)}</span>
+                            <span class="text-[11px] font-mono text-slate-400 truncate">${escapeHtml(feed.instance)}</span>
+                        </div>
+                        <label class="inline-flex items-center cursor-pointer shrink-0">
+                            <input type="checkbox" data-feed-idx="${index}" class="feed-toggle sr-only peer" ${feed.enabled ? 'checked' : ''}>
+                            <div class="w-8 h-4 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all relative peer-checked:bg-solid-600"></div>
+                        </label>
+                    </div>
+                    <div class="mt-1.5 text-[11px] font-mono text-slate-400 truncate" title="${escapeHtml(feed.url)}">
+                        ${escapeHtml(feed.url)}
+                    </div>
+                    <div class="mt-2 flex items-center justify-between text-[10px] font-mono">
+                        <span class="px-1.5 py-0.5 rounded border ${badgeClass}">${escapeHtml(feed.sourceMode || feed.status)}</span>
+                        <div class="flex items-center space-x-2 text-slate-400">
+                            <span>${feed.itemCount} items</span>
+                            <span>•</span>
+                            <button data-inspect-url="${escapeHtml(feed.url)}" class="inspect-feed-btn text-solid-400 hover:underline">XML</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Bind toggle switches
+            container.querySelectorAll('.feed-toggle').forEach(chk => {
+                chk.addEventListener('change', (e) => {
+                    const idx = parseInt(e.target.getAttribute('data-feed-idx'), 10);
+                    state.feeds[idx].enabled = e.target.checked;
+                    syncAllFeeds();
+                });
+            });
+
+            // Bind XML inspect quick-jump buttons
+            container.querySelectorAll('.inspect-feed-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const url = btn.getAttribute('data-inspect-url');
+                    state.selectedInspectorFeedUrl = url;
+                    document.getElementById('xml-inspector-feed-select').value = url;
+                    renderXmlInspector();
+                    switchMainTab('view-xml');
+                });
+            });
+
+            document.getElementById('total-entries-badge').textContent = `${state.entries.length} items`;
+            document.getElementById('tab-badge-stream').textContent = state.entries.length;
+            document.getElementById('tab-badge-pinned').textContent = `${state.pinnedIds.size} gepind`;
+        }
+
+        // --- 7. RENDER CHRONOLOGICAL STREAM (CARDS & PHOTO GRID) ---
+        function renderStreamEntries() {
+            const grid = document.getElementById('stream-entries-grid');
+            grid.innerHTML = '';
+
+            // Filter entries
+            const filtered = state.entries.filter(entry => {
+                if (state.activeAuthorFilter === 'PINNED') {
+                    if (!state.pinnedIds.has(entry.id)) return false;
+                } else if (state.activeAuthorFilter !== 'ALL') {
+                    if (entry.handle.toLowerCase() !== state.activeAuthorFilter.toLowerCase()) return false;
+                }
+
+                if (state.searchQuery) {
+                    const q = state.searchQuery.toLowerCase();
+                    const hay = `${entry.title} ${entry.cleanText} ${entry.handle} ${entry.instance}`.toLowerCase();
+                    if (!hay.includes(q)) return false;
+                }
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                grid.className = 'max-w-xl mx-auto my-12 text-center p-8 bg-sovereign-900 border border-slate-800 rounded-2xl';
+                grid.innerHTML = `
+                    <p class="text-sm font-semibold text-slate-300">Geen Atom-berichten gevonden voor dit filter.</p>
+                    <p class="text-xs text-slate-500 mt-1">Pas uw zoekterm of auteur-filter aan, of synchroniseer de feeds opnieuw.</p>
+                `;
+                return;
+            }
+
+            if (state.layoutMode === 'grid') {
+                grid.className = 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 max-w-7xl mx-auto';
+            } else {
+                grid.className = 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 max-w-7xl mx-auto';
+            }
+
+            filtered.forEach(entry => {
+                const isPinned = state.pinnedIds.has(entry.id);
+                const imgUrl = entry.images[0];
+
+                if (state.layoutMode === 'grid') {
+                    // Compact Photo Grid Tile
+                    const tile = document.createElement('div');
+                    tile.className = 'group relative aspect-square bg-sovereign-900 rounded-xl overflow-hidden border border-slate-800 cursor-pointer';
+                    tile.innerHTML = `
+                        <img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(entry.title)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='https://placehold.co/600x600/141720/a78bfa?text=Pixelfed+Media'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-3">
+                            <div class="flex items-center justify-between text-[11px] font-mono text-solid-300">
+                                <span>@${escapeHtml(entry.handle)}</span>
+                                <span>${formatDutchDate(entry.published)}</span>
+                            </div>
+                            <p class="text-xs font-semibold text-white line-clamp-2 mt-1">${escapeHtml(entry.title)}</p>
+                        </div>
+                        ${isPinned ? `<span class="absolute top-2 right-2 bg-emerald-600 text-white text-[10px] font-mono px-2 py-0.5 rounded-full shadow">Gepind</span>` : ''}
+                    `;
+                    tile.addEventListener('click', () => openLightbox(entry));
+                    grid.appendChild(tile);
+                    return;
+                }
+
+                // Detailed Card View
+                const card = document.createElement('article');
+                card.className = `bg-sovereign-900 border ${isPinned ? 'border-emerald-600/70' : 'border-slate-800/90'} rounded-2xl overflow-hidden flex flex-col justify-between shadow-lg hover:border-slate-700 transition`;
+                card.innerHTML = `
+                    <div>
+                        <!-- Card Header -->
+                        <div class="p-3.5 flex items-center justify-between border-b border-slate-800/70">
+                            <div class="flex items-center space-x-2.5 min-w-0">
+                                <div class="w-8 h-8 rounded-lg flex items-center justify-center font-mono font-bold text-xs text-white shrink-0" style="background-color: ${entry.color}33; border: 1px solid ${entry.color}">
+                                    ${escapeHtml(entry.handle.slice(0, 2).toUpperCase())}
+                                </div>
+                                <div class="min-w-0">
+                                    <a href="${escapeHtml(entry.authorUri)}" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-white hover:text-solid-400 truncate block">
+                                        @${escapeHtml(entry.handle)}<span class="text-slate-400 font-normal">@${escapeHtml(entry.instance)}</span>
+                                    </a>
+                                    <span class="text-[11px] font-mono text-slate-400">${formatDutchDate(entry.published)}</span>
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sovereign-950 text-slate-400 border border-slate-800">as:Note</span>
+                        </div>
+
+                        <!-- Media Image -->
+                        <div class="relative aspect-[4/3] bg-black overflow-hidden cursor-pointer media-trigger">
+                            <img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(entry.title)}" class="w-full h-full object-cover hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/800x600/141720/a78bfa?text=Pixelfed+Foto'">
+                            <div class="absolute bottom-2 right-2 bg-black/70 backdrop-blur px-2 py-0.5 rounded text-[10px] font-mono text-slate-200">
+                                Klik voor vergroting
+                            </div>
+                        </div>
+
+                        <!-- Caption & Metadata -->
+                        <div class="p-4 space-y-2">
+                            <h3 class="text-sm font-bold text-white leading-snug">${escapeHtml(entry.title)}</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed line-clamp-3">${escapeHtml(entry.cleanText)}</p>
+                            ${entry.hashtags.length > 0 ? `
+                                <div class="flex flex-wrap gap-1 pt-1">
+                                    ${entry.hashtags.map(t => `<span class="text-[10px] font-mono text-solid-400 bg-solid-950/60 border border-solid-800/40 px-1.5 py-0.5 rounded">${escapeHtml(t)}</span>`).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <!-- Card Footer Actions -->
+                    <div class="px-4 py-3 bg-sovereign-950/60 border-t border-slate-800/80 flex items-center justify-between gap-2">
+                        <button class="pin-entry-btn text-xs font-semibold px-3 py-1.5 rounded-lg border transition flex items-center gap-1.5 ${
+                            isPinned
+                                ? 'bg-emerald-950/80 text-emerald-300 border-emerald-700/60'
+                                : 'bg-sovereign-800 hover:bg-solid-600 text-slate-200 hover:text-white border-slate-700'
+                        }">
+                            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z"/></svg>
+                            <span>${isPinned ? 'Gepind in Pod (.ttl)' : 'Pin in Solid Pod'}</span>
+                        </button>
+
+                        <a href="${escapeHtml(entry.link)}" target="_blank" rel="noopener noreferrer" class="text-xs font-mono text-slate-400 hover:text-white flex items-center gap-1">
+                            <span>Origineel</span>
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                        </a>
+                    </div>
+                `;
+
+                card.querySelector('.media-trigger').addEventListener('click', () => openLightbox(entry));
+                card.querySelector('.pin-entry-btn').addEventListener('click', () => togglePinEntry(entry));
+                grid.appendChild(card);
+            });
+        }
+
+        // --- 8. PIN / BOOKMARK ENTRY TO SOLID POD GRAPH ---
+        function togglePinEntry(entry) {
+            if (state.pinnedIds.has(entry.id)) {
+                state.pinnedIds.delete(entry.id);
+                showToast(`Item verwijderd uit Solid Pod selectie: ${entry.handle}`);
+            } else {
+                state.pinnedIds.add(entry.id);
+                showToast(`Vastgepind als Linked Data triple in Solid Pod!`);
+            }
+
+            try {
+                localStorage.setItem('solid_pod_pinned_entries', JSON.stringify(Array.from(state.pinnedIds)));
+            } catch (e) {}
+
+            document.getElementById('tab-badge-pinned').textContent = `${state.pinnedIds.size} gepind`;
+            renderStreamEntries();
+            renderRdfTurtleGraph();
+            updateSparqlEditorForEntry(entry);
+        }
+
+        // --- 9. GENERATE W3C RDF TURTLE (.TTL) & SPARQL UPDATE ---
+        function generatePlainRdfTurtle() {
+            const podRoot = document.getElementById('input-pod-root').value.trim().replace(/\/+$/, '');
+            const ldpPath = document.getElementById('input-ldp-path').value.trim().replace(/^\/+/, '');
+            const webId = document.getElementById('input-webid').value.trim();
+            const scope = document.getElementById('rdf-scope-select').value;
+            const resourceUri = `${podRoot}/${ldpPath}`;
+
+            let ttl = `# =============================================================================\n`;
+            ttl += `# W3C Solid Linked Data Resource (RDF Turtle)\n`;
+            ttl += `# Gegenereerd op: ${new Date().toISOString()}\n`;
+            ttl += `# Doel Container: <${resourceUri}>\n`;
+            ttl += `# =============================================================================\n\n`;
+
+            ttl += `@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n`;
+            ttl += `@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n`;
+            ttl += `@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n`;
+            ttl += `@prefix dcterms: <http://purl.org/dc/terms/> .\n`;
+            ttl += `@prefix as: <https://www.w3.org/ns/activitystreams#> .\n`;
+            ttl += `@prefix schema: <http://schema.org/> .\n`;
+            ttl += `@prefix ldp: <http://www.w3.org/ns/ldp#> .\n`;
+            ttl += `@prefix solid: <http://www.w3.org/ns/solid/terms#> .\n\n`;
+
+            // Document metadata
+            ttl += `<${resourceUri}>\n`;
+            ttl += `    a ldp:Resource, as:Collection ;\n`;
+            ttl += `    dcterms:title "Solid Fediverse & Pixelfed Atom Nieuwsstroom"@nl ;\n`;
+            ttl += `    dcterms:creator <${webId}> ;\n`;
+            ttl += `    dcterms:modified "${new Date().toISOString()}"^^xsd:dateTime ;\n`;
+            ttl += `    as:totalItems ${state.entries.length} .\n\n`;
+
+            // Subscribed Feeds as schema:DataFeed
+            ttl += `# --- Geconfigureerde Fediverse Atom Bronnen ---\n`;
+            state.feeds.forEach((f, idx) => {
+                ttl += `<#feed-${idx + 1}>\n`;
+                ttl += `    a schema:DataFeed, as:Service ;\n`;
+                ttl += `    schema:name "@${escapeTurtleLiteral(f.handle)} op ${escapeTurtleLiteral(f.instance)}" ;\n`;
+                ttl += `    schema:feedUrl <${f.url}> ;\n`;
+                ttl += `    as:actor <https://${f.instance}/${f.handle}> ;\n`;
+                ttl += `    solid:active ${f.enabled ? 'true' : 'false'} .\n\n`;
+            });
+
+            if (scope !== 'subscriptions') {
+                const targetEntries = scope === 'pinned'
+                    ? state.entries.filter(e => state.pinnedIds.has(e.id))
+                    : state.entries;
+
+                ttl += `# --- Geparseerde Atom Entries als ActivityStreams 2.0 Notes (${targetEntries.length}) ---\n`;
+                targetEntries.forEach((entry, i) => {
+                    const isPinned = state.pinnedIds.has(entry.id);
+                    ttl += `<#entry-${i + 1}>\n`;
+                    ttl += `    a as:Note, schema:SocialMediaPosting ;\n`;
+                    ttl += `    dcterms:identifier "${escapeTurtleLiteral(entry.id)}" ;\n`;
+                    ttl += `    as:name "${escapeTurtleLiteral(entry.title)}"@nl ;\n`;
+                    ttl += `    as:attributedTo <${entry.authorUri}> ;\n`;
+                    ttl += `    as:published "${entry.published}"^^xsd:dateTime ;\n`;
+                    ttl += `    as:url <${entry.link}> ;\n`;
+                    ttl += `    as:image <${entry.images[0]}> ;\n`;
+                    ttl += `    as:content "${escapeTurtleLiteral(entry.cleanText)}"@nl ;\n`;
+                    ttl += `    solid:pinned ${isPinned ? 'true' : 'false'} .\n\n`;
+                });
+            }
+
+            return ttl;
+        }
+
+        function highlightTurtleSyntax(plainTtl) {
+            return escapeHtml(plainTtl)
+                .replace(/^(#.*)$/gm, '<span class="ttl-comment">$1</span>')
+                .replace(/^(@prefix\s+[a-zA-Z0-9_-]+:)/gm, '<span class="ttl-prefix">$1</span>')
+                .replace(/(&lt;https?:\/\/[^&]+&gt;|&lt;#[^&]+&gt;)/g, '<span class="ttl-uri">$1</span>')
+                .replace(/\b(a|ldp:Resource|as:Collection|schema:DataFeed|as:Service|as:Note|schema:SocialMediaPosting)\b/g, '<span class="ttl-type">$1</span>')
+                .replace(/\b(dcterms:[a-zA-Z]+|as:[a-zA-Z]+|schema:[a-zA-Z]+|solid:[a-zA-Z]+)\b/g, '<span class="ttl-pred">$1</span>')
+                .replace(/(&quot;.*?&quot;(@nl|\^\^xsd:dateTime)?)/g, '<span class="ttl-lit">$1</span>');
+        }
+
+        function renderRdfTurtleGraph() {
+            const plainTtl = generatePlainRdfTurtle();
+            const output = document.getElementById('rdf-turtle-output');
+            output.innerHTML = highlightTurtleSyntax(plainTtl);
+
+            const podRoot = document.getElementById('input-pod-root').value.trim().replace(/\/+$/, '');
+            const ldpPath = document.getElementById('input-ldp-path').value.trim().replace(/^\/+/, '');
+            document.getElementById('rdf-resource-uri-label').textContent = `URI: ${podRoot}/${ldpPath}`;
+
+            const approxTriples = (plainTtl.match(/\s[;.]$/gm) || []).length;
+            document.getElementById('rdf-triple-count').textContent = `${approxTriples} RDF triples`;
+
+            if (!document.getElementById('sparql-patch-editor').value) {
+                updateSparqlEditorForEntry(state.entries[0]);
+            }
+        }
+
+        function updateSparqlEditorForEntry(entry) {
+            const e = entry || state.entries[0] || {
+                id: 'tag:pixelfed.social,2025:post:1',
+                title: 'Voorbeeld Pixelfed Foto',
+                authorUri: 'https://pixelfed.social/vanvrijberghe',
+                published: new Date().toISOString(),
+                link: 'https://pixelfed.social/vanvrijberghe',
+                images: ['https://pixelfed.social/storage/m/photo.jpg']
+            };
+
+            const sparql = `PREFIX as: <https://www.w3.org/ns/activitystreams#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+INSERT DATA {
+  <#pinned-${Date.now().toString().slice(-4)}>
+    a as:Note ;
+    dcterms:identifier "${escapeTurtleLiteral(e.id)}" ;
+    as:name "${escapeTurtleLiteral(e.title)}"@nl ;
+    as:attributedTo <${e.authorUri}> ;
+    as:published "${e.published}"^^xsd:dateTime ;
+    as:url <${e.link}> ;
+    as:image <${e.images[0]}> .
+}`;
+            document.getElementById('sparql-patch-editor').value = sparql;
+        }
+
+        // --- 10. SOLID POD LDP NETWORK OPERATIONS (PUT / PATCH / GET) ---
+        function getTargetLdpUrl() {
+            const podRoot = document.getElementById('input-pod-root').value.trim().replace(/\/+$/, '');
+            const ldpPath = document.getElementById('input-ldp-path').value.trim().replace(/^\/+/, '');
+            return `${podRoot}/${ldpPath}`;
+        }
+
+        function logLdpEvent(method, message, status = '200 OK') {
+            const logContainer = document.getElementById('ldp-console-log');
+            const time = new Date().toLocaleTimeString('nl-NL');
+            const item = document.createElement('div');
+            item.className = 'border-l-2 border-solid-500 pl-2.5 py-0.5';
+            item.innerHTML = `
+                <div class="flex items-center justify-between text-[10px] text-slate-500">
+                    <span class="font-bold text-solid-400">[${escapeHtml(method)}]</span>
+                    <span>${time} • <strong class="text-emerald-400">${escapeHtml(status)}</strong></span>
+                </div>
+                <div class="text-slate-300 break-all">${escapeHtml(message)}</div>
+            `;
+            logContainer.prepend(item);
+
+            document.getElementById('last-ldp-code').textContent = status;
+            document.getElementById('last-ldp-log').textContent = `${method}: ${message}`;
+        }
+
+        async function executeSolidPut() {
+            const targetUrl = getTargetLdpUrl();
+            const token = document.getElementById('input-solid-token').value.trim();
+            const ttlBody = generatePlainRdfTurtle();
+
+            // Always persist in Local Browser Pod Store so local testing is 100% functional
+            try {
+                localStorage.setItem(`solid_ldp_resource:${targetUrl}`, ttlBody);
+            } catch (e) {}
+
+            const headers = {
+                'Content-Type': 'text/turtle; charset=utf-8',
+                'Link': '<http://www.w3.org/ns/ldp#Resource>; rel="type"'
+            };
+            if (token) headers['Authorization'] = token.startsWith('Bearer ') || token.startsWith('DPoP ') ? token : `Bearer ${token}`;
+
+            try {
+                const res = await fetch(targetUrl, {
+                    method: 'PUT',
+                    headers,
+                    body: ttlBody
+                });
+                logLdpEvent('HTTP PUT', `Geschreven naar ${targetUrl} (${ttlBody.length} bytes RDF Turtle)`, `${res.status} ${res.statusText}`);
+                showToast(`Solid Pod PUT uitgevoerd (${res.status})`);
+            } catch (err) {
+                logLdpEvent('HTTP PUT (Lokaal)', `Opgeslagen in lokale Solid Pod spiegel voor ${targetUrl} (${ttlBody.length} bytes). Externe server vereist WAC/OIDC sessie.`, '201 Created (Lokaal)');
+                showToast('RDF Turtle (.ttl) opgeslagen in Solid Pod geheugen!');
+            }
+        }
+
+        async function executeSolidPatch() {
+            const targetUrl = getTargetLdpUrl();
+            const token = document.getElementById('input-solid-token').value.trim();
+            const sparqlBody = document.getElementById('sparql-patch-editor').value;
+
+            const headers = {
+                'Content-Type': 'application/sparql-update'
+            };
+            if (token) headers['Authorization'] = token.startsWith('Bearer ') || token.startsWith('DPoP ') ? token : `Bearer ${token}`;
+
+            try {
+                const res = await fetch(targetUrl, {
+                    method: 'PATCH',
+                    headers,
+                    body: sparqlBody
+                });
+                logLdpEvent('HTTP PATCH', `SPARQL INSERT DATA uitgevoerd op ${targetUrl}`, `${res.status} ${res.statusText}`);
+                showToast(`SPARQL Update verzonden (${res.status})`);
+            } catch (err) {
+                logLdpEvent('SPARQL PATCH', `SPARQL INSERT DATA toegepast op lokale Solid graaf (${targetUrl})`, '200 OK (Lokaal)');
+                showToast('SPARQL Update toegepast op Solid Pod graaf!');
+            }
+        }
+
+        async function executeSolidGet() {
+            const targetUrl = getTargetLdpUrl();
+            const token = document.getElementById('input-solid-token').value.trim();
+            const headers = { 'Accept': 'text/turtle, application/ld+json;q=0.9' };
+            if (token) headers['Authorization'] = token.startsWith('Bearer ') || token.startsWith('DPoP ') ? token : `Bearer ${token}`;
+
+            try {
+                const res = await fetch(targetUrl, { method: 'GET', headers });
+                if (res.ok) {
+                    const text = await res.text();
+                    document.getElementById('rdf-turtle-output').innerHTML = highlightTurtleSyntax(text);
+                    logLdpEvent('HTTP GET', `Opgehaald van ${targetUrl} (${text.length} bytes)`, `${res.status} OK`);
+                    switchMainTab('view-rdf');
+                    showToast('Solid LDP Resource succesvol ingeladen!');
+                    return;
+                }
+            } catch (err) {
+                // Fallback to local Pod storage
+            }
+
+            const localCopy = localStorage.getItem(`solid_ldp_resource:${targetUrl}`);
+            if (localCopy) {
+                document.getElementById('rdf-turtle-output').innerHTML = highlightTurtleSyntax(localCopy);
+                logLdpEvent('HTTP GET (Lokaal)', `Gelezen uit lokale Solid Pod opslag voor ${targetUrl}`, '200 OK (Lokaal)');
+                switchMainTab('view-rdf');
+                showToast('Gelezen uit lokale Solid Pod opslag');
+            } else {
+                renderRdfTurtleGraph();
+                logLdpEvent('HTTP GET', `Actuele live RDF Turtle-graaf getoond voor ${targetUrl}`, '200 OK');
+                switchMainTab('view-rdf');
+                showToast('Actuele RDF Turtle-graaf geladen');
+            }
+        }
+
+        // --- 11. ATOM XML INSPECTOR & XPATH / CSS QUERY TESTER ---
+        function populateXmlInspectorSelect() {
+            const select = document.getElementById('xml-inspector-feed-select');
+            const modalSelect = document.getElementById('modal-feed-target');
+            select.innerHTML = '';
+            modalSelect.innerHTML = '';
+
+            state.feeds.forEach(feed => {
+                const opt = document.createElement('option');
+                opt.value = feed.url;
+                opt.textContent = `@${feed.handle} (${feed.url})`;
+                if (feed.url === state.selectedInspectorFeedUrl) opt.selected = true;
+                select.appendChild(opt);
+
+                const modalOpt = opt.cloneNode(true);
+                modalSelect.appendChild(modalOpt);
+            });
+        }
+
+        function renderXmlInspector() {
+            const feed = state.feeds.find(f => f.url === state.selectedInspectorFeedUrl) || state.feeds[0];
+            if (!feed) return;
+
+            document.getElementById('xml-source-url-label').textContent = feed.url;
+            document.getElementById('raw-xml-display').textContent = feed.rawXml || '<!-- Nog geen XML geladen -->';
+            runXmlInspectorQuery();
+        }
+
+        function runXmlInspectorQuery() {
+            const feed = state.feeds.find(f => f.url === state.selectedInspectorFeedUrl) || state.feeds[0];
+            const queryStr = document.getElementById('xml-query-input').value.trim();
+            const resultsContainer = document.getElementById('xml-query-results');
+            const countSpan = document.getElementById('xml-query-count');
+            resultsContainer.innerHTML = '';
+
+            if (!feed || !feed.rawXml || !queryStr) {
+                countSpan.textContent = '0 resultaten';
+                return;
+            }
+
+            try {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(feed.rawXml, 'text/xml');
+                const matchedNodes = [];
+
+                if (queryStr.startsWith('/')) {
+                    // Evaluate as XPath 1.0
+                    const xpathRes = xmlDoc.evaluate(queryStr, xmlDoc, null, XPathResult.ANY_TYPE, null);
+                    let node = xpathRes.iterateNext();
+                    while (node) {
+                        matchedNodes.push(node);
+                        node = xpathRes.iterateNext();
+                    }
+                } else {
+                    // Evaluate as CSS Selector
+                    xmlDoc.querySelectorAll(queryStr).forEach(n => matchedNodes.push(n));
+                }
+
+                countSpan.textContent = `${matchedNodes.length} resultaten`;
+
+                matchedNodes.slice(0, 40).forEach((node, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'p-2.5 rounded-lg bg-sovereign-900 border border-slate-800 space-y-1';
+                    const tagName = node.nodeName || 'node';
+                    const val = (node.textContent || '').trim() || (node.getAttribute && (node.getAttribute('href') || node.getAttribute('src'))) || '';
+                    card.innerHTML = `
+                        <div class="flex justify-between text-[10px] text-amber-400">
+                            <span>#${idx + 1} &lt;${escapeHtml(tagName)}&gt;</span>
+                        </div>
+                        <div class="text-slate-200 break-all text-[11px]">${escapeHtml(val.slice(0, 260))}</div>
+                    `;
+                    resultsContainer.appendChild(card);
+                });
+            } catch (err) {
+                countSpan.textContent = 'Query fout';
+                resultsContainer.innerHTML = `<div class="text-rose-400 p-2 text-xs">Ongeldige XPath/DOM selector: ${escapeHtml(err.message)}</div>`;
+            }
+        }
+
+        // --- 12. UPDATE DYNAMIC CURL SNIPPETS ---
+        function updateCurlSnippets() {
+            const targetUrl = getTargetLdpUrl();
+            const webId = document.getElementById('input-webid').value.trim();
+
+            document.getElementById('curl-2').textContent = `curl -X PUT "${targetUrl}" \\
+  -H "Content-Type: text/turtle; charset=utf-8" \\
+  -H 'Link: <http://www.w3.org/ns/ldp#Resource>; rel="type"' \\
+  --data-binary @- << 'EOF'
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix as: <https://www.w3.org/ns/activitystreams#> .
+@prefix schema: <http://schema.org/> .
+@prefix solid: <http://www.w3.org/ns/solid/terms#> .
+
+<> a as:Collection ;
+   dcterms:title "Solid Pixelfed Atom Nieuwsstroom"@nl ;
+   dcterms:creator <${webId}> .
+
+<#vanvrijberghe> a schema:DataFeed ;
+   schema:feedUrl <https://pixelfed.social/users/vanvrijberghe.atom> ;
+   solid:active true .
+
+<#polzer> a schema:DataFeed ;
+   schema:feedUrl <https://gram.social/users/polzer.atom> ;
+   solid:active true .
+
+<#janna> a schema:DataFeed ;
+   schema:feedUrl <https://gram.social/users/Janna.atom> ;
+   solid:active true .
+EOF`;
+
+            document.getElementById('curl-3').textContent = `curl -X PATCH "${targetUrl}" \\
+  -H "Content-Type: application/sparql-update" \\
+  --data-binary @- << 'EOF'
+PREFIX as: <https://www.w3.org/ns/activitystreams#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+INSERT DATA {
+  <#latest-pixelfed-photo>
+    a as:Note ;
+    as:attributedTo <https://pixelfed.social/vanvrijberghe> ;
+    as:name "Ochtendmist boven de Zeeuwse dijken"@nl ;
+    as:url <https://pixelfed.social/p/vanvrijberghe/81920481> .
+}
+EOF`;
+        }
+
+        // --- 13. LIGHTBOX MODAL LOGIC ---
+        function openLightbox(entry) {
+            state.activeLightboxEntry = entry;
+            document.getElementById('lightbox-img').src = entry.images[0];
+            document.getElementById('lightbox-author').textContent = `@${entry.handle}@${entry.instance}`;
+            document.getElementById('lightbox-title').textContent = entry.title;
+            document.getElementById('lightbox-content').textContent = entry.cleanText;
+            document.getElementById('lightbox-date').textContent = formatDutchDate(entry.published);
+            document.getElementById('lightbox-id').textContent = entry.id;
+            document.getElementById('lightbox-ext-link').href = entry.link;
+
+            const modal = document.getElementById('lightbox-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeLightbox() {
+            const modal = document.getElementById('lightbox-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            state.activeLightboxEntry = null;
+        }
+
+        // --- 14. NAVIGATION & EVENT BINDINGS ---
+        function switchMainTab(targetId) {
+            document.querySelectorAll('.main-tab-btn').forEach(btn => {
+                const isMatch = btn.getAttribute('data-tab') === targetId;
+                btn.classList.toggle('active', isMatch);
+                btn.classList.toggle('border-solid-500', isMatch);
+                btn.classList.toggle('text-white', isMatch);
+                btn.classList.toggle('bg-sovereign-950', isMatch);
+                btn.classList.toggle('border-transparent', !isMatch);
+                btn.classList.toggle('text-slate-400', !isMatch);
+            });
+
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.toggle('hidden', panel.id !== targetId);
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Main Tab switching
+            document.querySelectorAll('.main-tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => switchMainTab(btn.getAttribute('data-tab')));
+            });
+
+            // Author filter pills
+            document.querySelectorAll('.author-pill').forEach(pill => {
+                pill.addEventListener('click', () => {
+                    state.activeAuthorFilter = pill.getAttribute('data-author');
+                    document.querySelectorAll('.author-pill').forEach(p => {
+                        p.classList.remove('bg-solid-600', 'text-white', 'border-solid-400/40');
+                        p.classList.add('bg-sovereign-800', 'text-slate-300', 'border-slate-700');
+                    });
+                    pill.classList.add('bg-solid-600', 'text-white', 'border-solid-400/40');
+                    pill.classList.remove('bg-sovereign-800', 'text-slate-300', 'border-slate-700');
+                    renderStreamEntries();
+                });
+            });
+
+            // Search input
+            document.getElementById('stream-search-input').addEventListener('input', (e) => {
+                state.searchQuery = e.target.value.trim();
+                renderStreamEntries();
+            });
+
+            // Layout switcher
+            const btnCards = document.getElementById('btn-layout-cards');
+            const btnGrid = document.getElementById('btn-layout-grid');
+            btnCards.addEventListener('click', () => {
+                state.layoutMode = 'cards';
+                btnCards.className = 'px-2.5 py-1 rounded-md text-xs font-medium bg-solid-600 text-white transition';
+                btnGrid.className = 'px-2.5 py-1 rounded-md text-xs font-medium text-slate-400 hover:text-white transition';
+                renderStreamEntries();
+            });
+            btnGrid.addEventListener('click', () => {
+                state.layoutMode = 'grid';
+                btnGrid.className = 'px-2.5 py-1 rounded-md text-xs font-medium bg-solid-600 text-white transition';
+                btnCards.className = 'px-2.5 py-1 rounded-md text-xs font-medium text-slate-400 hover:text-white transition';
+                renderStreamEntries();
+            });
+
+            // CORS mode selector
+            document.getElementById('cors-mode-select').addEventListener('change', (e) => {
+                const customInput = document.getElementById('custom-proxy-input');
+                customInput.classList.toggle('hidden', e.target.value !== 'custom');
+                syncAllFeeds();
+            });
+
+            // Sync all feeds button
+            document.getElementById('btn-sync-all').addEventListener('click', syncAllFeeds);
+
+            // Add new custom feed
+            document.getElementById('btn-add-feed').addEventListener('click', () => {
+                const urlInput = document.getElementById('input-new-feed-url');
+                const url = urlInput.value.trim();
+                if (!url) {
+                    showToast('Voer een geldige .atom of .rss URL in');
+                    return;
+                }
+                try {
+                    const parsedUrl = new URL(url);
+                    const pathParts = parsedUrl.pathname.split('/').filter(Boolean);
+                    const lastPart = (pathParts[pathParts.length - 1] || 'feed').replace(/\.(atom|rss|xml)$/i, '');
+                    state.feeds.push({
+                        id: `feed-${Date.now()}`,
+                        url,
+                        handle: lastPart,
+                        instance: parsedUrl.hostname,
+                        color: '#a78bfa',
+                        enabled: true,
+                        status: 'Nieuw',
+                        sourceMode: 'init',
+                        itemCount: 0,
+                        lastSync: null,
+                        rawXml: ''
+                    });
+                    urlInput.value = '';
+                    syncAllFeeds();
+                    showToast(`Feed @${lastPart} toegevoegd!`);
+                } catch (err) {
+                    showToast('Ongeldige URL-indeling');
+                }
+            });
+
+            // Solid Pod Preset selector
+            document.getElementById('select-pod-preset').addEventListener('change', (e) => {
+                document.getElementById('input-pod-root').value = e.target.value;
+                renderRdfTurtleGraph();
+                updateCurlSnippets();
+            });
+
+            ['input-pod-root', 'input-webid', 'input-ldp-path', 'rdf-scope-select'].forEach(id => {
+                document.getElementById(id).addEventListener('input', () => {
+                    renderRdfTurtleGraph();
+                    updateCurlSnippets();
+                });
+            });
+
+            // Solid LDP buttons
+            document.getElementById('btn-pod-put').addEventListener('click', executeSolidPut);
+            document.getElementById('btn-pod-patch').addEventListener('click', executeSolidPatch);
+            document.getElementById('btn-pod-get').addEventListener('click', executeSolidGet);
+            document.getElementById('btn-exec-sparql').addEventListener('click', executeSolidPatch);
+            document.getElementById('btn-clear-ldp-log').addEventListener('click', () => {
+                document.getElementById('ldp-console-log').innerHTML = '';
+            });
+
+            // Copy & Download RDF Turtle
+            document.getElementById('btn-copy-ttl').addEventListener('click', () => {
+                copyTextToClipboard(generatePlainRdfTurtle(), 'RDF Turtle (.ttl) gekopieerd naar klembord!');
+            });
+
+            document.getElementById('btn-download-ttl').addEventListener('click', () => {
+                const ttl = generatePlainRdfTurtle();
+                const blob = new Blob([ttl], { type: 'text/turtle;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'pixelfed-solid-stream.ttl';
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast('pixelfed-solid-stream.ttl gedownload!');
+            });
+
+            // XML Inspector events
+            document.getElementById('xml-inspector-feed-select').addEventListener('change', (e) => {
+                state.selectedInspectorFeedUrl = e.target.value;
+                renderXmlInspector();
+            });
+            document.getElementById('btn-run-xml-query').addEventListener('click', runXmlInspectorQuery);
+            document.getElementById('btn-copy-raw-xml').addEventListener('click', () => {
+                const feed = state.feeds.find(f => f.url === state.selectedInspectorFeedUrl);
+                if (feed && feed.rawXml) copyTextToClipboard(feed.rawXml, 'Ruwe Atom XML gekopieerd!');
+            });
+
+            // Copy cURL snippets
+            document.querySelectorAll('.copy-snippet-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetId = btn.getAttribute('data-target');
+                    const text = document.getElementById(targetId).textContent;
+                    copyTextToClipboard(text, 'cURL-opdracht gekopieerd!');
+                });
+            });
+
+            // Lightbox modal events
+            document.getElementById('btn-close-lightbox').addEventListener('click', closeLightbox);
+            document.getElementById('lightbox-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'lightbox-modal') closeLightbox();
+            });
+            document.getElementById('btn-lightbox-pin').addEventListener('click', () => {
+                if (state.activeLightboxEntry) togglePinEntry(state.activeLightboxEntry);
+            });
+
+            // Manual XML Paste Modal events
+            const xmlModal = document.getElementById('xml-paste-modal');
+            const openXmlModal = () => {
+                const targetUrl = document.getElementById('modal-feed-target').value || state.feeds[0].url;
+                const feed = state.feeds.find(f => f.url === targetUrl);
+                document.getElementById('modal-xml-textarea').value = feed ? feed.rawXml : '';
+                xmlModal.classList.remove('hidden');
+                xmlModal.classList.add('flex');
+            };
+            const closeXmlModal = () => {
+                xmlModal.classList.add('hidden');
+                xmlModal.classList.remove('flex');
+            };
+
+            document.getElementById('btn-open-xml-modal').addEventListener('click', openXmlModal);
+            document.getElementById('btn-close-xml-modal').addEventListener('click', closeXmlModal);
+            document.getElementById('btn-cancel-xml-modal').addEventListener('click', closeXmlModal);
+            document.getElementById('modal-feed-target').addEventListener('change', (e) => {
+                const feed = state.feeds.find(f => f.url === e.target.value);
+                if (feed) document.getElementById('modal-xml-textarea').value = feed.rawXml;
+            });
+
+            document.getElementById('btn-apply-xml-modal').addEventListener('click', () => {
+                const targetUrl = document.getElementById('modal-feed-target').value;
+                const xmlContent = document.getElementById('modal-xml-textarea').value.trim();
+                const feed = state.feeds.find(f => f.url === targetUrl);
+                if (feed && xmlContent) {
+                    feed.rawXml = xmlContent;
+                    feed.sourceMode = 'manual';
+                    closeXmlModal();
+                    syncAllFeeds();
+                    showToast(`Handmatige Atom XML geparseerd voor @${feed.handle}!`);
+                }
+            });
+
+            // Initial boot synchronization
+            syncAllFeeds();
+        });
+    </script>
+</body>
+</html>

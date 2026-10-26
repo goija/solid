@@ -1,0 +1,188 @@
+{
+  "process": "PID 1001 - sovereign-master-indexd",
+  "timestamp": "2026-10-26T08:11:43.291Z",
+  "activeParcel": {
+    "id": "PVT00-M-1172",
+    "gemeente": "Poortvliet",
+    "sectie": "M",
+    "perceelnummer": 1172,
+    "registeredArea": 365,
+    "date": "2008-06-04",
+    "postcode": "4697 RE",
+    "huisnr": "3",
+    "pandid": "0716100000004192",
+    "koopsom": "€ 385.000 k.k.",
+    "transactieDatum": "2023-09-14",
+    "bouwjaar": 1928,
+    "gebruiksdoel": "Woonfunctie (Vrijstaande Dijkwoning)",
+    "woonoppervlak": "142 m²",
+    "ring": [
+      [
+        66584.37,
+        396751.372
+      ],
+      [
+        66604.115,
+        396736.322
+      ],
+      [
+        66615.5,
+        396751.2
+      ],
+      [
+        66595.76,
+        396766.25
+      ],
+      [
+        66584.37,
+        396751.372
+      ]
+    ]
+  },
+  "endpoints": {
+    "wooTholenTree": "https://woo-tholen.vercel.app/tree.html",
+    "wooTholenApiTest": "https://woo-tholen.vercel.app/apitest.html",
+    "cryptPadStudio": "https://mathgeo-seven.vercel.app/cryptpad.html",
+    "schaduwwaaier": "https://mathgeo-seven.vercel.app/schaduwwaaier.html",
+    "mathGeoRoot": "https://mathgeo-seven.vercel.app/"
+  },
+  "githubModels": [
+    {
+      "id": "openai/gpt-4o",
+      "provider": "OpenAI / GitHub Models",
+      "ctx": "128k",
+      "role": "Kadastrale & Juridische Woo-Analyse",
+      "status": "ONLINE"
+    },
+    {
+      "id": "deepseek/DeepSeek-R1",
+      "provider": "DeepSeek / GitHub Models",
+      "ctx": "128k",
+      "role": "Geodetische Wiskunde & Poolplanimeter Verificatie",
+      "status": "ONLINE"
+    },
+    {
+      "id": "meta/Llama-3.3-70B-Instruct",
+      "provider": "Meta / GitHub Models",
+      "ctx": "128k",
+      "role": "Fediverse OSINT & Samenvattingen",
+      "status": "ONLINE"
+    },
+    {
+      "id": "microsoft/Phi-4",
+      "provider": "Microsoft / GitHub Models",
+      "ctx": "16k",
+      "role": "Edge CISO & Log Forensics (BTFM)",
+      "status": "ONLINE"
+    },
+    {
+      "id": "mistral-ai/Mistral-Large-2411",
+      "provider": "Mistral / GitHub Models",
+      "ctx": "128k",
+      "role": "Europese Burgerrechten & Solid RDF",
+      "status": "ONLINE"
+    },
+    {
+      "id": "cohere/Cohere-command-r-plus",
+      "provider": "Cohere / GitHub Models",
+      "ctx": "128k",
+      "role": "RAG over Kadaster Check API 2.0",
+      "status": "ONLINE"
+    },
+    {
+      "id": "google/gemini-3-flash-preview",
+      "provider": "Google Sovereign Bridge",
+      "ctx": "1M",
+      "role": "Primaire Multimodal Workbench Assistent",
+      "status": "ONLINE"
+    },
+    {
+      "id": "burn-rs/middle-dutch-htr-v2",
+      "provider": "Local Rust/Burn WebGPU",
+      "ctx": "Local",
+      "role": "Middelnederlands Paleografie & Oorkonden",
+      "status": "LOCAL"
+    },
+    {
+      "id": "lumo/sovereign-geodesy-7b",
+      "provider": "Lumo AI Local Node",
+      "ctx": "32k",
+      "role": "RDNAPTRANS & Schaduwwaaier Specialist",
+      "status": "ONLINE"
+    }
+  ],
+  "matrixBridgesAcl": [
+    {
+      "id": "bridge-ap",
+      "name": "matrix-appservice-activitypub",
+      "room": "#fediverse:sovereign.nl",
+      "read": true,
+      "write": true,
+      "append": true,
+      "control": false
+    },
+    {
+      "id": "bridge-solid",
+      "name": "matrix-bridge-solid-oidc",
+      "room": "#solid-pod-wac:sovereign.nl",
+      "read": true,
+      "write": true,
+      "append": true,
+      "control": true
+    },
+    {
+      "id": "bridge-kadaster",
+      "name": "matrix-bridge-kadaster-webhook",
+      "room": "#kadaster-brk:sovereign.nl",
+      "read": true,
+      "write": true,
+      "append": false,
+      "control": false
+    },
+    {
+      "id": "bridge-cryptpad",
+      "name": "matrix-bridge-cryptpad-e2ee",
+      "room": "#cryptpad-keys:sovereign.nl",
+      "read": true,
+      "write": false,
+      "append": true,
+      "control": true
+    },
+    {
+      "id": "comp-planimeter",
+      "name": "component-polar-planimeter-ott573",
+      "room": "#geodesie-ott:sovereign.nl",
+      "read": true,
+      "write": true,
+      "append": true,
+      "control": false
+    },
+    {
+      "id": "comp-contactcenter",
+      "name": "component-contactcenter-dispatch",
+      "room": "#woo-contact:sovereign.nl",
+      "read": true,
+      "write": true,
+      "append": true,
+      "control": true
+    }
+  ],
+  "customModules": [
+    {
+      "id": "mod-custom-1",
+      "title": "Woo Tholen Tree Inspector",
+      "type": "iframe",
+      "url": "https://woo-tholen.vercel.app/tree.html",
+      "acl": "wac:Read, wac:Write",
+      "desc": "Standaard ingeladen API Network Tree module."
+    },
+    {
+      "id": "mod-dyn-1793002268574",
+      "title": "Kadaster Akte & Hypotheek Scanner",
+      "type": "iframe",
+      "url": "https://woo-tholen.vercel.app/tree.html",
+      "acl": "wac:Read, wac:Write",
+      "desc": "Koppeling met kadastrale akten, koopsommen en automatische Poolplanimeter-verificatie."
+    }
+  ]
+}

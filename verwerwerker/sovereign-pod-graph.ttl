@@ -1,0 +1,17 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix schema: <http://schema.org/> .
+@prefix acl: <http://www.w3.org/ns/auth/acl#> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+
+<https://solidcommunity.net/public/workbench/master-index.ttl>
+    a schema:Dataset ;
+    dcterms:title "Sovereign Master Index, Kadaster Check 2.0, Poolplanimeter & Matrix IAM"@nl ;
+    schema:mainEntityOfPage <https://woo-tholen.vercel.app/tree.html> ;
+    schema:hasPart <https://mathgeo-seven.vercel.app/cryptpad.html> .
+
+<#active-parcel-PVT00-M-1172>
+    a geo:Feature ;
+    schema:postalCode "4697 RE" ;
+    schema:price "€ 385.000 k.k." ;
+    schema:identifier "0716100000004192" ;
+    schema:areaServed "365 m2 (BRK) / 465.11 m2 (Poolplanimeter A. Ott Nr. 573)" .
