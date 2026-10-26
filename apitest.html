@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GOIJA / SOLID // PDOK & OGC API Tester + Vector Workbench</title>
+  <style>
+    :root {
+      --purple: #38bdf8;
+      --purple-dark: #0284c7;
+      --purple-light: rgba(56, 189, 248, 0.14);
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-alt: #090d16;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --green: #34d399;
+      --amber: #fbbf24;
+      --red: #f87171;
+      --blue: #60a5fa;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 18px;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    h1 { font-size: 1.25rem; display: flex; align-items: center; gap: 10px; color: var(--purple); font-family: var(--mono); }
+    h1 .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
+    .tag {
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      background: var(--purple-light);
+      color: var(--purple);
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      font-family: var(--mono);
+    }
+    .nav-links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: .76rem;
+      font-family: var(--mono);
+      background: var(--surface);
+      padding: 6px 11px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+    .nav-links a:hover { border-color: var(--purple); color: var(--purple); }
+    .desc { color: var(--muted); font-size: .82rem; margin-bottom: 16px; font-family: var(--mono); }
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .panel h2 {
+      font-size: .74rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--amber);
+      margin-bottom: 12px;
+      font-weight: 700;
+      font-family: var(--mono);
+    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+    label { font-size: .7rem; color: var(--muted); display: block; margin-bottom: 4px; font-weight: 600; font-family: var(--mono); }
+    input, select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: .83rem;
+      background: var(--surface-alt);
+      color: var(--text);
+      font-family: inherit;
+    }
+    input:focus, select:focus { outline: 2px solid var(--purple); outline-offset: -1px; }
+    input.mono { font-family: var(--mono); font-size: .75rem; }
+    button {
+      background: var(--purple-dark);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--mono);
+      white-space: nowrap;
+      transition: background .15s;
+    }
+    button:hover { background: var(--purple); color: #0f172a; }
+    button:disabled { opacity: .4; cursor: not-allowed; }
+    button.sec { background: rgba(56, 189, 248, 0.12); color: var(--purple); border: 1px solid rgba(56, 189, 248, 0.3); }
+    button.sec.active { background: var(--purple); color: #0f172a; font-weight: 700; }
+    button.ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    button.preset { background: rgba(251, 191, 36, 0.12); color: var(--amber); border: 1px solid rgba(251, 191, 36, 0.35); font-size: .75rem; padding: 6px 10px; }
+    button.preset:hover { background: var(--amber); color: #0f172a; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
+    .urlbar { display: flex; gap: 8px; align-items: stretch; margin-top: 12px; }
+    .urlbar input { font-family: var(--mono); font-size: .73rem; background: var(--surface-alt); color: var(--green); border: 1px solid var(--border); flex: 1; }
+    .status { font-size: .8rem; margin-top: 10px; min-height: 1.3em; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; font-family: var(--mono); }
+    .status.ok { color: var(--green); }
+    .status.err { color: var(--red); }
+    .status.info { color: var(--purple); }
+    .tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+    .tab {
+      padding: 7px 13px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface-alt);
+      cursor: pointer;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+    .tab.active { background: var(--purple); color: #0f172a; border-color: var(--purple); font-weight: 700; }
+    .page { display: none; }
+    .page.active { display: block; }
+    .scroll { overflow: auto; max-height: 460px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-alt); }
+    table { width: 100%; border-collapse: collapse; font-size: .76rem; font-family: var(--mono); }
+    thead th {
+      position: sticky;
+      top: 0;
+      background: #111827;
+      text-align: left;
+      padding: 8px 9px;
+      border-bottom: 2px solid var(--border);
+      color: var(--purple);
+      font-size: .66rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      white-space: nowrap;
+      z-index: 1;
+    }
+    td { padding: 7px 9px; border-bottom: 1px solid #1e293b; white-space: nowrap; color: var(--text); }
+    tbody tr { cursor: pointer; }
+    tbody tr:hover { background: rgba(56, 189, 248, 0.08); }
+    tbody tr.sel { background: rgba(56, 189, 248, 0.2); }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; color: var(--green); }
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+    .card {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      transition: transform .15s, border-color .15s;
+    }
+    .card:hover { transform: translateY(-2px); border-color: var(--purple); box-shadow: 0 4px 12px rgba(56, 189, 248, .12); }
+    .card h3 { font-size: .84rem; margin-bottom: 5px; color: var(--purple); font-family: var(--mono); }
+    .card p { font-size: .72rem; color: var(--muted); line-height: 1.4; }
+    .card .provider {
+      font-size: .65rem;
+      color: var(--amber);
+      background: rgba(251, 191, 36, 0.12);
+      padding: 2px 7px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-top: 6px;
+      font-family: var(--mono);
+    }
+    #mapwrap { position: relative; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    svg#map { width: 100%; height: 480px; background: #090d16; display: block; cursor: grab; touch-action: none; }
+    svg#map.drag { cursor: grabbing; }
+    .poly { fill: var(--purple); fill-opacity: .18; stroke: var(--purple); stroke-width: 1.2; }
+    .poly:hover, .poly.hl { fill: var(--amber); fill-opacity: .45; stroke: var(--amber); vector-effect: non-scaling-stroke; }
+    .plabel {
+      font-size: 10px;
+      font-weight: 700;
+      fill: #f8fafc;
+      text-anchor: middle;
+      pointer-events: none;
+      paint-order: stroke;
+      stroke: #090d16;
+      stroke-width: 3px;
+      font-family: var(--mono);
+    }
+    .mapctrl { position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; }
+    .mapctrl button { padding: 4px 9px; font-size: .78rem; background: rgba(15, 23, 42, .9); color: var(--text); border: 1px solid var(--border); }
+    #tip {
+      position: absolute;
+      pointer-events: none;
+      background: rgba(15, 23, 42, 0.96);
+      color: #fff;
+      border: 1px solid var(--purple);
+      font-size: .72rem;
+      padding: 7px 10px;
+      border-radius: 6px;
+      display: none;
+      z-index: 5;
+      max-width: 280px;
+      line-height: 1.4;
+      font-family: var(--mono);
+    }
+    pre {
+      background: var(--surface-alt);
+      color: var(--green);
+      padding: 13px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: .73rem;
+      overflow: auto;
+      max-height: 500px;
+      font-family: var(--mono);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .empty { color: var(--muted); font-size: .83rem; padding: 16px 2px; text-align: center; font-family: var(--mono); }
+    .hint { font-size: .72rem; color: var(--muted); font-family: var(--mono); }
+    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .filter-chip {
+      font-size: .72rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--surface-alt);
+      color: var(--muted);
+      cursor: pointer;
+      border: 1px solid var(--border);
+      font-family: var(--mono);
+    }
+    .filter-chip.active { background: var(--purple); color: #0f172a; border-color: var(--purple); font-weight: 700; }
+    dl dt { color: var(--amber); font-family: var(--mono); font-size: .75rem; }
+    dl dd { color: var(--text); font-family: var(--mono); font-size: .78rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1><span class="dot"></span>SOVEREIGN PDOK &amp; SOLID OGC API TESTER</h1>
+    <span class="tag">EPSG:28992 // 0% Iframes</span>
+    <span class="tag">Platteweg 3-5-7 (E 108 → E 1552)</span>
+  </div>
+  <nav class="nav-links">
+    <a href="index.html">🏠 Workbench</a>
+    <a href="tree.html">🌳 Repository Tree</a>
+    <a href="tree.json">📜 tree.json</a>
+    <a href="centra/04-geocentrum/index.html">🌀 Geocentrum</a>
+    <a href="filebeheer/index.html">📂 Filebeheer</a>
+  </nav>
+</header>
+
+<div class="desc">
+  Status: ● SYSTEM ONLINE // Directe OGC API Features &amp; Solid Pod Inspectie · Kadastrale Percelen (BRK), BAG, BGT, AHN4 &amp; Zeeland Dossier Presets
+</div>
+
+<!-- ═══ SOVEREIGN DOSSIER PRESETS & LOCAL VFS INSPECTOR ═══ -->
+<div class="panel">
+  <h2>⚡ Sovereign Dossier Presets (Tholen / Scherpenisse / Poortvliet) &amp; Solid Pod Files</h2>
+  <div class="row" style="margin-top:0">
+    <button class="preset" id="preScherpenisse">📍 Scherpenisse E 1552 / E 108 (Platteweg 3-5-7)</button>
+    <button class="preset" id="prePoortvlietM">📍 Poortvliet Sectie M (1172–1180)</button>
+    <button class="preset" id="prePoortvlietN">📍 Poortvliet N 1316</button>
+    <button class="preset" id="preSpeelmansplaten">📍 Speelmansplaten Sectie K</button>
+    <button class="sec" onclick="loadLocalFile('tree.json')">📦 Laad tree.json</button>
+    <button class="sec" onclick="loadLocalFile('json/manifest-tree.json')">📦 manifest-tree.json</button>
+    <button class="sec" onclick="loadLocalFile('json/scherpenisse-e108-e1552.json')">⚖️ Dossier E108→E1552</button>
+    <button class="sec" onclick="loadLocalFile('json/poortvliet-sectie-m.json')">📊 Poortvliet M JSON</button>
+    <button class="sec" onclick="loadLocalFile('json/woo-zoekslagen.json')">📚 Woo-Zoekslagen</button>
+    <button class="sec" onclick="loadLocalFile('pod/kadaster/scherpenisse-e108-e1552.ttl')">🐢 Pod GeoSPARQL (.ttl)</button>
+  </div>
+</div>
+
+<!-- ═══ DATASET CATALOG ═══ -->
+<div class="panel">
+  <h2>📦 PDOK OGC API Datasets Catalogus</h2>
+  <div class="filter-bar" id="filterBar">
+    <span class="filter-chip active" data-provider="all">Alle</span>
+    <span class="filter-chip" data-provider="kadaster">Kadaster</span>
+    <span class="filter-chip" data-provider="rws">Rijkswaterstaat</span>
+    <span class="filter-chip" data-provider="rvo">RVO</span>
+    <span class="filter-chip" data-provider="bzk">BZK</span>
+    <span class="filter-chip" data-provider="ahn">AHN</span>
+    <span class="filter-chip" data-provider="other">Waterschap &amp; Overig</span>
+  </div>
+  <div class="cards" id="datasetCards">
+    <div class="empty">Laden van dataset catalogus...</div>
+  </div>
+</div>
+
+<!-- ═══ QUERY PANEL ═══ -->
+<div class="panel" id="queryPanel">
+  <h2>1️⃣ OGC API Query Instellingen</h2>
+  <div class="grid">
+    <div>
+      <label for="apiSelect">Dataset</label>
+      <select id="apiSelect"></select>
+    </div>
+    <div>
+      <label for="collSelect">Collectie</label>
+      <select id="collSelect"></select>
+    </div>
+    <div>
+      <label for="crsSelect">Coördinatenstelsel (CRS)</label>
+      <select id="crsSelect">
+        <option value="28992" selected>EPSG:28992 (RD New)</option>
+        <option value="4258">EPSG:4258 (ETRS89)</option>
+        <option value="84">CRS84 (WGS84 Lon/Lat)</option>
+      </select>
+    </div>
+  </div>
+
+  <h2 style="margin-top:16px">2️⃣ Zoekmodus</h2>
+  <div class="row">
+    <button class="sec active" data-mode="bbox">📦 BBox (RD / CRS)</button>
+    <button class="sec" data-mode="coords">📍 Punt + Radius</button>
+    <button class="sec" data-mode="id">🔢 Feature ID</button>
+    <button class="sec" data-mode="location">🏠 PDOK Locatieserver</button>
+  </div>
+
+  <div id="mode-bbox" class="page active">
+    <div class="grid" style="margin-top:12px">
+      <div><label>min X (RD)</label><input type="number" id="bboxMinX" value="64450"></div>
+      <div><label>min Y (RD)</label><input type="number" id="bboxMinY" value="395750"></div>
+      <div><label>max X (RD)</label><input type="number" id="bboxMaxX" value="64650"></div>
+      <div><label>max Y (RD)</label><input type="number" id="bboxMaxY" value="395950"></div>
+      <div><label>Limit</label><input type="number" id="bboxLimit" value="25" min="1" max="200"></div>
+    </div>
+  </div>
+
+  <div id="mode-coords" class="page">
+    <div class="grid" style="margin-top:12px">
+      <div><label>X / Lon</label><input type="text" id="coordX" value="64540" placeholder="64540"></div>
+      <div><label>Y / Lat</label><input type="text" id="coordY" value="395835" placeholder="395835"></div>
+      <div><label>Radius (m)</label><input type="number" id="coordRadius" value="120"></div>
+      <div><label>Limit</label><input type="number" id="coordLimit" value="15"></div>
+    </div>
+    <div class="row" style="margin-top:10px"><button id="btnCoords">📍 Zoek rondom punt</button></div>
+  </div>
+
+  <div id="mode-id" class="page">
+    <div class="grid" style="margin-top:12px">
+      <div style="grid-column:span 2"><label>Feature ID</label><input id="idValue" class="mono" placeholder="Voer PDOK Feature UUID of Lokaal ID in"></div>
+    </div>
+    <div class="row" style="margin-top:10px"><button id="btnId">🔎 Lookup Feature</button></div>
+  </div>
+
+  <div id="mode-location" class="page">
+    <div class="row" style="margin-top:12px">
+      <input id="locationQuery" value="Platteweg Scherpenisse" placeholder="Adres of perceel (bijv. 'Platteweg Scherpenisse')" style="flex:1">
+      <button id="btnLocSearch">🔎 Zoek Locatie</button>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:14px">
+    <button id="btnRun">▶ Execute OGC Query</button>
+    <button id="btnPrev" class="sec" disabled>◀ Prev</button>
+    <button id="btnNext" class="sec" disabled>Next ▶</button>
+    <span id="pgInfo" class="hint"></span>
+  </div>
+
+  <div class="urlbar">
+    <input id="urlDisplay" readonly>
+    <button id="btnCopy" class="sec" title="Kopieer Request URL">⧉ Kopieer URL</button>
+  </div>
+  <div class="status" id="status"><span class="hint">Klaar voor OGC API request.</span></div>
+</div>
+
+<!-- ═══ RESULTS PANEL ═══ -->
+<div class="panel" id="resultsPanel">
+  <div class="tabs">
+    <div class="tab active" data-page="res">📋 Tabel Resultaten</div>
+    <div class="tab" data-page="map">🗺️ Native Vector Kaart (SVG)</div>
+    <div class="tab" data-page="detail">📄 Perceel / Feature Detail</div>
+    <div class="tab" data-page="code">💻 cURL / Python / Turtle</div>
+    <div class="tab" data-page="raw">📜 Raw JSON / RDF</div>
+  </div>
+
+  <div class="page active" id="p-res">
+    <div class="row" style="justify-content:space-between;margin-bottom:10px;margin-top:0">
+      <span class="hint" id="resultMeta">Geen data geladen.</span>
+      <div class="row" style="margin-top:0">
+        <button id="btnCsv" class="ghost" disabled>⬇ Download CSV</button>
+        <button id="btnGeojson" class="ghost" disabled>⬇ Download GeoJSON</button>
+      </div>
+    </div>
+    <div class="scroll" id="tableWrap" style="display:none">
+      <table id="tbl">
+        <thead><tr id="thead"></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="emptyRes">Klik op "▶ Execute OGC Query" of kies een Dossier Preset hierboven.</div>
+  </div>
+
+  <div class="page" id="p-map">
+    <div id="mapwrap">
+      <svg id="map" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="mapctrl">
+        <button id="zIn" title="Zoom in">＋</button>
+        <button id="zOut" title="Zoom uit">−</button>
+        <button id="zFit" title="Passend maken">⤢</button>
+        <button id="zReset" title="Reset weergave">⟲</button>
+      </div>
+      <div id="tip"></div>
+    </div>
+  </div>
+
+  <div class="page" id="p-detail">
+    <div id="detailContent"><p class="empty">Selecteer een rij in de tabel of klik op een perceel op de kaart.</p></div>
+  </div>
+
+  <div class="page" id="p-code">
+    <h2 style="margin:0 0 8px">cURL Request</h2>
+    <pre id="curlSnip">—</pre>
+    <h2 style="margin:14px 0 8px">Python (Requests / GeoJSON)</h2>
+    <pre id="pySnip">—</pre>
+  </div>
+
+  <div class="page" id="p-raw">
+    <pre id="rawJson">// Geen data geladen...</pre>
+  </div>
+</div>
+
+<script>
+(function() {
+  "use strict";
+
+  const ALL_DATASETS = [
+    {id:"brk-kadastrale-kaart",name:"Kadastrale Kaart (BRK v1)",provider:"kadaster",baseUrl:"https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1",colls:["perceel","bebouwing","nummeraanduidingreeks","openbareruimtenaam"],bbox:[64450,395750,64650,395950],desc:"Kadastrale percelen, grenzen, bebouwing & nummeraanduiding"},
+    {id:"brk-kadastrale-percelen",name:"Kadastrale Percelen (INSPIRE)",provider:"kadaster",baseUrl:"https://api.pdok.nl/kadaster/brk-kadastrale-percelen/ogc/v1",colls:["cadastralparcel"],bbox:[64450,395750,64650,395950],desc:"Geharmoniseerde kadastrale percelen (INSPIRE)"},
+    {id:"bag-ogc-v2",name:"BAG (Adressen & Gebouwen v2)",provider:"kadaster",baseUrl:"https://api.pdok.nl/kadaster/bag/ogc/v2",colls:["pand","verblijfsobject","ligplaats","standplaats","adres"],bbox:[64450,395750,64650,395950],desc:"Basisregistratie Adressen en Gebouwen (Platteweg 3-5-7)"},
+    {id:"bgt",name:"BGT (Grootschalige Topografie)",provider:"kadaster",baseUrl:"https://api.pdok.nl/bgt/ogc/v1",colls:["pand","wegdeel","waterdeel","ondersteunendwaterdeel","begroeidterreindeel","onbegroeidterreindeel"],bbox:[64450,395750,64650,395950],desc:"Grootschalige topografie: erfgrenzen, dijksloten, verharding"},
+    {id:"3d-basisvoorziening",name:"3D Basisvoorziening Gebouwen",provider:"kadaster",baseUrl:"https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1",colls:["basisbestand_gebouwen"],bbox:[64450,395750,64650,395950],desc:"3D gebouwmodellen LoD 2.2"},
+    {id:"ahn4",name:"AHN 4 (Actueel Hoogtebestand)",provider:"ahn",baseUrl:"https://api.pdok.nl/ahn/ogc/v1/ahn4",colls:["hoogte","ruwheid"],bbox:[64450,395750,64650,395950],desc:"Digitale hoogtemodellen Nederland"},
+    {id:"rws-vervoersnetwerken-wegen",name:"Vervoersnetwerken - Wegen",provider:"rws",baseUrl:"https://api.pdok.nl/rws/vervoersnetwerken-wegen/ogc/v1",colls:["netwerk","knooppunt","node"],bbox:[64000,395000,68000,398000],desc:"Rijkswaterstaat wegen en netwerken"},
+    {id:"rws-vervoersnetwerken-binnenwateren",name:"Vervoersnetwerken - Binnenwateren",provider:"rws",baseUrl:"https://api.pdok.nl/rws/vervoersnetwerken-binnenwateren/ogc/v1",colls:["netwerk","vaarwaterkilometerpaal"],bbox:[62000,390000,72000,400000],desc:"Vaarwegen, Oosterschelde & Schelde-Rijnverbinding"},
+    {id:"rvo-gsa-agrarisch-areaal",name:"GSA Agrarisch Areaal",provider:"rvo",baseUrl:"https://api.pdok.nl/rvo/gsa-agrarisch-areaal/ogc/v1",colls:["perceel"],bbox:[66000,396000,67260,397200],desc:"Agrarische percelen en gewaspercelen (Poortvliet)"},
+    {id:"rvo-rev",name:"REV (Register Externe Veiligheid)",provider:"rvo",baseUrl:"https://api.pdok.nl/rvo/rev/ogc/v1",colls:["seveso_inrichting"],bbox:[60000,390000,75000,405000],desc:"Externe veiligheidsrisico's & leidingstroken"},
+    {id:"waterschappen-hydrografie",name:"Waterschappen Hydrografie (INSPIRE)",provider:"other",baseUrl:"https://api.pdok.nl/waterschappen/hydrografie-inspire/ogc/v1",colls:["hydrography"],bbox:[64000,395000,68000,398000],desc:"Hydrologische objecten Waterschap Scheldestromen"},
+    {id:"waterschappen-keringen",name:"Waterschappen Waterkeringen (IMWA)",provider:"other",baseUrl:"https://api.pdok.nl/waterschappen/keringen-imwa/ogc/v1",colls:["waterkering"],bbox:[64000,395000,68000,398000],desc:"Waterkeringen en legger-objecten"},
+    {id:"brr-bestemmingsplannen",name:"BRR Bestemmingsplannen",provider:"bzk",baseUrl:"https://api.pdok.nl/brr/bestemmingsplannen/ogc/v1",colls:["bestemmingsplan"],bbox:[64450,395750,64650,395950],desc:"Gemeentelijke bestemmingsplannen (Tholen)"},
+    {id:"omgevingswet",name:"Omgevingswet Documenten",provider:"bzk",baseUrl:"https://api.pdok.nl/bzk/omgevingswet/ogc/v1",colls:["document"],bbox:[64450,395750,64650,395950],desc:"Omgevingswet besluiten en gebieden"},
+    {id:"cbs-gebiedsstukken",name:"CBS Gebiedsstukken",provider:"other",baseUrl:"https://api.pdok.nl/cbs/gebiedsstukken/ogc/v1",colls:["gebiedsstuk"],bbox:[60000,390000,75000,405000],desc:"CBS statistische gebieden en wijken"}
+  ];
+
+  const CRS_URIS = {
+    "28992": "http://www.opengis.net/def/crs/EPSG/0/28992",
+    "4258": "http://www.opengis.net/def/crs/EPSG/0/4258",
+    "84": "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
+  };
+
+  const S = {
+    datasets: ALL_DATASETS,
+    filteredDatasets: ALL_DATASETS,
+    currentDataset: null,
+    currentColl: null,
+    crs: "28992",
+    mode: "bbox",
+    features: [],
+    links: {},
+    lastUrl: "",
+    lastCursor: null,
+    isLoading: false
+  };
+
+  const $ = id => document.getElementById(id);
+
+  function init() {
+    renderDatasetCards(ALL_DATASETS);
+    setupEvents();
+    loadDataset(ALL_DATASETS[0]);
+  }
+
+  function renderDatasetCards(datasets) {
+    const container = $("datasetCards");
+    container.innerHTML = "";
+    datasets.forEach(ds => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <h3>${ds.name}</h3>
+        <p>${ds.desc || "Geen beschrijving"}</p>
+        <span class="provider">${ds.provider.toUpperCase()}</span>
+        <span style="font-size:.68rem;color:var(--muted);float:right;margin-top:6px;font-family:var(--mono)">${(ds.colls || []).length} lagen</span>
+      `;
+      card.onclick = () => loadDataset(ds);
+      container.appendChild(card);
+    });
+  }
+
+  function loadDataset(dataset) {
+    S.currentDataset = dataset;
+    S.currentColl = dataset.colls?.[0] || "items";
+    S.lastCursor = null;
+
+    const apiSel = $("apiSelect");
+    apiSel.innerHTML = "";
+    S.datasets.forEach(d => {
+      const opt = document.createElement("option");
+      opt.value = d.id;
+      opt.textContent = d.name;
+      if (d.id === dataset.id) opt.selected = true;
+      apiSel.appendChild(opt);
+    });
+
+    const collSel = $("collSelect");
+    collSel.innerHTML = "";
+    (dataset.colls || []).forEach(c => {
+      const opt = document.createElement("option");
+      opt.value = c;
+      opt.textContent = c;
+      collSel.appendChild(opt);
+    });
+
+    if (dataset.bbox) {
+      $("bboxMinX").value = dataset.bbox[0];
+      $("bboxMinY").value = dataset.bbox[1];
+      $("bboxMaxX").value = dataset.bbox[2];
+      $("bboxMaxY").value = dataset.bbox[3];
+    }
+
+    syncUrl();
+    setStatus(`✅ Dataset geselecteerd: ${dataset.name} (${S.currentColl})`, "ok");
+  }
+
+  function setupEvents() {
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.onclick = () => {
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        const provider = chip.dataset.provider;
+        S.filteredDatasets = provider === "all" ? S.datasets : S.datasets.filter(d => d.provider === provider);
+        renderDatasetCards(S.filteredDatasets);
+      };
+    });
+
+    document.querySelectorAll('[data-mode]').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('[data-mode]').forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.querySelectorAll('[id^="mode-"]').forEach(p => p.classList.remove("active"));
+        $(`mode-${btn.dataset.mode}`).classList.add("active");
+        S.mode = btn.dataset.mode;
+      };
+    });
+
+    $("btnRun").onclick = () => { S.lastCursor = null; executeQuery(); };
+    $("btnPrev").onclick = () => cursorQuery(S.links.prev);
+    $("btnNext").onclick = () => cursorQuery(S.links.next);
+    $("btnCoords").onclick = execCoords;
+    $("btnId").onclick = execId;
+    $("btnLocSearch").onclick = execLoc;
+    $("btnCopy").onclick = copyUrl;
+    $("btnCsv").onclick = downloadCsv;
+    $("btnGeojson").onclick = downloadGeojson;
+
+    // Presets Zeeland / Tholen
+    $("preScherpenisse").onclick = () => applyPreset("brk-kadastrale-kaart", "perceel", [64450, 395750, 64650, 395950], "Scherpenisse Platteweg 3-5-7 (E 1552 / E 108)");
+    $("prePoortvlietM").onclick = () => applyPreset("brk-kadastrale-kaart", "perceel", [66000, 396000, 67260, 397000], "Poortvliet Sectie M (1172–1180)");
+    $("prePoortvlietN").onclick = () => applyPreset("brk-kadastrale-kaart", "perceel", [67800, 395500, 68400, 396100], "Poortvliet Sectie N 1316");
+    $("preSpeelmansplaten").onclick = () => applyPreset("brk-kadastrale-kaart", "perceel", [71500, 391500, 73000, 393000], "Speelmansplaten Sectie K (Oesterdam)");
+
+    document.querySelectorAll('.tab').forEach(t => t.onclick = () => switchTab(t.dataset.page));
+    ["zIn", "zOut", "zFit", "zReset"].forEach(id => $(id).onclick = {
+      zIn: () => zoomBy(1.4),
+      zOut: () => zoomBy(1 / 1.4),
+      zFit: zoomFit,
+      zReset: zoomReset
+    }[id]);
+
+    $("apiSelect").onchange = () => {
+      const ds = S.datasets.find(d => d.id === $("apiSelect").value);
+      if (ds) loadDataset(ds);
+    };
+    $("collSelect").onchange = () => { S.currentColl = $("collSelect").value; S.lastCursor = null; syncUrl(); };
+    $("crsSelect").onchange = () => { S.crs = $("crsSelect").value; syncUrl(); };
+    ["bboxMinX", "bboxMinY", "bboxMaxX", "bboxMaxY", "bboxLimit"].forEach(id => $(id).oninput = syncUrl);
+  }
+
+  function applyPreset(dsId, coll, bbox, label) {
+    const ds = S.datasets.find(d => d.id === dsId) || S.datasets[0];
+    loadDataset(ds);
+    S.currentColl = coll;
+    $("collSelect").value = coll;
+    $("crsSelect").value = "28992";
+    S.crs = "28992";
+    $("bboxMinX").value = bbox[0];
+    $("bboxMinY").value = bbox[1];
+    $("bboxMaxX").value = bbox[2];
+    $("bboxMaxY").value = bbox[3];
+    syncUrl();
+    setStatus(`🎯 Preset geladen: ${label}`, "info");
+    executeQuery();
+  }
+
+  window.loadLocalFile = async function(path) {
+    setStatus(`⏳ Lokaal/Repository bestand laden: ${path}...`, "info");
+    $("urlDisplay").value = window.location.origin + "/" + path;
+    try {
+      const res = await fetch(path);
+      if (!res.ok) throw new Error(`HTTP ${res.status} (${path})`);
+      const text = await res.text();
+      $("rawJson").textContent = text;
+      renderCode(window.location.origin + "/" + path);
+      try {
+        const json = JSON.parse(text);
+        if (Array.isArray(json.features)) {
+          S.features = json.features;
+          renderTable();
+          renderMap();
+          switchTab("res");
+        } else {
+          switchTab("raw");
+        }
+      } catch (_) {
+        switchTab("raw");
+      }
+      setStatus(`✅ Bestand geladen: ${path}`, "ok");
+    } catch (err) {
+      setStatus(`❌ Kan ${path} niet laden: ${err.message}`, "err");
+    }
+  };
+
+  function syncUrl() {
+    if (!S.currentDataset || !S.currentColl) return;
+    let url = `${S.currentDataset.baseUrl}/collections/${S.currentColl}/items`;
+    const p = [];
+    if (S.mode === "bbox") {
+      const b = [$("bboxMinX").value, $("bboxMinY").value, $("bboxMaxX").value, $("bboxMaxY").value].join(",");
+      p.push(`bbox=${encodeURIComponent(b)}`);
+      p.push(`bbox-crs=${encodeURIComponent(CRS_URIS[S.crs])}`);
+      p.push(`limit=${parseInt($("bboxLimit").value) || 25}`);
+    }
+    p.push(`crs=${encodeURIComponent(CRS_URIS[S.crs])}`);
+    p.push(`f=json`);
+    if (S.lastCursor) p.push(`cursor=${encodeURIComponent(S.lastCursor)}`);
+    url += "?" + p.join("&");
+    S.lastUrl = url;
+    $("urlDisplay").value = url;
+  }
+
+  function cursorQuery(linkUrl) {
+    if (!linkUrl) return;
+    executeQuery(linkUrl);
+  }
+
+  async function executeQuery(urlOverride) {
+    if (S.isLoading) return;
+    S.isLoading = true;
+    setStatus("⏳ OGC API Features ophalen...", "info");
+    setButtons(false);
+
+    if (!urlOverride) syncUrl();
+    const url = urlOverride || S.lastUrl;
+    $("urlDisplay").value = url;
+
+    try {
+      const res = await fetch(url, { headers: { "Accept": "application/geo+json, application/json" } });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const json = await res.json();
+      S.features = json.features || [];
+      S.links = {};
+      (json.links || []).forEach(l => { if (l.rel) S.links[l.rel] = l.href; });
+
+      $("rawJson").textContent = JSON.stringify(json, null, 2);
+      renderTable();
+      renderMap();
+      renderCode(url);
+
+      const n = json.numberReturned ?? S.features.length;
+      setStatus(`✅ ${n} feature(s) geladen in EPSG:${S.crs}`, "ok");
+      $("resultMeta").textContent = `${n} resultaten geladen` + (S.links.next ? " · vervolgpagina beschikbaar" : "");
+      setButtons(true);
+    } catch (err) {
+      setStatus("❌ OGC Fout: " + err.message, "err");
+      setButtons(true);
+    } finally {
+      S.isLoading = false;
+    }
+  }
+
+  async function execCoords() {
+    const x = parseFloat($("coordX").value), y = parseFloat($("coordY").value), r = parseFloat($("coordRadius").value) || 100;
+    if (isNaN(x) || isNaN(y)) { setStatus("❌ Ongeldige coördinaten", "err"); return; }
+    $("bboxMinX").value = Math.round(x - r);
+    $("bboxMinY").value = Math.round(y - r);
+    $("bboxMaxX").value = Math.round(x + r);
+    $("bboxMaxY").value = Math.round(y + r);
+    $("bboxLimit").value = $("coordLimit").value;
+    document.querySelector('[data-mode="bbox"]').click();
+    syncUrl();
+    await executeQuery();
+  }
+
+  async function execId() {
+    const id = $("idValue").value.trim();
+    if (!id) { setStatus("❌ Voer een Feature ID in", "err"); return; }
+    const url = `${S.currentDataset.baseUrl}/collections/${S.currentColl}/items/${encodeURIComponent(id)}?crs=${encodeURIComponent(CRS_URIS[S.crs])}&f=json`;
+    S.lastUrl = url;
+    $("urlDisplay").value = url;
+    try {
+      const res = await fetch(url, { headers: { "Accept": "application/geo+json, application/json" } });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const json = await res.json();
+      $("rawJson").textContent = JSON.stringify(json, null, 2);
+      S.features = [json.type === "Feature" ? json : { properties: json, geometry: null }];
+      S.links = {};
+      renderTable();
+      renderMap();
+      renderCode(url);
+      showDetail(S.features[0]);
+      switchTab("detail");
+      setStatus("✅ Feature geladen", "ok");
+      setButtons(true);
+    } catch (err) {
+      setStatus("❌ " + err.message, "err");
+    }
+  }
+
+  async function execLoc() {
+    const q = $("locationQuery").value.trim();
+    if (!q) { setStatus("❌ Voer een adres of locatie in", "err"); return; }
+    setStatus("🔎 Zoeken via PDOK Locatieserver...", "info");
+    try {
+      const res = await fetch("https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?q=" + encodeURIComponent(q) + "&rows=1");
+      const data = await res.json();
+      const doc = data.response?.docs?.[0];
+      if (!doc || !doc.centroide_rd) throw new Error("Geen RD-locatie gevonden");
+      const m = doc.centroide_rd.match(/POINT\(([0-9.]+)\s+([0-9.]+)\)/);
+      if (!m) throw new Error("Kon RD-punt niet parsen");
+      const rdX = parseFloat(m[1]), rdY = parseFloat(m[2]);
+      $("bboxMinX").value = Math.round(rdX - 150);
+      $("bboxMinY").value = Math.round(rdY - 150);
+      $("bboxMaxX").value = Math.round(rdX + 150);
+      $("bboxMaxY").value = Math.round(rdY + 150);
+      document.querySelector('[data-mode="bbox"]').click();
+      syncUrl();
+      await executeQuery();
+      setStatus("✅ Locatie gevonden: " + (doc.weergavenaam || q), "ok");
+    } catch (err) {
+      setStatus("❌ " + err.message, "err");
+    }
+  }
+
+  function renderTable() {
+    const wrap = $("tableWrap"), empty = $("emptyRes"), tbody = $("tbody"), thead = $("thead");
+    tbody.innerHTML = "";
+    if (!S.features.length) { wrap.style.display = "none"; empty.style.display = ""; return; }
+    wrap.style.display = "";
+    empty.style.display = "none";
+
+    const sample = S.features[0], props = sample.properties || {};
+    const priority = ["kadastrale_gemeente_code", "sectie", "perceelnummer", "kadastrale_grootte_waarde", "soort_grootte_waarde", "begin_geldigheid", "identificatie", "bouwjaar", "status"];
+    const cols = priority.filter(k => k in props).concat(Object.keys(props).filter(k => !priority.includes(k) && typeof props[k] !== "object").slice(0, 4));
+
+    thead.innerHTML = "";
+    cols.slice(0, 8).forEach(c => {
+      const th = document.createElement("th");
+      th.textContent = c.replace(/_/g, " ");
+      thead.appendChild(th);
+    });
+
+    S.features.forEach((f, i) => {
+      const tr = document.createElement("tr");
+      tr.dataset.idx = i;
+      tr.onmouseenter = () => hl(i, true);
+      tr.onmouseleave = () => hl(i, false);
+      tr.onclick = () => { S.selected = f; showDetail(f); switchTab("detail"); hl(i, true); };
+      const p = f.properties || {};
+      cols.slice(0, 8).forEach(c => {
+        const td = document.createElement("td");
+        td.textContent = p[c] ?? "—";
+        if (typeof p[c] === "number") td.className = "num";
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+  }
+
+  function hl(i, on) {
+    const p = document.querySelector(`#map path[data-idx="${i}"]`);
+    if (p) p.classList.toggle("hl", on);
+    const r = document.querySelector(`#tbody tr[data-idx="${i}"]`);
+    if (r) r.classList.toggle("sel", on);
+  }
+
+  function showDetail(f) {
+    const p = f.properties || {}, g = f.geometry || {}, cont = $("detailContent");
+    let html = `<h3 style="margin-bottom:12px;color:var(--purple);font-family:var(--mono)">${p.perceelnummer ? "Perceel " + (p.kadastrale_gemeente_code || "") + " " + (p.sectie || "") + " " + p.perceelnummer : "Feature Details"}</h3><dl style="display:grid;grid-template-columns:auto 1fr;gap:8px 16px">`;
+    if (p.kadastrale_grootte_waarde) html += `<dt>BRK Geregistreerd</dt><dd>${Number(p.kadastrale_grootte_waarde).toLocaleString("nl-NL")} m²</dd>`;
+    const calc = geomArea(f);
+    if (calc > 0) html += `<dt>Geometrisch Berekend (Shoelace)</dt><dd>${Math.round(calc).toLocaleString("nl-NL")} m²</dd>`;
+    Object.entries(p).forEach(([k, v]) => {
+      if (typeof v === "object" || v === null) return;
+      html += `<dt>${k.replace(/_/g, " ")}</dt><dd>${v}</dd>`;
+    });
+    html += `<dt>Geometry Type</dt><dd>${g.type || "—"}</dd><dt>Feature ID</dt><dd class="mono">${f.id || "—"}</dd></dl>`;
+    cont.innerHTML = html;
+  }
+
+  let mapState = { k: 1, tx: 0, ty: 0, base: null };
+
+  function renderMap() {
+    const svg = $("map");
+    svg.innerHTML = "";
+    mapState = { k: 1, tx: 0, ty: 0, base: null };
+    if (!S.features.length) { addMapText("Geen geometrie geladen"); return; }
+
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity, hasGeom = false;
+    S.features.forEach(f => getRings(f).forEach(r => r.forEach(([x, y]) => {
+      if (isFinite(x) && isFinite(y)) {
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+        hasGeom = true;
+      }
+    })));
+    if (!hasGeom) { addMapText("Geen geldige polygoon-coördinaten gevonden"); return; }
+
+    const vb = { w: 960, h: 480 }, pad = 40;
+    const sx = (vb.w - 2 * pad) / Math.max(maxX - minX, 1);
+    const sy = (vb.h - 2 * pad) / Math.max(maxY - minY, 1);
+    const s = Math.min(sx, sy);
+    const ox = pad + ((vb.w - 2 * pad) - (maxX - minX) * s) / 2;
+    const oy = pad + ((vb.h - 2 * pad) - (maxY - minY) * s) / 2;
+    const TX = x => ox + (x - minX) * s;
+    const TY = y => vb.h - (oy + (y - minY) * s);
+    mapState.base = { TX, TY, vb };
+
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.id = "vp";
+    svg.appendChild(g);
+
+    S.features.forEach((f, i) => {
+      const p = f.properties || {};
+      getRings(f).forEach(r => {
+        if (r.length < 3) return;
+        let d = "";
+        r.forEach(([x, y], j) => { d += (j ? "L" : "M") + TX(x).toFixed(2) + "," + TY(y).toFixed(2); });
+        d += "Z";
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", d);
+        path.setAttribute("class", "poly");
+        path.dataset.idx = i;
+        path.onclick = () => { S.selected = f; showDetail(f); switchTab("detail"); };
+        path.onmousemove = ev => {
+          $("tip").style.display = "block";
+          $("tip").style.left = (ev.clientX - svg.getBoundingClientRect().left + 12) + "px";
+          $("tip").style.top = (ev.clientY - svg.getBoundingClientRect().top + 12) + "px";
+          let tipHtml = p.perceelnummer ? `<b>${p.kadastrale_gemeente_code || ""} ${p.sectie || ""} ${p.perceelnummer}</b><br>` : "";
+          if (p.kadastrale_grootte_waarde) tipHtml += `Grootte: ${p.kadastrale_grootte_waarde} m²<br>`;
+          if (p.identificatie) tipHtml += `<span style='opacity:.75'>${p.identificatie}</span>`;
+          $("tip").innerHTML = tipHtml || "Feature #" + (i + 1);
+        };
+        path.onmouseleave = () => $("tip").style.display = "none";
+        g.appendChild(path);
+      });
+      const c = centroid(f);
+      if (c) {
+        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        t.setAttribute("x", TX(c[0]));
+        t.setAttribute("y", TY(c[1]));
+        t.setAttribute("class", "plabel");
+        t.textContent = (p.sectie ? p.sectie + " " : "") + (p.perceelnummer || p.bouwjaar || "");
+        g.appendChild(t);
+      }
+    });
+
+    applyTransform();
+    attachPanZoom(svg);
+  }
+
+  function getRings(f) {
+    const g = f.geometry;
+    if (!g) return [];
+    if (g.type === "Polygon") return g.coordinates;
+    if (g.type === "MultiPolygon") return g.coordinates.flat();
+    return [];
+  }
+
+  function geomArea(f) {
+    let t = 0;
+    const g = f.geometry;
+    if (!g) return 0;
+    const polys = g.type === "Polygon" ? [g.coordinates] : (g.type === "MultiPolygon" ? g.coordinates : []);
+    polys.forEach(poly => poly.forEach((r, i) => {
+      let a = 0;
+      for (let j = 0; j < r.length - 1; j++) a += r[j][0] * r[j + 1][1] - r[j + 1][0] * r[j][1];
+      t += (i === 0 ? 1 : -1) * Math.abs(a) / 2;
+    }));
+    return t;
+  }
+
+  function centroid(f) {
+    const rings = getRings(f);
+    if (!rings.length || !rings[0] || rings[0].length < 3) return null;
+    const r = rings[0];
+    let sx = 0, sy = 0;
+    for (let i = 0; i < r.length; i++) { sx += r[i][0]; sy += r[i][1]; }
+    return [sx / r.length, sy / r.length];
+  }
+
+  function addMapText(t) {
+    const s = $("map"), txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    txt.setAttribute("x", 480);
+    txt.setAttribute("y", 240);
+    txt.setAttribute("text-anchor", "middle");
+    txt.setAttribute("fill", "#94a3b8");
+    txt.textContent = t;
+    s.appendChild(txt);
+  }
+
+  function applyTransform() {
+    const g = $("vp");
+    if (g) g.setAttribute("transform", `translate(${mapState.tx},${mapState.ty}) scale(${mapState.k})`);
+  }
+
+  function attachPanZoom(svg) {
+    let drag = false, last = null;
+    svg.onwheel = ev => {
+      ev.preventDefault();
+      const p = getSvgPt(svg, ev), f = ev.deltaY < 0 ? 1.25 : 1 / 1.25;
+      const k2 = Math.max(0.1, Math.min(100, mapState.k * f)), r = k2 / mapState.k;
+      mapState.tx = p.x - r * (p.x - mapState.tx);
+      mapState.ty = p.y - r * (p.y - mapState.ty);
+      mapState.k = k2;
+      applyTransform();
+    };
+    svg.onpointerdown = ev => { drag = true; last = getSvgPt(svg, ev); svg.classList.add("drag"); svg.setPointerCapture(ev.pointerId); };
+    svg.onpointermove = ev => {
+      if (!drag) return;
+      const p = getSvgPt(svg, ev);
+      mapState.tx += p.x - last.x;
+      mapState.ty += p.y - last.y;
+      last = p;
+      applyTransform();
+    };
+    svg.onpointerup = ev => { drag = false; svg.classList.remove("drag"); try { svg.releasePointerCapture(ev.pointerId); } catch (_) {} };
+    svg.ondblclick = zoomFit;
+  }
+
+  function getSvgPt(svg, ev) {
+    const pt = svg.createSVGPoint();
+    pt.x = ev.clientX;
+    pt.y = ev.clientY;
+    const m = svg.getScreenCTM();
+    if (!m) return { x: 0, y: 0 };
+    const p = pt.matrixTransform(m.inverse());
+    return { x: p.x, y: p.y };
+  }
+
+  function zoomBy(f) {
+    const vb = mapState.base?.vb || { w: 960, h: 480 }, cx = vb.w / 2, cy = vb.h / 2;
+    const k2 = Math.max(0.1, Math.min(100, mapState.k * f)), r = k2 / mapState.k;
+    mapState.tx = cx - r * (cx - mapState.tx);
+    mapState.ty = cy - r * (cy - mapState.ty);
+    mapState.k = k2;
+    applyTransform();
+  }
+  function zoomFit() { mapState = { k: 1, tx: 0, ty: 0, base: mapState.base }; applyTransform(); }
+  function zoomReset() { mapState = { k: 1, tx: 0, ty: 0, base: mapState.base }; applyTransform(); }
+
+  function switchTab(pageId) {
+    const clean = pageId.replace("p-", "");
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle("active", t.dataset.page === clean));
+    document.querySelectorAll('[id^="p-"]').forEach(p => p.classList.toggle("active", p.id === "p-" + clean));
+  }
+
+  function renderCode(url) {
+    $("curlSnip").textContent = `curl -sSL -H "Accept: application/geo+json" "${url}" -o sovereign-output.geojson`;
+    $("pySnip").textContent = `import requests\n\nurl = "${url}"\nres = requests.get(url, headers={"Accept": "application/geo+json"})\ndata = res.json()\nprint(f"Geladen features: {len(data.get('features', []))}")`;
+  }
+
+  function downloadCsv() {
+    if (!S.features.length) return;
+    const cols = Object.keys(S.features[0].properties || {}).slice(0, 12);
+    cols.unshift("id");
+    const q = v => { const s = String(v ?? ""); return /[,"\n;]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+    const lines = [cols.map(q).join(";")];
+    S.features.forEach(f => {
+      const p = f.properties || {};
+      lines.push(cols.map(c => q(c === "id" ? f.id : p[c])).join(";"));
+    });
+    downloadBlob("sovereign-pdok-export.csv", "\ufeff" + lines.join("\n"), "text/csv");
+  }
+
+  function downloadGeojson() {
+    if (!S.features.length) return;
+    downloadBlob("sovereign-pdok-export.geojson", JSON.stringify({ type: "FeatureCollection", features: S.features }, null, 2), "application/geo+json");
+  }
+
+  function downloadBlob(n, t, m) {
+    const b = new Blob([t], { type: m }), a = document.createElement("a");
+    a.href = URL.createObjectURL(b);
+    a.download = n;
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
+
+  function setStatus(m, c) { $("status").innerHTML = m; $("status").className = "status" + (c ? " " + c : ""); }
+  function setButtons(e) {
+    $("btnRun").disabled = !e || S.isLoading;
+    $("btnPrev").disabled = !e || !S.links.prev;
+    $("btnNext").disabled = !e || !S.links.next;
+    $("btnCsv").disabled = !e || !S.features.length;
+    $("btnGeojson").disabled = !e || !S.features.length;
+  }
+  function copyUrl() {
+    navigator.clipboard.writeText($("urlDisplay").value)
+      .then(() => setStatus("✅ Request URL gekopieerd naar klembord", "ok"))
+      .catch(() => { $("urlDisplay").select(); document.execCommand("copy"); });
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
