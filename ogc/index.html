@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovereign OGC API Client & Geodesy Workbench</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #f8fafc; padding: 2rem; margin: 0; }
+        .container { max-width: 1100px; margin: 0 auto; background: #1e293b; padding: 2rem; border-radius: 12px; border: 1px solid #334155; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4); }
+        h1 { font-size: 1.4rem; color: #38bdf8; margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+        .card { background: #0f172a; border: 1px solid #334155; padding: 1.5rem; border-radius: 8px; }
+        label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.4rem; }
+        input, select { width: 100%; background: #1e293b; border: 1px solid #475569; color: #f8fafc; padding: 0.6rem; border-radius: 6px; margin-bottom: 1rem; font-family: monospace; }
+        button { background: #0284c7; color: white; border: none; padding: 0.7rem 1.2rem; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #0369a1; }
+        pre { background: #090d16; padding: 1rem; border-radius: 6px; overflow-x: auto; color: #34d399; font-size: 0.85rem; max-height: 350px; border: 1px solid #1e293b; }
+        .badge { background: #334155; color: #38bdf8; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>
+        <span>🌐 OGC API FEATURES & GEOSPARQL CLIENT</span>
+        <span class="badge">EPSG:28992 // 0% Iframes</span>
+    </h1>
+    <p style="color: #94a3b8; font-size: 0.9rem;">Verbind rechtstreeks met OGC API-endpoints (zoals PDOK Kadaster / BRK) en haal GeoJSON / WKT vectordata op.</p>
+
+    <div class="grid">
+        <div class="card">
+            <h2>⚙️ OGC Query Parameteres</h2>
+            <label for="ogcEndpoint">OGC API Base URL:</label>
+            <input type="text" id="ogcEndpoint" value="https://api.pdok.nl/kadaster/brk/ogc/v1_0">
+
+            <label for="collectionId">Collectie / Laag:</label>
+            <select id="collectionId">
+                <option value="perceel">perceel (BRK Percelen)</option>
+                <option value="gemeente">gemeente (Kadastrale Gemeenten)</option>
+                <option value="sectie">sectie (Kadastrale Secties)</option>
+            </select>
+
+            <label for="bbox">BBOX (MinX, MinY, MaxX, MaxY - EPSG:28992 / RD):</label>
+            <input type="text" id="bbox" value="64500,395800,64600,395900">
+
+            <button onclick="runOgcQuery()">Query Uitvoeren (Features)</button>
+        </div>
+
+        <div class="card">
+            <h2>📊 GeoJSON / WKT Response</h2>
+            <pre id="ogcOutput">// Wacht op OGC API request...</pre>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import OgcApiClient from './ogc-client.js';
+
+    window.runOgcQuery = async function() {
+        const endpoint = document.getElementById('ogcEndpoint').value;
+        const collection = document.getElementById('collectionId').value;
+        const bboxStr = document.getElementById('bbox').value;
+        const output = document.getElementById('ogcOutput');
+
+        output.textContent = "Bezig met ophalen van OGC features...";
+
+        try {
+            const client = new OgcApiClient(endpoint);
+            const bbox = bboxStr.split(',').map(n => parseFloat(n.trim()));
+            const data = await client.getFeatures(collection, bbox, 10);
+            output.textContent = JSON.stringify(data, null, 2);
+        } catch (err) {
+            output.textContent = "FOUT bij ophalen OGC data: " + err.message + "\n\n(Tip: Controleer CORS of netwerkverbinding naar endpoint).";
+        }
+    }
+</script>
+
+</body>
+</html>
