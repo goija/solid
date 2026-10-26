@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "solid",
+  "branch": "main",
+  "status": "SYSTEM ONLINE // PLATTEWEG 3-5-7 (E 108 -> E 1552)",
+  "type": "directory",
+  "children": [
+    { "name": "README.md", "type": "file" },
+    { "name": "bestandenstructuur.md", "type": "file" },
+    { "name": "vercel.json", "type": "file" },
+    { "name": "index.html", "type": "file" },
+    { "name": "tree.html", "type": "file" },
+    { "name": "tree.json", "type": "file" },
+    {
+      "name": "css",
+      "type": "directory",
+      "children": [
+        { "name": "styles.css", "type": "file" }
+      ]
+    },
+    {
+      "name": "js",
+      "type": "directory",
+      "children": [
+        { "name": "app.js", "type": "file" }
+      ]
+    },
+    {
+      "name": "json",
+      "type": "directory",
+      "children": [
+        { "name": "manifest-tree.json", "type": "file" },
+        { "name": "poortvliet-sectie-m.json", "type": "file" },
+        { "name": "scherpenisse-e108-e1552.json", "type": "file" },
+        { "name": "kadaster-workspace.json", "type": "file" },
+        { "name": "woo-zoekslagen.json", "type": "file" }
+      ]
+    },
+    {
+      "name": "bash",
+      "type": "directory",
+      "children": [
+        { "name": "git-push-solid.sh", "type": "file" },
+        { "name": "generate-production-assets.sh", "type": "file" }
+      ]
+    },
+    {
+      "name": "pod",
+      "type": "directory",
+      "children": [
+        { "name": ".acl", "type": "file" },
+        {
+          "name": "profile",
+          "type": "directory",
+          "children": [
+            { "name": "card.ttl", "type": "file" }
+          ]
+        },
+        {
+          "name": "feeds",
+          "type": "directory",
+          "children": [
+            { "name": "subscriptions.ttl", "type": "file" }
+          ]
+        },
+        {
+          "name": "kadaster",
+          "type": "directory",
+          "children": [
+            { "name": "scherpenisse-e108-e1552.ttl", "type": "file" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "centra",
+      "type": "directory",
+      "children": [
+        {
+          "name": "01-home",
+          "type": "directory",
+          "children": [
+            { "name": "index.html", "type": "file" },
+            { "name": "config.json", "type": "file" }
+          ]
+        },
+        {
+          "name": "02-beheercentrum",
+          "type": "directory",
+          "children": [
+            { "name": "index.html", "type": "file" },
+            { "name": "acl-builder.js", "type": "file" }
+          ]
+        },
+        {
+          "name": "03-juridischcentrum",
+          "type": "directory",
+          "children": [
+            { "name": "index.html", "type": "file" },
+            { "name": "dossier-platteweg.json", "type": "file" }
+          ]
+        },
+        {
+          "name": "04-geocentrum",
+          "type": "directory",
+          "children": [
+            { "name": "index.html", "type": "file" },
+            { "name": "grid-60deg.js", "type": "file" }
+          ]
+        },
+        {
+          "name": "05-tijdscapsule",
+          "type": "directory",
+          "children": [
+            { "name": "index.html", "type": "file" },
+            { "name": "subscriptions.ttl", "type": "file" }
+          ]
+        },
+        {
+          "name": "06-kenniscentrum",
+          "type": "directory",
+          "children": [
+            { "name": "index.html", "type": "file" },
+            { "name": "otp-engine.js", "type": "file" }
+          ]
+        },
+        {
+          "name": "07-rekencentrum",
+          "type": "directory",
+          "children": [
+            { "name": "index.html", "type": "file" },
+            { "name": "poortvliet-calc.js", "type": "file" }
+          ]
+        },
+        {
+          "name": "08-bibliotheek",
+          "type": "directory",
+          "children": [
+            { "name": "index.html", "type": "file" },
+            { "name": "network-tree.json", "type": "file" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "data",
+      "type": "directory",
+      "children": [
+        { "name": "geojson", "type": "directory" },
+        { "name": "stl", "type": "directory" }
+      ]
+    },
+    { "name": "workbench", "type": "directory" },
+    {
+      "name": "filebeheer",
+      "type": "directory",
+      "children": [
+        { "name": "index.html", "type": "file" }
+      ]
+    },
+    { "name": "verwerwerker", "type": "directory" },
+    { "name": "woo", "type": "directory" },
+    { "name": "VORTEX.OS", "type": "directory" }
+  ]
+}

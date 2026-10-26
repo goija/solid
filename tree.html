@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovereign Solid // Volledige Repository Tree (main)</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body { font-family: monospace; background: #0f172a; color: #f8fafc; padding: 2rem; margin: 0; }
+        .tree-container { max-width: 1000px; margin: 0 auto; background: #1e293b; padding: 2rem; border-radius: 8px; border: 1px solid #334155; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); }
+        h1 { font-size: 1.25rem; color: #38bdf8; margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 0.75rem; }
+        ul { list-style-type: none; padding-left: 20px; margin: 5px 0; }
+        li { position: relative; margin: 4px 0; }
+        li::before { content: "├── "; color: #64748b; }
+        li:last-child::before { content: "└── "; }
+        .folder { color: #fbbf24; font-weight: bold; }
+        .file { color: #34d399; }
+        .status-bar { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #334155; font-size: 0.85rem; color: #94a3b8; display: flex; justify-content: space-between; }
+        a { color: inherit; text-decoration: none; }
+        a:hover { text-decoration: underline; color: #38bdf8; }
+    </style>
+</head>
+<body>
+
+<div class="tree-container">
+    <h1>📦 GOIJA / SOLID // VOLLEDIGE REPOSITORY TREE (MAIN)</h1>
+    <p style="font-size: 0.9rem; color: #cbd5e1;">Status: ● SYSTEM ONLINE // PLATTEWEG 3-5-7 (E 108 → E 1552) | <a href="tree.json" target="_blank" style="color: #38bdf8;">[Bekijk tree.json]</a></p>
+    
+    <div class="tree">
+        <ul>
+            <li><span class="folder">solid/ (main)</span>
+                <ul>
+                    <li><span class="file"><a href="README.md" target="_blank">README.md</a></span></li>
+                    <li><span class="file"><a href="bestandenstructuur.md" target="_blank">bestandenstructuur.md</a></span></li>
+                    <li><span class="file"><a href="vercel.json" target="_blank">vercel.json</a></span></li>
+                    <li><span class="file"><a href="index.html" target="_blank">index.html</a></span></li>
+                    <li><span class="file"><a href="tree.html" target="_blank">tree.html</a></span></li>
+                    <li><span class="file"><a href="tree.json" target="_blank">tree.json</a></span></li>
+                    
+                    <li><span class="folder">css/</span>
+                        <ul>
+                            <li><span class="file"><a href="css/styles.css" target="_blank">styles.css</a></span></li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="folder">js/</span>
+                        <ul>
+                            <li><span class="file"><a href="js/app.js" target="_blank">app.js</a></span></li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="folder">json/</span>
+                        <ul>
+                            <li><span class="file"><a href="json/manifest-tree.json" target="_blank">manifest-tree.json</a></span></li>
+                            <li><span class="file">poortvliet-sectie-m.json</span></li>
+                            <li><span class="file">scherpenisse-e108-e1552.json</span></li>
+                            <li><span class="file">kadaster-workspace.json</span></li>
+                            <li><span class="file">woo-zoekslagen.json</span></li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="folder">bash/</span>
+                        <ul>
+                            <li><span class="file">git-push-solid.sh</span></li>
+                            <li><span class="file">generate-production-assets.sh</span></li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="folder">pod/</span>
+                        <ul>
+                            <li><span class="file">.acl</span></li>
+                            <li><span class="folder">profile/</span>
+                                <ul><li><span class="file">card.ttl</span></li></ul>
+                            </li>
+                            <li><span class="folder">feeds/</span>
+                                <ul><li><span class="file">subscriptions.ttl</span></li></ul>
+                            </li>
+                            <li><span class="folder">kadaster/</span>
+                                <ul><li><span class="file">scherpenisse-e108-e1552.ttl</span></li></ul>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="folder">centra/</span>
+                        <ul>
+                            <li><span class="folder">01-home/</span>
+                                <ul>
+                                    <li><span class="file">index.html</span></li>
+                                    <li><span class="file">config.json</span></li>
+                                </ul>
+                            </li>
+                            <li><span class="folder">02-beheercentrum/</span>
+                                <ul>
+                                    <li><span class="file">index.html</span></li>
+                                    <li><span class="file">acl-builder.js</span></li>
+                                </ul>
+                            </li>
+                            <li><span class="folder">03-juridischcentrum/</span>
+                                <ul>
+                                    <li><span class="file">index.html</span></li>
+                                    <li><span class="file">dossier-platteweg.json</span></li>
+                                </ul>
+                            </li>
+                            <li><span class="folder">04-geocentrum/</span>
+                                <ul>
+                                    <li><span class="file">index.html</span></li>
+                                    <li><span class="file">grid-60deg.js</span></li>
+                                </ul>
+                            </li>
+                            <li><span class="folder">05-tijdscapsule/</span>
+                                <ul>
+                                    <li><span class="file">index.html</span></li>
+                                    <li><span class="file">subscriptions.ttl</span></li>
+                                </ul>
+                            </li>
+                            <li><span class="folder">06-kenniscentrum/</span>
+                                <ul>
+                                    <li><span class="file">index.html</span></li>
+                                    <li><span class="file">otp-engine.js</span></li>
+                                </ul>
+                            </li>
+                            <li><span class="folder">07-rekencentrum/</span>
+                                <ul>
+                                    <li><span class="file">index.html</span></li>
+                                    <li><span class="file">poortvliet-calc.js</span></li>
+                                </ul>
+                            </li>
+                            <li><span class="folder">08-bibliotheek/</span>
+                                <ul>
+                                    <li><span class="file">index.html</span></li>
+                                    <li><span class="file">network-tree.json</span></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="folder">data/</span>
+                        <ul>
+                            <li><span class="folder">geojson/</span></li>
+                            <li><span class="folder">stl/</span></li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="folder">workbench/</span></li>
+                    
+                    <li><span class="folder">filebeheer/</span>
+                        <ul>
+                            <li><span class="file"><a href="filebeheer/index.html" target="_blank">index.html</a></span></li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="folder">verwerwerker/</span></li>
+                    <li><span class="folder">woo/</span></li>
+                    <li><span class="folder">VORTEX.OS/</span></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="status-bar">
+        <span>Repository: <a href="https://github.com/goija/solid" target="_blank">github.com/goija/solid</a></span>
+        <span>Branch: main</span>
+    </div>
+</div>
+
+</body>
+</html>
