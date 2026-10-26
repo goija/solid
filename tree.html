@@ -1,1 +1,167 @@
-[plak hier bovenstaande HTML of voer dit script uit]
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovereign Solid // Volledige Repository Tree (main)</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body { font-family: monospace; background: #0f172a; color: #f8fafc; padding: 2rem; margin: 0; }
+        .tree-container { max-width: 1000px; margin: 0 auto; background: #1e293b; padding: 2rem; border-radius: 8px; border: 1px solid #334155; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); }
+        h1 { font-size: 1.25rem; color: #38bdf8; margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 0.75rem; }
+        ul { list-style-type: none; padding-left: 20px; margin: 5px 0; }
+        li { position: relative; margin: 4px 0; }
+        li::before { content: "├── "; color: #64748b; }
+        li:last-child::before { content: "└── "; }
+        .folder { color: #fbbf24; font-weight: bold; }
+        .file { color: #34d399; }
+        .status-bar { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #334155; font-size: 0.85rem; color: #94a3b8; display: flex; justify-content: space-between; }
+        a { color: inherit; text-decoration: none; }
+        a:hover { text-decoration: underline; color: #38bdf8; }
+    </style>
+</head>
+<body>
+
+<div class="tree-container">
+    <h1>📦 GOIJA / SOLID // VOLLEDIGE REPOSITORY TREE (MAIN)</h1>
+    <p style="font-size: 0.9rem; color: #cbd5e1;">Status: ● SYSTEM ONLINE // PLATTEWEG 3-5-7 (E 108 → E 1552) | <a href="tree.json" target="_blank" style="color: #38bdf8;">[Bekijk tree.json]</a></p>
+    
+    <div class="tree">
+        <ul>
+            <li><span class="folder"><a href="https://github.com/goija/solid/tree/main" target="_blank">solid/ (main)</a></span>
+                <ul>
+                    <li><span class="file"><a href="README.md" target="_blank">README.md</a></span></li>
+                    <li><span class="file"><a href="bestandenstructuur.md" target="_blank">bestandenstructuur.md</a></span></li>
+                    <li><span class="file"><a href="vercel.json" target="_blank">vercel.json</a></span></li>
+                    <li><span class="file"><a href="index.html" target="_blank">index.html</a></span></li>
+                    <li><span class="file"><a href="tree.html" target="_blank">tree.html</a></span></li>
+                    <li><span class="file"><a href="tree.json" target="_blank">tree.json</a></span></li>
+                    
+                    <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/css" target="_blank">css/</a></span>
+                        <ul>
+                            <li><span class="file"><a href="css/styles.css" target="_blank">styles.css</a></span></li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/js" target="_blank">js/</a></span>
+                        <ul>
+                            <li><span class="file"><a href="js/app.js" target="_blank">app.js</a></span></li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/json" target="_blank">json/</a></span>
+                        <ul>
+                            <li><span class="file"><a href="json/manifest-tree.json" target="_blank">manifest-tree.json</a></span></li>
+                            <li><span class="file"><a href="json/poortvliet-sectie-m.json" target="_blank">poortvliet-sectie-m.json</a></span></li>
+                            <li><span class="file"><a href="json/scherpenisse-e108-e1552.json" target="_blank">scherpenisse-e108-e1552.json</a></span></li>
+                            <li><span class="file"><a href="json/kadaster-workspace.json" target="_blank">kadaster-workspace.json</a></span></li>
+                            <li><span class="file"><a href="json/woo-zoekslagen.json" target="_blank">woo-zoekslagen.json</a></span></li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/bash" target="_blank">bash/</a></span>
+                        <ul>
+                            <li><span class="file"><a href="bash/git-push-solid.sh" target="_blank">git-push-solid.sh</a></span></li>
+                            <li><span class="file"><a href="bash/generate-production-assets.sh" target="_blank">generate-production-assets.sh</a></span></li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/pod" target="_blank">pod/</a></span>
+                        <ul>
+                            <li><span class="file"><a href="pod/.acl" target="_blank">.acl</a></span></li>
+                            <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/pod/profile" target="_blank">profile/</a></span>
+                                <ul><li><span class="file"><a href="pod/profile/card.ttl" target="_blank">card.ttl</a></span></li></ul>
+                            </li>
+                            <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/pod/feeds" target="_blank">feeds/</a></span>
+                                <ul><li><span class="file"><a href="pod/feeds/subscriptions.ttl" target="_blank">subscriptions.ttl</a></span></li></ul>
+                            </li>
+                            <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/pod/kadaster" target="_blank">kadaster/</a></span>
+                                <ul><li><span class="file"><a href="pod/kadaster/scherpenisse-e108-e1552.ttl" target="_blank">scherpenisse-e108-e1552.ttl</a></span></li></ul>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/centra" target="_blank">centra/</a></span>
+                        <ul>
+                            <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/centra/01-home" target="_blank">01-home/</a></span>
+                                <ul>
+                                    <li><span class="file"><a href="centra/01-home/index.html" target="_blank">index.html</a></span></li>
+                                    <li><span class="file"><a href="centra/01-home/config.json" target="_blank">config.json</a></span></li>
+                                </ul>
+                            </li>
+                            <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/centra/02-beheercentrum" target="_blank">02-beheercentrum/</a></span>
+                                <ul>
+                                    <li><span class="file"><a href="centra/02-beheercentrum/index.html" target="_blank">index.html</a></span></li>
+                                    <li><span class="file"><a href="centra/02-beheercentrum/acl-builder.js" target="_blank">acl-builder.js</a></span></li>
+                                </ul>
+                            </li>
+                            <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/centra/03-juridischcentrum" target="_blank">03-juridischcentrum/</a></span>
+                                <ul>
+                                    <li><span class="file"><a href="centra/03-juridischcentrum/index.html" target="_blank">index.html</a></span></li>
+                                    <li><span class="file"><a href="centra/03-juridischcentrum/dossier-platteweg.json" target="_blank">dossier-platteweg.json</a></span></li>
+                                </ul>
+                            </li>
+                            <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/centra/04-geocentrum" target="_blank">04-geocentrum/</a></span>
+                                <ul>
+                                    <li><span class="file"><a href="centra/04-geocentrum/index.html" target="_blank">index.html</a></span></li>
+                                    <li><span class="file"><a href="centra/04-geocentrum/grid-60deg.js" target="_blank">grid-60deg.js</a></span></li>
+                                </ul>
+                            </li>
+                            <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/centra/05-tijdscapsule" target="_blank">05-tijdscapsule/</a></span>
+                                <ul>
+                                    <li><span class="file"><a href="centra/05-tijdscapsule/index.html" target="_blank">index.html</a></span></li>
+                                    <li><span class="file"><a href="centra/05-tijdscapsule/subscriptions.ttl" target="_blank">subscriptions.ttl</a></span></li>
+                                </ul>
+                            </li>
+                            <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/centra/06-kenniscentrum" target="_blank">06-kenniscentrum/</a></span>
+                                <ul>
+                                    <li><span class="file"><a href="centra/06-kenniscentrum/index.html" target="_blank">index.html</a></span></li>
+                                    <li><span class="file"><a href="centra/06-kenniscentrum/otp-engine.js" target="_blank">otp-engine.js</a></span></li>
+                                </ul>
+                            </li>
+                            <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/centra/07-rekencentrum" target="_blank">07-rekencentrum/</a></span>
+                                <ul>
+                                    <li><span class="file"><a href="centra/07-rekencentrum/index.html" target="_blank">index.html</a></span></li>
+                                    <li><span class="file"><a href="centra/07-rekencentrum/poortvliet-calc.js" target="_blank">poortvliet-calc.js</a></span></li>
+                                </ul>
+                            </li>
+                            <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/centra/08-bibliotheek" target="_blank">08-bibliotheek/</a></span>
+                                <ul>
+                                    <li><span class="file"><a href="centra/08-bibliotheek/index.html" target="_blank">index.html</a></span></li>
+                                    <li><span class="file"><a href="centra/08-bibliotheek/network-tree.json" target="_blank">network-tree.json</a></span></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/data" target="_blank">data/</a></span>
+                        <ul>
+                            <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/data/geojson" target="_blank">geojson/</a></span></li>
+                            <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/data/stl" target="_blank">stl/</a></span></li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/workbench" target="_blank">workbench/</a></span></li>
+                    
+                    <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/filebeheer" target="_blank">filebeheer/</a></span>
+                        <ul>
+                            <li><span class="file"><a href="filebeheer/index.html" target="_blank">index.html</a></span></li>
+                        </ul>
+                    </li>
+                    
+                    <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/verwerwerker" target="_blank">verwerwerker/</a></span></li>
+                    <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/woo" target="_blank">woo/</a></span></li>
+                    <li><span class="folder"><a href="https://github.com/goija/solid/tree/main/VORTEX.OS" target="_blank">VORTEX.OS/</a></span></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="status-bar">
+        <span>Repository: <a href="https://github.com/goija/solid" target="_blank">github.com/goija/solid</a></span>
+        <span>Branch: main</span>
+    </div>
+</div>
+
+</body>
+</html>
