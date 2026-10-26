@@ -1,13 +1,10 @@
 {
   "version": 2,
-  "cleanUrls": false,
-  "headers": [
-    {
-      "source": "/pod/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Content-Type", "value": "text/turtle; charset=utf-8" }
-      ]
-    }
+  "cleanUrls": true,
+  "routes": [
+    { "src": "/css/(.*)", "dest": "/css/$1" },
+    { "src": "/js/(.*)", "dest": "/js/$1" },
+    { "src": "/json/(.*)", "dest": "/json/$1" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
