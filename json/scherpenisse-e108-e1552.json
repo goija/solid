@@ -1,0 +1,12 @@
+{
+  "dossier": "Platteweg 3-5-7, Scherpenisse",
+  "kadastraleGemeente": "Scherpenisse",
+  "akrCode": "SPS00",
+  "sectie": "E",
+  "crs": "EPSG:28992",
+  "planimeter": { "model": "A. Ott Kempten Nr. 573", "poolarmCm": 15.00, "rijarmCm": 16.67 },
+  "features": [
+    { "id": "SPS00-E-108", "properties": { "perceel": 108, "sectie": "E", "peiljaar": 1926, "registeredAreaM2": 1640, "shoelaceAreaM2": 1639.45 } },
+    { "id": "SPS00-E-1552", "properties": { "perceel": 1552, "sectie": "E", "peiljaar": 2026, "registeredAreaM2": 1495, "shoelaceAreaM2": 1494.80 } }
+  ]
+}

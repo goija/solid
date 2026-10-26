@@ -1,0 +1,17 @@
+{
+  "type": "FeatureCollection",
+  "crs": "EPSG:28992",
+  "kadastraleGemeente": "Poortvliet",
+  "code": 797,
+  "akrCode": "PVT00/848",
+  "sectie": "M",
+  "bboxFilter": [66000, 396000, 67000, 397000],
+  "totalRegisteredAreaM2": 38295,
+  "features": [
+    { "id": "PVT00-M-1172", "properties": { "perceel": 1172, "sectie": "M", "registeredAreaM2": 365, "shoelaceAreaM2": 364.88, "registratie": "2008-06-04" } },
+    { "id": "PVT00-M-1173", "properties": { "perceel": 1173, "sectie": "M", "registeredAreaM2": 810, "shoelaceAreaM2": 810.42, "registratie": "1999-11-15" } },
+    { "id": "PVT00-M-1174", "properties": { "perceel": 1174, "sectie": "M", "registeredAreaM2": 11990, "shoelaceAreaM2": 11988.75, "registratie": "2015-02-13" } },
+    { "id": "PVT00-M-1178", "properties": { "perceel": 1178, "sectie": "M", "registeredAreaM2": 10900, "shoelaceAreaM2": 10902.10, "registratie": "1999-11-09" } },
+    { "id": "PVT00-M-1180", "properties": { "perceel": 1180, "sectie": "M", "registeredAreaM2": 14230, "shoelaceAreaM2": 14228.90, "registratie": "2024-06-17" } }
+  ]
+}
