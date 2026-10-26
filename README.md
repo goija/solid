@@ -13,3 +13,4 @@ Zelfstandige W3C Solid Pod, Kadastrale Geodesie (`EPSG:28992`) en Fediverse Atom
 6. **🧠 Kenniscentrum** (`centra/06-kenniscentrum/`) — GitHub Models Registry, CryptPad E2EE (AES-256-GCM + OTP) & BTFM
 7. **📊 Rekencentrum** (`centra/07-rekencentrum/`) — Kadaster API Collecties, Poortvliet Sectie M (`1172–1180`) & A. Ott Nr. 573 Poolplanimeter
 8. **📚 Bibliotheek** (`centra/08-bibliotheek/`) — Bestuursorganen, Woo-Zoekslagen & Native API Network Tree
+
