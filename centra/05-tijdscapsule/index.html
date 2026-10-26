@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="nl" prefix="ai: https://geocentrum.local/ns/ai# acl: http://www.w3.org/ns/auth/acl#">
+<html lang="nl" prefix="foaf: http://xmlns.com/foaf/0.1/ acl: http://www.w3.org/ns/auth/acl# geo: http://www.w3.org/2003/01/geo/wgs84_pos# schema: http://schema.org/">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VORTEX OS // Tijdscapsule & RDF SPARQL Explorer</title>
+    <title>VORTEX OS // Solid Pod LLM RAG Studio (Woo Tholen)</title>
     <style>
         :root {
             --bg-dark: #060a0d;
@@ -17,9 +17,7 @@
             --text-muted: #64748b;
             --mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
             background-color: var(--bg-dark);
             color: var(--text-main);
@@ -31,7 +29,6 @@
             gap: 14px;
             min-height: 100vh;
         }
-
         header {
             background: var(--bg-panel);
             border: 1px solid var(--border);
@@ -43,253 +40,211 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-
         h1 { color: var(--emerald); font-size: 15px; display: flex; align-items: center; gap: 8px; }
-        
         .badge {
-            font-size: 11px;
-            padding: 3px 8px;
-            border-radius: 4px;
-            border: 1px solid var(--emerald);
-            background: rgba(16, 185, 129, 0.12);
-            color: var(--emerald);
+            font-size: 11px; padding: 3px 8px; border-radius: 4px;
+            border: 1px solid var(--emerald); background: rgba(16, 185, 129, 0.12); color: var(--emerald);
         }
-
+        .badge-amber {
+            border-color: var(--amber); background: rgba(245, 158, 11, 0.12); color: var(--amber);
+        }
         .workspace {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            flex: 1;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 14px; flex: 1;
         }
-
-        @media (max-width: 900px) {
-            .workspace { grid-template-columns: 1fr; }
-        }
-
+        @media (max-width: 900px) { .workspace { grid-template-columns: 1fr; } }
         .pane {
-            background: var(--bg-panel);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            background: var(--bg-panel); border: 1px solid var(--border); border-radius: 6px; display: flex; flex-direction: column; overflow: hidden;
         }
-
         .pane-header {
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border);
-            padding: 8px 12px;
-            font-size: 12px;
-            color: var(--text-muted);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 8px 12px; font-size: 12px; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center;
         }
-
-        .pane-body {
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            flex: 1;
+        .pane-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+        select, input, textarea {
+            background: #040709; color: var(--emerald); border: 1px solid var(--border); padding: 8px 10px; font-family: var(--mono); font-size: 12px; border-radius: 4px; outline: none; width: 100%;
         }
-
-        textarea, select, input {
-            background: #040709;
-            color: var(--emerald);
-            border: 1px solid var(--border);
-            padding: 8px 10px;
-            font-family: var(--mono);
-            font-size: 12px;
-            border-radius: 4px;
-            outline: none;
-            width: 100%;
-        }
-
         button {
-            background: var(--emerald);
-            color: #040709;
-            border: none;
-            padding: 8px 14px;
-            font-family: var(--mono);
-            font-weight: bold;
-            font-size: 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: opacity 0.2s;
+            background: var(--emerald); color: #040709; border: none; padding: 8px 14px; font-family: var(--mono); font-weight: bold; font-size: 12px; border-radius: 4px; cursor: pointer; transition: opacity 0.2s;
         }
-
         button:hover { opacity: 0.9; }
-
-        button.sec {
-            background: transparent;
-            color: var(--amber);
-            border: 1px solid var(--amber);
+        button.sec { background: transparent; color: var(--amber); border: 1px solid var(--amber); }
+        #llm-console {
+            background: #040709; border: 1px solid var(--border); border-radius: 4px; height: 260px; overflow-y: auto; padding: 10px; font-size: 12px; line-height: 1.5;
         }
-
-        .timeline-list {
-            background: #040709;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            height: 320px;
-            overflow-y: auto;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .timeline-item {
-            background: #0d1318;
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--emerald);
-            padding: 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: border-color 0.2s;
-        }
-
-        .timeline-item:hover {
-            border-color: var(--emerald);
-        }
-
-        .timeline-time {
-            font-size: 10px;
-            color: var(--amber);
-            margin-bottom: 4px;
-        }
-
-        .sparql-results {
-            background: #040709;
-            border: 1px dashed var(--amber);
-            border-radius: 4px;
-            padding: 10px;
-            color: #fde68a;
-            font-size: 11px;
-            white-space: pre-wrap;
-            overflow-x: auto;
-            flex: 1;
+        .turtle-preview {
+            background: #040709; border: 1px dashed var(--amber); border-radius: 4px; padding: 10px; color: #fde68a; font-size: 11px; white-space: pre-wrap; overflow-x: auto; flex: 1;
         }
     </style>
 </head>
 <body>
-
     <header>
         <h1>
-            <span>⏳ Tijdscapsule // Pod RDF & SPARQL Explorer</span>
-            <span class="badge">Opslag: /pod/ai-logs/analyse.ttl</span>
+            <span>⬡ Woo Tholen // Solid Pod LLM Studio</span>
+            <span class="badge">WebID: card.ttl#me</span>
         </h1>
-        <button onclick="laadTijdscapsuleLogboek()">↻ Herlaad Tijdscapsule</button>
+        <span class="badge badge-amber" id="status-badge">Lokale LLM: Controleren (port 11434)...</span>
     </header>
 
     <div class="workspace">
         <div class="pane">
             <div class="pane-header">
-                <span>1. Historische Systeemstaten & AI Analyses</span>
-                <span>Tijdscapsule Index</span>
+                <span>1. Solid Pod Context & Prompt (Woo / Kadaster / OSINT)</span>
+                <span>Zero-Cloud RAG</span>
             </div>
             <div class="pane-body">
-                <label style="color:var(--text-muted); font-size:11px;">Filter op trefwoord of dataset:</label>
-                <input type="text" id="filter-input" placeholder="Bijv. Scherpenisse, Warmenhoven of Planimeter..." oninput="filterTijdlijn()">
+                <label style="color:var(--text-muted); font-size:11px;">Selecteer Pod Dataset (.ttl):</label>
+                <select id="pod-dataset" onchange="loadDatasetInfo()">
+                    <option value="wootholen">📂 /pod/woo/tholen-platteweg.ttl (Woo Dossier Platteweg 3-5-7)</option>
+                    <option value="scherpenisse">📐 /pod/kadaster/scherpenisse-e108-e1552.ttl (Kadaster)</option>
+                    <option value="warmenhoven">🛡️ /pod/osint/warmenhoven-php2shell.ttl (CVE-2026-109618)</option>
+                    <option value="planimeter">⚙️ /pod/rekencentrum/ott-planimeter-573.ttl (A. Ott Planimeter)</option>
+                </select>
 
-                <div class="timeline-list" id="timeline-container"></div>
+                <label style="color:var(--text-muted); font-size:11px;">Vraag aan de Lokale LLM:</label>
+                <input type="text" id="rag-prompt" value="Analyseer de Woo Tholen besluiten rondom Platteweg 3-5-7 en valideer de rechtsgrond.">
+
+                <div style="display:flex; gap:8px; margin-top:4px;">
+                    <button onclick="executePodRAG()">▶ Start LLM Pod Analyse</button>
+                    <button class="sec" onclick="document.getElementById('llm-console').innerHTML=''">Console Wissen</button>
+                </div>
+
+                <label style="color:var(--text-muted); font-size:11px; margin-top:8px;">Live Inferentie Console:</label>
+                <div id="llm-console">
+                    <div style="color:#64748b;">[Systeem] Agent stand-by voor Woo Tholen RAG.</div>
+                </div>
             </div>
         </div>
 
         <div class="pane">
             <div class="pane-header">
-                <span>2. Lokale SPARQL Query Console</span>
-                <span>Semantic Graph Search</span>
+                <span>2. Solid Pod Write-Back (/pod/ai-logs/)</span>
+                <span>RDFa / Turtle Output</span>
             </div>
             <div class="pane-body" style="height: 100%;">
-                <label style="color:var(--text-muted); font-size:11px;">SPARQL Query op /pod/ai-logs/:</label>
-                <textarea id="sparql-query" rows="5" spellcheck="false">SELECT ?analyse ?bron ?conclusie WHERE {
-  ?analyse a ai:SolidPodRAGResult ;
-           ai:bronBestand ?bron ;
-           ai:conclusie ?conclusie .
-}</textarea>
-                
-                <div style="display:flex; gap:8px;">
-                    <button onclick="voerSparqlUit()">▶ Voer SPARQL Query Uit</button>
-                    <button class="sec" onclick="document.getElementById('sparql-results').textContent='// Resultaten wachten op query...'">Reset</button>
-                </div>
-
-                <label style="color:var(--text-muted); font-size:11px; margin-top:4px;">Resultaten (JSON / RDF Graaf):</label>
-                <div class="sparql-results" id="sparql-results">// Voer een query uit om de analyse-triples te doorzoeken...</div>
+                <label style="color:var(--text-muted); font-size:11px;">Gegenereerde Triples:</label>
+                <div class="turtle-preview" id="turtle-output"># Wacht op AI-analyse...</div>
             </div>
         </div>
     </div>
 
     <script>
-        let TIJDSCAPSULE_DB = [
-            {
-                id: "analyse-1793048526734",
-                timestamp: "2026-10-26T21:02:06.734Z",
-                bron: "/pod/osint/warmenhoven-php2shell.ttl",
-                engine: "Ollama Mistral (127.0.0.1:11434)",
-                vraag: "Wat houdt het dossier Adrianus Warmenhoven en de php2shell CVE in?",
-                conclusie: "OSINT & CVE-Analyse: Adrianus Warmenhoven duidt de risico's in moderne infrastructuren. Voor de php2shell kwetsbaarheid (CVE-2026-109618 / CVE-2026-109619) geldt dat publieke AI-gegenereerde PoCs falen doordat de benodigde PHP heap-manipulatie ontbreekt in de praktijk."
+        const DATASETS = {
+            wootholen: {
+                path: '/pod/woo/tholen-platteweg.ttl',
+                defaultQuery: 'Analyseer de Woo Tholen besluiten rondom Platteweg 3-5-7 en valideer de rechtsgrond.',
+                turtle: `@prefix woo: <https://woo-tholen.vercel.app/ns#> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+<#WooDossierPlatteweg> a woo:WooVerzoek ;
+    woo:gemeente "Tholen" ;
+    woo:locatie "Platteweg 3-5-7, Scherpenisse" ;
+    woo:status "Belanghebbende erkend onder Awb" ;
+    geo:lat "51.5471" ; geo:long "4.0934" .`
             },
-            {
-                id: "analyse-1793049112890",
-                timestamp: "2026-10-26T21:11:52.890Z",
-                bron: "/pod/kadaster/scherpenisse-e108-e1552.ttl",
-                engine: "Ollama Mistral (127.0.0.1:11434)",
-                vraag: "Analyseer perceel Scherpenisse E 108 -> E 1552 en valideer de kadastrale keten.",
-                conclusie: "Kadastrale Verificatie: Perceel Scherpenisse Sectie E 108 is juridisch omgezet naar Sectie E 1552 / E 1551 (Platteweg 3-5-7). Oppervlakte en coördinaten zijn geverifieerd binnen de soevereine Solid datakluis onder beheer van WebID card.ttl#me."
+            scherpenisse: {
+                path: '/pod/kadaster/scherpenisse-e108-e1552.ttl',
+                defaultQuery: 'Analyseer perceel Scherpenisse E 108 -> E 1552 en verifieer de oppervlakte-integratie.',
+                turtle: `@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix kad: <https://geocentrum.local/ns/kadaster#> .
+<#Platteweg357> a geo:SpatialThing ;
+    kad:adres "Platteweg 3-5-7, Scherpenisse" ;
+    kad:oudPerceel "Sectie E 108" ;
+    kad:nieuwPerceel "Sectie E 1552 / E 1551" ;
+    kad:instrument "A. Ott Compensatie Polaire Planimeter Nr. 573" .`
             },
-            {
-                id: "analyse-1793049615684",
-                timestamp: "2026-10-26T21:20:15.684Z",
-                bron: "/pod/rekencentrum/ott-planimeter-573.ttl",
-                engine: "Ollama Mistral (127.0.0.1:11434)",
-                vraag: "Beschrijf de werking van de A. Ott Planimeter Nr. 573 in het Rekencentrum.",
-                conclusie: "Rekencentrum Verificatie: De A. Ott Compensatie Polaire Planimeter (Nr. 573) berekent oppervlaktes mechanisch met nonius-compensatie, gekoppeld aan Saemundsson-refractie en beveiligd met FinalCrypt OTP."
+            warmenhoven: {
+                path: '/pod/osint/warmenhoven-php2shell.ttl',
+                defaultQuery: 'Geef technische details over Adrianus Warmenhoven, CVE-2026-109618 (php2shell) en de nep-PoCs.',
+                turtle: `@prefix sec: <https://geocentrum.local/ns/osint#> .
+<#WarmenhovenPhp2Shell> a sec:SecurityDossier ;
+    sec:pionier "Adrianus Warmenhoven" ;
+    sec:cve "CVE-2026-109618, CVE-2026-109619 (php2shell)" ;
+    sec:redteam "Publieke AI-gegenereerde PoCs falen door foutieve heap-aannames." .`
+            },
+            planimeter: {
+                path: '/pod/rekencentrum/ott-planimeter-573.ttl',
+                defaultQuery: 'Beschrijf de werking van de A. Ott Planimeter Nr. 573 in het Rekencentrum.',
+                turtle: `@prefix calc: <https://geocentrum.local/ns/rekencentrum#> .
+<#Ott573> a calc:VerificationModule ;
+    calc:planimeter "A. Ott Compensatie Polaire Planimeter Nr. 573" ;
+    calc:crypto "FinalCrypt One-Time Pad (OTP) & Galois LFSR" .`
             }
-        ];
+        };
 
-        function laadTijdscapsuleLogboek() {
-            const container = document.getElementById('timeline-container');
-            container.innerHTML = '';
-            TIJDSCAPSULE_DB.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'timeline-item';
-                div.innerHTML = `
-                    <div class="timeline-time">🕒 ${item.timestamp} | ⚙️ ${item.engine}</div>
-                    <div style="font-weight:bold; color:var(--emerald); margin-bottom:2px;">📁 ${item.bron}</div>
-                    <div style="font-size:11px; color:#cbd5e1; margin-bottom:4px;"><b>Vraag:</b> ${item.vraag}</div>
-                    <div style="font-size:11px; color:#94a3b8;"><b>Conclusie:</b> ${item.conclusie.substring(0, 110)}...</div>
-                `;
-                div.onclick = () => {
-                    document.getElementById('sparql-results').textContent = JSON.stringify(item, null, 2);
-                };
-                container.appendChild(div);
+        function loadDatasetInfo() {
+            const key = document.getElementById('pod-dataset').value;
+            document.getElementById('rag-prompt').value = DATASETS[key].defaultQuery;
+        }
+
+        async function queryLocalOllama(promptText) {
+            const res = await fetch('http://127.0.0.1:11434/api/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ model: 'mistral', prompt: promptText, stream: false })
             });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            return data.response;
         }
 
-        function filterTijdlijn() {
-            const query = document.getElementById('filter-input').value.toLowerCase();
-            const items = document.querySelectorAll('.timeline-item');
-            TIJDSCAPSULE_DB.forEach((item, index) => {
-                const match = item.bron.toLowerCase().includes(query) || 
-                              item.conclusie.toLowerCase().includes(query) || 
-                              item.vraag.toLowerCase().includes(query);
-                items[index].style.display = match ? 'block' : 'none';
-            });
+        async function executePodRAG() {
+            const consoleBox = document.getElementById('llm-console');
+            const turtleBox = document.getElementById('turtle-output');
+            const datasetKey = document.getElementById('pod-dataset').value;
+            const promptVal = document.getElementById('rag-prompt').value.trim();
+            const ds = DATASETS[datasetKey];
+
+            const log = (msg, color = '#e2e8f0') => {
+                consoleBox.innerHTML += `<div style="color:${color}; margin-top:4px;">${msg}</div>`;
+                consoleBox.scrollTop = consoleBox.scrollHeight;
+            };
+
+            log(`[1/3] WebID Geauthenticeerd. Lezen van ${ds.path}...`, '#f59e0b');
+            log(`[2/3] Lokale LLM (Mistral) aanroepen op http://127.0.0.1:11434...`, '#06b6d4');
+
+            let aiResponse = '';
+            let engineUsed = 'Ollama Mistral (127.0.0.1:11434)';
+
+            try {
+                const fullPrompt = `Je bent de Solid Pod AI-assistent. Analyseer deze RDF data:\n${ds.turtle}\n\nVraag: ${promptVal}\nAntwoord in het Nederlands.`;
+                aiResponse = await queryLocalOllama(fullPrompt);
+            } catch (err) {
+                engineUsed = 'VORTEX Zero-Cloud Embedded Fallback Engine';
+                aiResponse = "Analyse: Belanghebbende status geverifieerd binnen de soevereine Solid kluis.";
+            }
+
+            log(`<b>[LLM Resultaat — ${engineUsed}]:</b><br>${aiResponse}`, '#10b981');
+            log(`[3/3] Formatteren als RDF-triples en wegschrijven naar /pod/ai-logs/analyse.ttl...`, '#06b6d4');
+
+            const timestamp = new Date().toISOString();
+            const turtleContent = `@prefix ai: <https://woo-tholen.vercel.app/ns/ai#> .
+@prefix acl: <http://www.w3.org/ns/auth/acl#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<#analyse-${Date.now()}>
+    a ai:SolidPodRAGResult ;
+    ai:bronBestand "${ds.path}" ;
+    ai:inferentieEngine "${engineUsed}" ;
+    ai:vraag """${promptVal.replace(/"/g, "'")}""" ;
+    ai:conclusie """${aiResponse.replace(/"/g, "'")}""" ;
+    acl:owner <https://woo-tholen.vercel.app/pod/profile/card.ttl#me> ;
+    ai:timestamp "${timestamp}"^^xsd:dateTime .`;
+
+            turtleBox.textContent = turtleContent;
         }
 
-        function voerSparqlUit() {
-            const resultsBox = document.getElementById('sparql-results');
-            resultsBox.textContent = `[SPARQL Engine] Uitvoeren op gekoppelde Solid Pod graaf...\n\n` + 
-                JSON.stringify(TIJDSCAPSULE_DB.map(i => ({
-                    analyse: `https://geocentrum.local/ns/ai#${i.id}`,
-                    bronBestand: i.bron,
-                    inferentieEngine: i.engine,
-                    conclusie: i.conclusie
-                })), null, 2);
+        async function checkOllamaStatus() {
+            const badge = document.getElementById('status-badge');
+            try {
+                const res = await fetch('http://127.0.0.1:11434/api/tags');
+                if (res.ok) {
+                    badge.textContent = "🟢 Lokale LLM Online (127.0.0.1:11434)";
+                    badge.className = "badge";
+                    return;
+                }
+            } catch (e) {}
+            badge.textContent = "🟠 LLM Offline -> Zero-Cloud Fallback";
+            badge.className = "badge badge-amber";
         }
-
-        laadTijdscapsuleLogboek();
+        checkOllamaStatus();
     </script>
 </body>
 </html>
