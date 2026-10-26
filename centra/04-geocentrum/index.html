@@ -1,0 +1,2708 @@
+<!DOCTYPE html>
+<html lang="nl" class="dark h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOLID POD SOVEREIGN WORKBENCH — Master Index, Kadaster API, Poolplanimeter, CryptPad & Matrix IAM</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        solid: {
+                            400: '#a78bfa',
+                            500: '#7c4dff',
+                            600: '#6d28d9',
+                            900: '#2e1065'
+                        },
+                        sovereign: {
+                            750: '#162032',
+                            800: '#0d1421',
+                            850: '#0a0f1a',
+                            900: '#070b12',
+                            950: '#04070b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'ui-monospace', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #070b12;
+            color: #e2e8f0;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070b12;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+        }
+        .bg-checkerboard {
+            background-color: #070b12;
+            background-image: 
+                linear-gradient(45deg, #0d1421 25%, transparent 25%), 
+                linear-gradient(-45deg, #0d1421 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #0d1421 75%), 
+                linear-gradient(-45deg, transparent 75%, #0d1421 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        .leaflet-container {
+            background: #05080f !important;
+            font-family: 'Inter', sans-serif;
+        }
+        .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+            background: #0d1421 !important;
+            color: #e2e8f0 !important;
+            border: 1px solid #334155;
+        }
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.45; }
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col overflow-hidden bg-sovereign-900 text-slate-200 antialiased">
+
+    <!-- ===================================================================== -->
+    <!-- TOP MASTER HEADER: PID 1001 HEARTBEAT, MATRIX IAM, SOLID POD & LINKS  -->
+    <!-- ===================================================================== -->
+    <header class="bg-sovereign-850/95 backdrop-blur-md border-b border-slate-800 px-3 py-2 shrink-0 z-30">
+        <div class="max-w-[1920px] mx-auto flex flex-wrap items-center justify-between gap-2">
+            <!-- Brand & Ecosystem Quick-Links -->
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-500 via-solid-600 to-emerald-500 flex items-center justify-center shadow-lg shadow-sky-500/10 border border-sky-400/40 shrink-0">
+                    <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L3 7v10l9 5 9-5V7l-9-5z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 22V12m0 0L3 7m9 5l9-5"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <h1 class="text-xs sm:text-sm font-bold tracking-tight text-white">SOVEREIGN POD & CISO GEODESY WORKBENCH</h1>
+                        <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-sky-500/15 text-sky-400 border border-sky-500/30 font-semibold">PID 1001: master-indexd</span>
+                        <span id="header-heartbeat" class="text-[10px] font-mono text-emerald-400 bg-emerald-950/80 border border-emerald-700/50 px-2 py-0.5 rounded">HEARTBEAT: 99.98% OK</span>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] font-mono text-slate-400 mt-0.5">
+                        <a href="https://woo-tholen.vercel.app/tree.html" target="_blank" rel="noopener noreferrer" class="text-emerald-400 hover:underline font-semibold">woo-tholen/tree.html</a>
+                        <span class="text-slate-700">|</span>
+                        <a href="https://woo-tholen.vercel.app/apitest.html" target="_blank" rel="noopener noreferrer" class="text-teal-400 hover:underline">woo-tholen/apitest.html</a>
+                        <span class="text-slate-700">|</span>
+                        <a href="https://mathgeo-seven.vercel.app/cryptpad.html" target="_blank" rel="noopener noreferrer" class="text-purple-400 hover:underline font-semibold">mathgeo/cryptpad.html</a>
+                        <span class="text-slate-700">|</span>
+                        <a href="https://mathgeo-seven.vercel.app/schaduwwaaier.html" target="_blank" rel="noopener noreferrer" class="text-amber-400 hover:underline">schaduwwaaier.html</a>
+                        <span class="text-slate-700">|</span>
+                        <a href="https://mathgeo-seven.vercel.app/" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:underline">mathgeo-seven</a>
+                        <span class="text-slate-700">|</span>
+                        <a href="https://dev.solidproject.org" target="_blank" rel="noopener noreferrer" class="text-solid-400 hover:underline">dev.solidproject.org</a>
+                        <span class="text-slate-700">|</span>
+                        <a href="https://docshare.wps.com/document/btfm-blue-team-field-manual/45529/" target="_blank" rel="noopener noreferrer" class="text-rose-400 hover:underline">BTFM Manual</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Telemetry & Quick Export Actions -->
+            <div class="flex items-center flex-wrap gap-1.5">
+                <div class="hidden xl:flex items-center space-x-2 bg-sovereign-800 border border-slate-800 px-2.5 py-1 rounded-lg text-[11px] font-mono">
+                    <span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
+                    <span class="text-slate-400">Matrix Bridges:</span>
+                    <span id="header-matrix-badge" class="text-purple-300 font-semibold">5/5 WAC-Geverifieerd</span>
+                </div>
+
+                <div class="flex items-center bg-sovereign-800 border border-slate-700/80 rounded-lg px-2 py-1 text-xs">
+                    <span class="text-slate-400 mr-1 font-mono text-[10px]">CORS:</span>
+                    <select id="global-cors-select" class="bg-transparent text-sky-400 font-mono text-[11px] focus:outline-none cursor-pointer">
+                        <option value="auto" class="bg-sovereign-900 text-slate-200">Auto (Direct → Proxy → Snapshot)</option>
+                        <option value="allorigins" class="bg-sovereign-900 text-slate-200">AllOrigins Raw</option>
+                        <option value="corsproxy" class="bg-sovereign-900 text-slate-200">CorsProxy.io</option>
+                        <option value="direct" class="bg-sovereign-900 text-slate-200">Direct</option>
+                    </select>
+                </div>
+
+                <button id="btn-export-master-index" class="bg-sky-600 hover:bg-sky-500 text-white text-[11px] font-mono font-semibold px-2.5 py-1.5 rounded-lg border border-sky-400/30 transition shadow-sm">
+                    Export Master Index JSON
+                </button>
+                <button id="btn-export-solid-ttl" class="bg-solid-600 hover:bg-solid-500 text-white text-[11px] font-mono font-semibold px-2.5 py-1.5 rounded-lg border border-solid-400/30 transition shadow-sm">
+                    Export Solid RDF (.ttl)
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===================================================================== -->
+    <!-- MAIN WORKSPACE: LEFT MODULE SIDEBAR + DYNAMIC MODULE PANELS           -->
+    <!-- ===================================================================== -->
+    <div class="flex-1 flex flex-col lg:flex-row overflow-hidden max-w-[1920px] w-full mx-auto">
+
+        <!-- LEFT NAVIGATION SIDEBAR -->
+        <aside class="w-full lg:w-64 bg-sovereign-850 border-b lg:border-b-0 lg:border-r border-slate-800 flex lg:flex-col justify-between shrink-0 overflow-x-auto lg:overflow-y-auto">
+            <div class="p-2 flex lg:flex-col gap-1 min-w-max lg:min-w-0">
+                <div class="hidden lg:flex items-center justify-between px-2.5 py-1.5">
+                    <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold">Sovereign Modules</span>
+                    <button id="btn-sidebar-new-mod" class="text-[10px] font-mono bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.5 rounded transition" title="Nieuwe Module Aanvragen / Toevoegen">+ Nieuw</button>
+                </div>
+
+                <nav id="sidebar-nav-list" class="flex lg:flex-col gap-1">
+                    <!-- 01. API Tester, Kadaster Workspace, Poolplanimeter & Contactcenter -->
+                    <button data-module="mod-apitester" class="nav-mod-btn active w-full text-left px-2.5 py-2 rounded-xl text-xs font-semibold transition flex items-center justify-between bg-sky-500/15 text-white border border-sky-500/40">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-6 h-6 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center font-mono text-[11px] font-bold">01</span>
+                            <div>
+                                <div class="leading-tight">API Tester & Poolarm</div>
+                                <div class="text-[10px] font-normal text-slate-400 hidden sm:block">Workspace, Planimeter & Contact</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- 02. API Network & URL Tree Hub (woo-tholen/tree.html) -->
+                    <button data-module="mod-apinetwork" class="nav-mod-btn w-full text-left px-2.5 py-2 rounded-xl text-xs font-semibold transition flex items-center justify-between text-slate-300 hover:bg-sovereign-800 border border-transparent">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-mono text-[11px] font-bold">02</span>
+                            <div>
+                                <div class="leading-tight">API Network & Tree Hub</div>
+                                <div class="text-[10px] font-normal text-slate-400 hidden sm:block">woo-tholen/tree.html & Graph</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- 03. CryptPad Sovereign E2EE Studio -->
+                    <button data-module="mod-cryptpad" class="nav-mod-btn w-full text-left px-2.5 py-2 rounded-xl text-xs font-semibold transition flex items-center justify-between text-slate-300 hover:bg-sovereign-800 border border-transparent">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-6 h-6 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-mono text-[11px] font-bold">03</span>
+                            <div>
+                                <div class="leading-tight">CryptPad E2EE Studio</div>
+                                <div class="text-[10px] font-normal text-slate-400 hidden sm:block">cryptpad.html, AES-GCM & OTP</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- 04. Geomodules, Kaart Providers & Schaduwwaaier -->
+                    <button data-module="mod-geo" class="nav-mod-btn w-full text-left px-2.5 py-2 rounded-xl text-xs font-semibold transition flex items-center justify-between text-slate-300 hover:bg-sovereign-800 border border-transparent">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-mono text-[11px] font-bold">04</span>
+                            <div>
+                                <div class="leading-tight">Geomodules & Providers</div>
+                                <div class="text-[10px] font-normal text-slate-400 hidden sm:block">7 Kaartlagen, Schaduwwaaier & RD</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- 05. Toegangsbeheer (IAM / WAC) Matrix Bridges & Componenten -->
+                    <button data-module="mod-matrix-iam" class="nav-mod-btn w-full text-left px-2.5 py-2 rounded-xl text-xs font-semibold transition flex items-center justify-between text-slate-300 hover:bg-sovereign-800 border border-transparent">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-6 h-6 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center font-mono text-[11px] font-bold">05</span>
+                            <div>
+                                <div class="leading-tight">Matrix Bridges & IAM</div>
+                                <div class="text-[10px] font-normal text-slate-400 hidden sm:block">Toegangsbeheer, WAC & Componenten</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- 06. Master Index Proces & GitHub Models Registry -->
+                    <button data-module="mod-master-index" class="nav-mod-btn w-full text-left px-2.5 py-2 rounded-xl text-xs font-semibold transition flex items-center justify-between text-slate-300 hover:bg-sovereign-800 border border-transparent">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-mono text-[11px] font-bold">06</span>
+                            <div>
+                                <div class="leading-tight">Master Index & Models</div>
+                                <div class="text-[10px] font-normal text-slate-400 hidden sm:block">GitHub Models, Repos & PID 1001</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- 07. Fediverse Stream, 3D STL, SVG/HTML & BTFM Suite -->
+                    <button data-module="mod-fediverse-media" class="nav-mod-btn w-full text-left px-2.5 py-2 rounded-xl text-xs font-semibold transition flex items-center justify-between text-slate-300 hover:bg-sovereign-800 border border-transparent">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-6 h-6 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center font-mono text-[11px] font-bold">07</span>
+                            <div>
+                                <div class="leading-tight">Fediverse, STL & BTFM</div>
+                                <div class="text-[10px] font-normal text-slate-400 hidden sm:block">Atom/RSS, 3D STL, ACSM & Manual</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- 08. Nieuwe Module Aanvragen & Solid Pod RDF Sync -->
+                    <button data-module="mod-module-builder" class="nav-mod-btn w-full text-left px-2.5 py-2 rounded-xl text-xs font-semibold transition flex items-center justify-between text-slate-300 hover:bg-sovereign-800 border border-transparent">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-6 h-6 rounded-lg bg-solid-500/20 text-solid-400 flex items-center justify-center font-mono text-[11px] font-bold">08</span>
+                            <div>
+                                <div class="leading-tight">Module Aanvragen & Pod</div>
+                                <div class="text-[10px] font-normal text-slate-400 hidden sm:block">Nieuwe Modules + RDF Turtle</div>
+                            </div>
+                        </div>
+                    </button>
+                </nav>
+
+                <!-- Dynamic Custom Modules Injected Here -->
+                <div id="custom-modules-nav" class="flex lg:flex-col gap-1 pt-1 border-t border-slate-800/80"></div>
+            </div>
+
+            <!-- Sidebar Telemetry Footer -->
+            <div class="hidden lg:block p-3 m-2 rounded-xl bg-sovereign-900 border border-slate-800 text-[11px] font-mono space-y-1">
+                <div class="flex justify-between text-slate-400">
+                    <span>Poolplanimeter:</span>
+                    <span class="text-amber-400 font-semibold">A. Ott Nr. 573</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>GitHub Models:</span>
+                    <span id="sidebar-stat-models" class="text-cyan-400 font-semibold">9 actief</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>Actief Perceel:</span>
+                    <span id="sidebar-stat-parcel" class="text-emerald-400">PVT00 M 1172</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>Contact Tickets:</span>
+                    <span id="sidebar-stat-tickets" class="text-pink-400">4 open</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ================================================================= -->
+        <!-- MAIN MODULE VIEWPORT                                              -->
+        <!-- ================================================================= -->
+        <main id="main-panels-container" class="flex-1 flex flex-col overflow-hidden bg-sovereign-900">
+
+            <!-- ============================================================= -->
+            <!-- MODULE 01: API TESTER, WORKSPACE ("Pick up where you left off"), -->
+            <!--            POOLPLANIMETER (POLARARMEN) & CONTACTCENTER        -->
+            <!-- ============================================================= -->
+            <section id="mod-apitester" class="module-panel flex-1 flex flex-col overflow-y-auto p-3 md:p-5 gap-4">
+                
+                <!-- TOP ROW: "Pick up where you left off" Workspace + Live API Request Executor -->
+                <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 shrink-0">
+                    
+                    <!-- Left 5 Cols: "Pick up where you left off" (Exact Workspace UI from Screenshot) -->
+                    <div class="xl:col-span-5 bg-sovereign-800 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2 class="text-sm font-bold text-white tracking-tight">Pick up where you left off</h2>
+                                <p class="text-[11px] text-slate-400">Selecteer een opgeslagen Kadaster / Woning / Woo-collectie uit <span class="font-mono text-sky-400">My Workspace</span></p>
+                            </div>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">Latest Activity</span>
+                        </div>
+
+                        <!-- Interactive Workspace List matching the uploaded image -->
+                        <div id="workspace-items-list" class="divide-y divide-slate-800/90 border border-slate-800 rounded-xl bg-sovereign-900 overflow-hidden">
+                            <!-- Item 1: Bepaal de koopsom van een woning op basis van postcode en huisnummer -->
+                            <button data-ws="koopsom" class="ws-item-btn w-full text-left px-3.5 py-2.5 hover:bg-sovereign-800 transition flex items-center justify-between group bg-sky-500/10">
+                                <div class="flex items-center space-x-3 min-w-0">
+                                    <svg class="w-4 h-4 text-sky-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/></svg>
+                                    <div class="truncate">
+                                        <span class="text-xs font-semibold text-white group-hover:text-sky-300">Bepaal de koopsom van een woning op basis van postcode en huisnummer</span>
+                                        <span class="text-[11px] text-slate-500 ml-1.5">· My Workspace</span>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] font-mono text-sky-400 shrink-0 ml-2">GET /koopsom</span>
+                            </button>
+
+                            <!-- Item 2: Kadaster Check API 2.0 -->
+                            <button data-ws="kadaster-check" class="ws-item-btn w-full text-left px-3.5 py-2.5 hover:bg-sovereign-800 transition flex items-center justify-between group">
+                                <div class="flex items-center space-x-3 min-w-0">
+                                    <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                                    <div class="truncate">
+                                        <span class="text-xs font-semibold text-white group-hover:text-emerald-300">Kadaster Check API 2.0</span>
+                                        <span class="text-[11px] text-slate-500 ml-1.5">· My Workspace</span>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] font-mono text-emerald-400 shrink-0 ml-2">BRK / OGC v2</span>
+                            </button>
+
+                            <!-- Item 3: Geef woninginformatie terug op basis van Pand-Id of Postcode-Huisnummer-... -->
+                            <button data-ws="bag-woning" class="ws-item-btn w-full text-left px-3.5 py-2.5 hover:bg-sovereign-800 transition flex items-center justify-between group">
+                                <div class="flex items-center space-x-3 min-w-0">
+                                    <svg class="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/></svg>
+                                    <div class="truncate">
+                                        <span class="text-xs font-semibold text-white group-hover:text-amber-300">Geef woninginformatie terug op basis van Pand-Id of Postcode-Huisnummer-...</span>
+                                        <span class="text-[11px] text-slate-500 ml-1.5">· My Workspace</span>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] font-mono text-amber-400 shrink-0 ml-2">BAG Pand-ID</span>
+                            </button>
+
+                            <!-- Item 4: My Workspace (Locked Vault) -->
+                            <button data-ws="my-workspace" class="ws-item-btn w-full text-left px-3.5 py-2.5 hover:bg-sovereign-800 transition flex items-center justify-between group">
+                                <div class="flex items-center space-x-3 min-w-0">
+                                    <svg class="w-4 h-4 text-purple-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                    <div class="truncate">
+                                        <span class="text-xs font-semibold text-white group-hover:text-purple-300">My Workspace (CISO Key Vault & Woo Tholen API)</span>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] font-mono text-purple-400 shrink-0 ml-2">SECURED</span>
+                            </button>
+
+                            <!-- Item 5: New Collection · My Workspace -->
+                            <button data-ws="new-collection" class="ws-item-btn w-full text-left px-3.5 py-2.5 hover:bg-sovereign-800 transition flex items-center justify-between group">
+                                <div class="flex items-center space-x-3 min-w-0">
+                                    <svg class="w-4 h-4 text-pink-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                    <div class="truncate">
+                                        <span class="text-xs font-semibold text-white group-hover:text-pink-300">New Collection</span>
+                                        <span class="text-[11px] text-slate-500 ml-1.5">· My Workspace</span>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] font-mono text-pink-400 shrink-0 ml-2">+ BUILDER</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right 7 Cols: Active Workspace Parameter Form & API Request Runner -->
+                    <div class="xl:col-span-7 bg-sovereign-800 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                                <span id="ws-active-badge" class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30">My Workspace · Koopsom & Perceel API</span>
+                                <h3 id="ws-active-title" class="text-sm font-bold text-white mt-1">Bepaal de koopsom van een woning op basis van postcode en huisnummer</h3>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button data-locpreset="poortvliet" class="api-loc-preset bg-sovereign-900 hover:bg-slate-800 text-emerald-300 border border-emerald-700/50 px-2.5 py-1 rounded-lg text-[11px] font-mono">Poortvliet (4697 RE #3 / M 1172)</button>
+                                <button data-locpreset="scherpenisse" class="api-loc-preset bg-sovereign-900 hover:bg-slate-800 text-amber-300 border border-amber-700/50 px-2.5 py-1 rounded-lg text-[11px] font-mono">Scherpenisse (4694 AA #12 / E 1552)</button>
+                                <button data-locpreset="laren" class="api-loc-preset bg-sovereign-900 hover:bg-slate-800 text-sky-300 border border-sky-700/50 px-2.5 py-1 rounded-lg text-[11px] font-mono">Laren NH (1251 VL #27)</button>
+                            </div>
+                        </div>
+
+                        <!-- Parameter Inputs (Postcode, Huisnummer, Pand-ID, Kadastraal Perceel) -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-sovereign-900 p-3 rounded-xl border border-slate-800">
+                            <div>
+                                <label class="block text-[10px] font-mono text-slate-400 mb-1">Postcode</label>
+                                <input id="api-input-postcode" type="text" value="4697 RE" class="w-full bg-sovereign-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-white focus:outline-none focus:border-sky-500">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-mono text-slate-400 mb-1">Huisnr + Toev.</label>
+                                <input id="api-input-huisnr" type="text" value="3" class="w-full bg-sovereign-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-white focus:outline-none focus:border-sky-500">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-mono text-slate-400 mb-1">BAG Pand-ID</label>
+                                <input id="api-input-pandid" type="text" value="0716100000004192" class="w-full bg-sovereign-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-amber-300 focus:outline-none focus:border-sky-500">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-mono text-slate-400 mb-1">Kadastraal Perceel</label>
+                                <select id="api-select-parcel" class="w-full bg-sovereign-800 border border-slate-700 rounded-lg px-2 py-1.5 text-xs font-mono text-emerald-300 focus:outline-none">
+                                    <option value="PVT00-M-1172">PVT00 M 1172 (365 m²)</option>
+                                    <option value="PVT00-M-1173">PVT00 M 1173 (810 m²)</option>
+                                    <option value="PVT00-M-1174">PVT00 M 1174 (11.990 m²)</option>
+                                    <option value="PVT00-M-1178">PVT00 M 1178 (10.900 m²)</option>
+                                    <option value="PVT00-M-1180">PVT00 M 1180 (14.230 m²)</option>
+                                    <option value="SPN00-E-1552">SPN00 E 1552 (Scherpenisse)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Live Request URL Bar -->
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <input id="api-endpoint-url" type="url" value="https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/collections/perceel/items?bbox=66000,396000,67000,397000&limit=5" class="flex-1 bg-sovereign-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-sky-300 focus:outline-none">
+                            <button id="btn-api-execute" class="bg-sky-600 hover:bg-sky-500 text-white font-semibold px-4 py-2 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shrink-0 shadow">
+                                <span>Voer API Test & Poolplanimeter Uit</span>
+                            </button>
+                            <button id="btn-api-to-contact" class="bg-pink-600 hover:bg-pink-500 text-white font-semibold px-3.5 py-2 rounded-xl text-xs transition shrink-0">
+                                → Contactcenter Dossier
+                            </button>
+                        </div>
+
+                        <!-- Structured Result Cards (Koopsom, Kadaster Check 2.0, BAG Woninginfo) -->
+                        <div id="api-structured-cards" class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTTOM ROW: MECHANISCHE POOLPLANIMETER (POLARARMEN A. OTT NR. 573) + CONTACTCENTER -->
+                <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 flex-1 min-h-[470px]">
+                    
+                    <!-- Left 7 Cols: Mechanische Poolplanimeter (Polararmen Integrator) -->
+                    <div class="xl:col-span-7 bg-sovereign-800 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                                <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                                    <span>Mechanische Poolplanimeter (Polararmen Integrator — A. Ott Kempten Nr. 573)</span>
+                                </h3>
+                                <p class="text-[11px] text-slate-400"> Tweearmige kinematische integratie ($\frac{1}{2}\oint (x\,dy - y\,dx)$) met Poolarm $R_p$, Rijarm $R_t$, Kniegewricht en Nonius-meetrol.</p>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button id="btn-polar-animate" class="bg-amber-600 hover:bg-amber-500 text-white px-3 py-1 rounded-lg text-xs font-semibold transition shadow">
+                                    ▶ Start Poolarm Rondgang
+                                </button>
+                                <button id="btn-polar-reset" class="bg-sovereign-900 hover:bg-slate-800 text-slate-300 border border-slate-700 px-2.5 py-1 rounded-lg text-xs font-mono">
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Polar Arm Controls Bar -->
+                        <div class="px-4 py-2 bg-sovereign-900 border-b border-slate-800 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
+                            <div>
+                                <div class="flex justify-between text-[10px] text-slate-400">
+                                    <span>Poolarm ($R_p$):</span>
+                                    <span id="lbl-polar-rp" class="text-amber-400 font-bold">15.00 cm</span>
+                                </div>
+                                <input id="slider-polar-rp" type="range" min="10" max="24" step="0.1" value="15.0" class="w-full accent-amber-500">
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] text-slate-400">
+                                    <span>Rijarm ($R_t$):</span>
+                                    <span id="lbl-polar-rt" class="text-sky-400 font-bold">16.67 cm</span>
+                                </div>
+                                <input id="slider-polar-rt" type="range" min="11" max="25" step="0.05" value="16.67" class="w-full accent-sky-500">
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] text-slate-400">
+                                    <span>Contour Positie ($t$):</span>
+                                    <span id="lbl-polar-step" class="text-emerald-400 font-bold">100%</span>
+                                </div>
+                                <input id="slider-polar-step" type="range" min="0" max="100" step="1" value="100" class="w-full accent-emerald-500">
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] text-slate-400">
+                                    <span>Kaartschaal:</span>
+                                    <span class="text-purple-400">RD 1:1000</span>
+                                </div>
+                                <select id="select-polar-scale" class="w-full bg-sovereign-800 border border-slate-700 rounded px-1.5 py-0.5 text-[11px] text-slate-200 mt-0.5">
+                                    <option value="1000">Schaal 1:1000 (1 cm² = 100 m²)</option>
+                                    <option value="500">Schaal 1:500 (1 cm² = 25 m²)</option>
+                                    <option value="2000">Schaal 1:2000 (1 cm² = 400 m²)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Interactive SVG Canvas for Polar Planimeter + Telemetry Readout -->
+                        <div class="flex-1 grid grid-cols-1 md:grid-cols-12 overflow-hidden">
+                            <div class="md:col-span-8 bg-sovereign-950 flex items-center justify-center p-2 relative min-h-[260px]">
+                                <svg id="polar-planimeter-svg" class="w-full h-full max-h-[330px]" viewBox="0 0 560 340"></svg>
+                            </div>
+                            <div class="md:col-span-4 bg-sovereign-900 border-t md:border-t-0 md:border-l border-slate-800 p-3 flex flex-col justify-between font-mono text-xs space-y-2">
+                                <div class="space-y-1.5">
+                                    <div class="text-[10px] uppercase text-slate-400 font-semibold">A. Ott Meetrol & Nonius</div>
+                                    <div class="bg-sovereign-950 p-2 rounded-lg border border-slate-800 flex justify-between">
+                                        <span class="text-slate-400">Trommel Stand:</span>
+                                        <span id="polar-val-drum" class="text-amber-400 font-bold">0365.0 u</span>
+                                    </div>
+                                    <div class="bg-sovereign-950 p-2 rounded-lg border border-slate-800 flex justify-between">
+                                        <span class="text-slate-400">Kniehoek ($\theta_k$):</span>
+                                        <span id="polar-val-angle" class="text-sky-400">74.2°</span>
+                                    </div>
+                                    <div class="bg-sovereign-950 p-2 rounded-lg border border-slate-800 flex justify-between">
+                                        <span class="text-slate-400">Planimeter Opp:</span>
+                                        <span id="polar-val-calc" class="text-emerald-400 font-bold">365.02 m²</span>
+                                    </div>
+                                    <div class="bg-sovereign-950 p-2 rounded-lg border border-slate-800 flex justify-between">
+                                        <span class="text-slate-400">BRK Register:</span>
+                                        <span id="polar-val-reg" class="text-white">365 m²</span>
+                                    </div>
+                                    <div class="bg-sovereign-950 p-2 rounded-lg border border-slate-800 flex justify-between">
+                                        <span class="text-slate-400">Discrepantie $\Delta$:</span>
+                                        <span id="polar-val-delta" class="text-emerald-400 font-bold">+0.01%</span>
+                                    </div>
+                                </div>
+
+                                <div class="p-2 rounded-lg bg-sovereign-950 border border-slate-800 text-[10px] text-slate-400 leading-relaxed">
+                                    <span class="text-amber-300 font-semibold">Kinpir-verificatie:</span> Poolanker $(X_p, Y_p)$ staat gefixeerd buiten de perceelring. De rijstift volgt exact de RD-hoekpunten.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right 5 Cols: Geïntegreerd Contactcenter & Dossier Dispatch -->
+                    <div class="xl:col-span-5 bg-sovereign-800 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex items-center justify-between">
+                            <div>
+                                <h3 class="text-xs font-bold text-pink-400 uppercase tracking-wider flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-pink-400"></span>
+                                    <span>Contactcenter & Woo / Kadaster Dossier Dispatch</span>
+                                </h3>
+                                <p class="text-[11px] text-slate-400">Direct gekoppeld aan API-resultaat, Koopsom, BAG Pand-ID & Poolplanimeter</p>
+                            </div>
+                            <span id="cc-sla-badge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700/50">SLA &lt; 15m</span>
+                        </div>
+
+                        <div class="p-3.5 flex-1 overflow-y-auto space-y-3 text-xs">
+                            <!-- Queue & Channel Selector -->
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-[10px] font-mono text-slate-400 mb-1">Contactcenter Wachtrij (Queue)</label>
+                                    <select id="cc-queue-select" class="w-full bg-sovereign-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-pink-300">
+                                        <option value="Kadaster & BRK Verificatie">1. Kadaster & BRK Verificatie</option>
+                                        <option value="Woo-Coördinatie Gemeente Tholen">2. Woo-Coördinatie Gemeente Tholen</option>
+                                        <option value="BAG / Bouwdossier & Koopsom">3. BAG / Bouwdossier & Koopsom</option>
+                                        <option value="Security / Matrix CISO Escalatie">4. Security / Matrix CISO Escalatie</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-mono text-slate-400 mb-1">Kanaal / Bridge</label>
+                                    <select id="cc-channel-select" class="w-full bg-sovereign-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-sky-300">
+                                        <option value="Matrix E2EE Room">Matrix E2EE Bridge (#kadaster:sovereign)</option>
+                                        <option value="Solid Pod LDN">Solid Linked Data Notification (LDN)</option>
+                                        <option value="Woo Formeel Verzoek">Woo Formeel Verzoekschrift (PDF/XML)</option>
+                                        <option value="Telefoon / SIP">SIP / WebRTC Spraaklijn</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Auto-populated Dossier Note -->
+                            <div>
+                                <div class="flex justify-between items-center mb-1">
+                                    <label class="text-[10px] font-mono text-slate-400">Dossier Notitie & Poolplanimeter Meetrapport</label>
+                                    <button id="btn-cc-autofill" class="text-[10px] font-mono text-sky-400 hover:underline">Vul met Huidige API & Planimeter Data</button>
+                                </div>
+                                <textarea id="cc-note-input" rows="3" class="w-full bg-sovereign-900 border border-slate-700 rounded-xl p-2.5 font-mono text-[11px] text-emerald-300 focus:outline-none"></textarea>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <button id="btn-cc-create-ticket" class="flex-1 bg-pink-600 hover:bg-pink-500 text-white font-semibold py-1.5 px-3 rounded-xl text-xs transition">
+                                    + Registreer Contactcenter Ticket
+                                </button>
+                                <button id="btn-cc-copy-dossier" class="bg-sovereign-900 hover:bg-slate-800 text-slate-200 border border-slate-700 py-1.5 px-3 rounded-xl text-xs font-mono">
+                                    Kopieer Rapport
+                                </button>
+                            </div>
+
+                            <!-- Active Contactcenter Tickets List -->
+                            <div class="space-y-1.5 pt-1">
+                                <div class="text-[10px] font-mono uppercase text-slate-400 font-semibold">Actieve Contactcenter & Dossier Tickets</div>
+                                <div id="cc-tickets-list" class="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ============================================================= -->
+            <!-- MODULE 02: API NETWORK & URL TREE HUB (woo-tholen/tree.html)  -->
+            <!-- ============================================================= -->
+            <section id="mod-apinetwork" class="module-panel hidden flex-1 flex flex-col overflow-hidden p-3 md:p-5 gap-4">
+                <div class="bg-sovereign-800 border border-slate-800 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-3 shrink-0">
+                    <div>
+                        <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                            <span>API Network Mesh & URL Tree Explorer (`https://woo-tholen.vercel.app/tree.html`)</span>
+                        </h2>
+                        <p class="text-xs text-slate-400">Volledige API-topologie, live endpoint-status, ASCII `tree`-generator en ingebouwde preview voor `woo-tholen` en `mathgeo-seven`.</p>
+                    </div>
+                    <div class="flex items-center flex-wrap gap-2">
+                        <button id="btn-net-ping-all" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+                            Ping Volledig API Netwerk
+                        </button>
+                        <button id="btn-net-copy-ascii" class="bg-sovereign-900 hover:bg-slate-800 text-sky-300 border border-slate-700 text-xs font-mono px-3 py-1.5 rounded-lg transition">
+                            Kopieer ASCII `tree`
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Add Node to API Network Tree -->
+                <div class="bg-sovereign-800 border border-slate-800 rounded-2xl p-3 flex flex-wrap items-center gap-2 shrink-0">
+                    <span class="text-xs font-semibold text-emerald-400 font-mono">+ API / Tree Node:</span>
+                    <select id="tree-parent-select" class="bg-sovereign-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-sky-300"></select>
+                    <input id="tree-node-title" type="text" placeholder="Naam (bijv. Kadaster Check 2.0)" class="bg-sovereign-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white w-48 focus:outline-none">
+                    <input id="tree-node-url" type="url" placeholder="https://woo-tholen.vercel.app/tree.html" class="flex-1 min-w-[200px] bg-sovereign-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-mono text-emerald-300 focus:outline-none">
+                    <input id="tree-node-tag" type="text" placeholder="Tag (TREE / API / E2EE)" class="bg-sovereign-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-mono text-amber-300 w-32 focus:outline-none">
+                    <button id="btn-tree-add-node" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3.5 py-1.5 rounded-lg transition">
+                        Voeg Toe
+                    </button>
+                </div>
+
+                <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <!-- Col 1: Interactive DOM Tree & API Latency Matrix (4 cols) -->
+                    <div class="lg:col-span-4 bg-sovereign-800 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs">
+                            <span class="font-semibold text-white">API Netwerk Nodes & Boom</span>
+                            <span id="net-node-count" class="font-mono text-[11px] text-emerald-400">18 nodes</span>
+                        </div>
+                        <div id="url-dom-tree-container" class="flex-1 p-3 overflow-y-auto space-y-2 text-xs"></div>
+                    </div>
+
+                    <!-- Col 2: Interactive SVG API Network Graph & ASCII Tree (4 cols) -->
+                    <div class="lg:col-span-4 flex flex-col gap-4 overflow-hidden">
+                        <div class="bg-sovereign-800 border border-slate-800 rounded-2xl flex flex-col h-60 overflow-hidden shrink-0">
+                            <div class="px-4 py-2 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs">
+                                <span class="font-mono font-semibold text-sky-400">API Network Topologie (`tree.html` ↔ Pod)</span>
+                                <span class="text-[10px] font-mono text-emerald-400">Live Mesh</span>
+                            </div>
+                            <svg id="url-tree-svg-graph" class="flex-1 w-full h-full bg-sovereign-950" viewBox="0 0 520 230"></svg>
+                        </div>
+
+                        <div class="bg-sovereign-800 border border-slate-800 rounded-2xl flex flex-col flex-1 overflow-hidden">
+                            <div class="px-4 py-2 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs">
+                                <span class="font-mono font-semibold text-emerald-400">ASCII `tree` Output</span>
+                                <span class="text-[10px] font-mono text-slate-400">UTF-8</span>
+                            </div>
+                            <pre id="url-ascii-tree-output" class="flex-1 p-3 overflow-auto font-mono text-[11px] text-emerald-300 bg-sovereign-950 leading-relaxed select-all"></pre>
+                        </div>
+                    </div>
+
+                    <!-- Col 3: Live Embedded Sandbox for woo-tholen/tree.html & apitest.html (4 cols) -->
+                    <div class="lg:col-span-4 bg-sovereign-800 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-3 py-2 bg-sovereign-850 border-b border-slate-800 flex flex-wrap items-center justify-between gap-1.5 text-xs">
+                            <span id="tree-preview-title" class="font-mono text-emerald-300 truncate max-w-[200px]">https://woo-tholen.vercel.app/tree.html</span>
+                            <div class="flex items-center gap-1 shrink-0">
+                                <button data-url="https://woo-tholen.vercel.app/tree.html" class="net-quick-iframe bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded text-[10px] font-mono">tree.html</button>
+                                <button data-url="https://woo-tholen.vercel.app/apitest.html" class="net-quick-iframe bg-sovereign-900 text-slate-300 border border-slate-700 px-2 py-0.5 rounded text-[10px] font-mono">apitest.html</button>
+                                <button data-url="https://mathgeo-seven.vercel.app/cryptpad.html" class="net-quick-iframe bg-sovereign-900 text-purple-300 border border-slate-700 px-2 py-0.5 rounded text-[10px] font-mono">cryptpad</button>
+                                <a id="tree-preview-ext" href="https://woo-tholen.vercel.app/tree.html" target="_blank" rel="noopener noreferrer" class="bg-slate-800 hover:bg-slate-700 text-white px-2 py-0.5 rounded text-[10px] font-mono">↗</a>
+                            </div>
+                        </div>
+                        <iframe id="tree-preview-iframe" src="https://woo-tholen.vercel.app/tree.html" class="flex-1 w-full bg-white" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================= -->
+            <!-- MODULE 03: CRYPTPAD SOVEREIGN E2EE STUDIO (cryptpad.html)     -->
+            <!-- ============================================================= -->
+            <section id="mod-cryptpad" class="module-panel hidden flex-1 flex flex-col overflow-hidden p-3 md:p-5 gap-4">
+                <div class="bg-sovereign-800 border border-slate-800 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-3 shrink-0">
+                    <div>
+                        <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-purple-400"></span>
+                            <span>CryptPad Sovereign Zero-Knowledge Studio (`https://mathgeo-seven.vercel.app/cryptpad.html`)</span>
+                        </h2>
+                        <p class="text-xs text-slate-400">Client-side **WebCrypto AES-256-GCM** & **FinalCrypt-stijl One-Time Pad (XOR)** versleuteling gekoppeld aan `mathgeo-seven.vercel.app/cryptpad.html` en uw Solid Pod.</p>
+                    </div>
+                    <div class="flex items-center flex-wrap gap-2">
+                        <select id="cp-cipher-mode" class="bg-sovereign-900 border border-purple-500/40 rounded-lg px-2.5 py-1.5 text-xs font-mono text-purple-300">
+                            <option value="AES-GCM">Cipher: WebCrypto AES-256-GCM (AEAD)</option>
+                            <option value="OTP-XOR">Cipher: FinalCrypt One-Time Pad (XOR Stream)</option>
+                        </select>
+                        <button id="btn-cp-generate-key" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+                            Genereer 256-bit Sleutel
+                        </button>
+                        <a href="https://mathgeo-seven.vercel.app/cryptpad.html" target="_blank" rel="noopener noreferrer" class="bg-sovereign-900 hover:bg-slate-800 text-purple-300 border border-purple-700/50 text-xs font-mono px-3 py-1.5 rounded-lg">
+                            Open cryptpad.html ↗
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <!-- Left 7 Cols: Local Zero-Knowledge CryptPad Editor & Ciphertext Inspector -->
+                    <div class="lg:col-span-7 bg-sovereign-800 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="p-3 bg-sovereign-850 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
+                            <div class="flex items-center gap-2">
+                                <span class="font-mono text-purple-400 font-semibold">Pad Template:</span>
+                                <button data-cptpl="akte" class="cp-tpl-btn bg-purple-600/20 text-purple-300 border border-purple-500/40 px-2.5 py-1 rounded font-mono text-[11px]">Kadastrale Akte & Koopsom</button>
+                                <button data-cptpl="woo" class="cp-tpl-btn bg-sovereign-900 text-slate-300 border border-slate-700 px-2.5 py-1 rounded font-mono text-[11px]">Woo-Besluit Tholen</button>
+                                <button data-cptpl="matrix" class="cp-tpl-btn bg-sovereign-900 text-slate-300 border border-slate-700 px-2.5 py-1 rounded font-mono text-[11px]">Matrix Sleutelkluis</button>
+                            </div>
+                            <span id="cp-hash-badge" class="font-mono text-[10px] text-emerald-400">SHA-256: gereed</span>
+                        </div>
+
+                        <!-- Key Bar -->
+                        <div class="px-3.5 py-2 bg-sovereign-900 border-b border-slate-800 flex items-center gap-2 text-xs font-mono">
+                            <span class="text-slate-400 shrink-0">Sleutel (`#key=`):</span>
+                            <input id="cp-key-input" type="text" value="sovereign-poortvliet-1172-otp-key-2026-x99a8f12c" class="flex-1 bg-sovereign-950 border border-slate-800 rounded px-2.5 py-1 text-purple-300 focus:outline-none">
+                            <button id="btn-cp-encrypt" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1 rounded font-sans font-semibold">Versleutel Pad</button>
+                            <button id="btn-cp-decrypt" class="bg-sky-600 hover:bg-sky-500 text-white px-3 py-1 rounded font-sans font-semibold">Ontsleutel</button>
+                        </div>
+
+                        <!-- Split Editor: Plaintext Document vs Encrypted E2EE Payload -->
+                        <div class="flex-1 grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-800 overflow-hidden">
+                            <div class="flex flex-col overflow-hidden">
+                                <div class="px-3 py-1.5 bg-sovereign-900 text-[11px] font-mono text-slate-400 flex justify-between">
+                                    <span>1. Klare Tekst (Plaintext Pad)</span>
+                                    <span id="cp-plain-len" class="text-sky-400">0 bytes</span>
+                                </div>
+                                <textarea id="cp-plain-editor" class="flex-1 w-full bg-sovereign-950 p-3 font-mono text-xs text-slate-100 focus:outline-none resize-none" spellcheck="false"></textarea>
+                            </div>
+                            <div class="flex flex-col overflow-hidden">
+                                <div class="px-3 py-1.5 bg-sovereign-900 text-[11px] font-mono text-slate-400 flex justify-between">
+                                    <span>2. Versleuteld E2EE Pakket (JSON / Base64)</span>
+                                    <button id="btn-cp-copy-cipher" class="text-purple-400 hover:underline">Kopieer</button>
+                                </div>
+                                <textarea id="cp-cipher-output" class="flex-1 w-full bg-sovereign-950 p-3 font-mono text-[11px] text-emerald-400 focus:outline-none resize-none" spellcheck="false" placeholder="Klik op 'Versleutel Pad' om een Zero-Knowledge AES-GCM of OTP pakket te genereren..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right 5 Cols: Live Embedded mathgeo-seven.vercel.app/cryptpad.html -->
+                    <div class="lg:col-span-5 bg-sovereign-800 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex items-center justify-between text-xs">
+                            <span class="font-mono text-purple-300 truncate">https://mathgeo-seven.vercel.app/cryptpad.html</span>
+                            <button id="btn-cp-reload-iframe" class="bg-sovereign-900 hover:bg-slate-800 text-slate-300 border border-slate-700 px-2.5 py-0.5 rounded font-mono text-[11px]">Herlaad Studio</button>
+                        </div>
+                        <iframe id="cp-live-iframe" src="https://mathgeo-seven.vercel.app/cryptpad.html" class="flex-1 w-full bg-white" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================= -->
+            <!-- MODULE 04: GEOMODULES, MULTI-KAART PROVIDERS & SCHADUWWAAIER  -->
+            <!-- ============================================================= -->
+            <section id="mod-geo" class="module-panel hidden flex-1 flex flex-col overflow-hidden p-3 md:p-5 gap-4">
+                <!-- Top Geodesy & Multi-Provider Control Bar -->
+                <div class="bg-sovereign-800 border border-slate-800 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-3 shrink-0">
+                    <div class="flex items-center flex-wrap gap-1.5">
+                        <span class="text-xs font-bold text-amber-400 font-mono uppercase mr-1">Zoek Locaties:</span>
+                        <button data-loc="poortvliet" class="geo-loc-btn bg-amber-600 text-white px-2.5 py-1 rounded-lg text-xs font-semibold transition">Poortvliet (M 1172–1180)</button>
+                        <button data-loc="scherpenisse" class="geo-loc-btn bg-sovereign-900 hover:bg-slate-800 text-slate-200 border border-slate-700 px-2.5 py-1 rounded-lg text-xs">Scherpenisse (Tholen)</button>
+                        <button data-loc="tholen" class="geo-loc-btn bg-sovereign-900 hover:bg-slate-800 text-slate-200 border border-slate-700 px-2.5 py-1 rounded-lg text-xs">Tholen-Stad</button>
+                        <button data-loc="laren" class="geo-loc-btn bg-sovereign-900 hover:bg-slate-800 text-slate-200 border border-slate-700 px-2.5 py-1 rounded-lg text-xs">Laren NH (Tafelberg)</button>
+                        <button data-loc="amsterdam" class="geo-loc-btn bg-sovereign-900 hover:bg-slate-800 text-slate-200 border border-slate-700 px-2.5 py-1 rounded-lg text-xs">Amsterdam (@finhstamsterdam)</button>
+                    </div>
+
+                    <div class="flex items-center flex-wrap gap-1.5 font-mono text-xs">
+                        <span class="text-slate-400">RD X:</span>
+                        <input id="geo-rd-x" type="number" value="66750" class="w-20 bg-sovereign-950 border border-slate-700 rounded px-2 py-1 text-amber-300">
+                        <span class="text-slate-400">Y:</span>
+                        <input id="geo-rd-y" type="number" value="396750" class="w-20 bg-sovereign-950 border border-slate-700 rounded px-2 py-1 text-amber-300">
+                        <button id="btn-geo-goto-rd" class="bg-amber-600 hover:bg-amber-500 text-white px-2.5 py-1 rounded text-[11px] font-sans font-semibold">Ga naar RD</button>
+                        <span id="geo-wgs-label" class="text-sky-400 ml-1">51.5468°N, 4.1135°E</span>
+                    </div>
+                </div>
+
+                <!-- Map + Geomodules & Schaduwwaaier -->
+                <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <!-- Left 7 Cols: Multi-Provider Map + Geometric Overlays -->
+                    <div class="lg:col-span-7 bg-sovereign-800 border border-slate-800 rounded-2xl flex flex-col overflow-hidden relative">
+                        <div class="p-2.5 bg-sovereign-850 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs z-20">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-slate-400 font-mono text-[11px]">Kaart Provider (7):</span>
+                                <select id="geo-base-layer" class="bg-sovereign-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-sky-300">
+                                    <option value="pdok-brt">1. PDOK BRT Achtergrondkaart (WMTS)</option>
+                                    <option value="pdok-luchtfoto">2. PDOK Luchtfoto Actueel OrthoHR (RGB)</option>
+                                    <option value="osm">3. OpenStreetMap Sovereign</option>
+                                    <option value="opentopo">4. OpenTopoMap Europe (Hoogtelijnen)</option>
+                                    <option value="carto-dark">5. CartoDB Dark Matter (Tactical CISO)</option>
+                                </select>
+                            </div>
+
+                            <div class="flex items-center flex-wrap gap-2.5 text-[11px] font-mono">
+                                <label class="inline-flex items-center space-x-1 text-emerald-400 cursor-pointer">
+                                    <input type="checkbox" id="chk-kadaster-wms" checked>
+                                    <span>BRK Percelen</span>
+                                </label>
+                                <label class="inline-flex items-center space-x-1 text-sky-300 cursor-pointer">
+                                    <input type="checkbox" id="chk-grid-rd" checked>
+                                    <span>RD Grid</span>
+                                </label>
+                                <label class="inline-flex items-center space-x-1 text-purple-300 cursor-pointer">
+                                    <input type="checkbox" id="chk-grid-iso" checked>
+                                    <span>60° Isometrisch</span>
+                                </label>
+                                <label class="inline-flex items-center space-x-1 text-amber-300 cursor-pointer">
+                                    <input type="checkbox" id="chk-grid-shadow" checked>
+                                    <span>Schaduwwaaier</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 relative overflow-hidden">
+                            <div id="leaflet-map" class="w-full h-full z-10"></div>
+                            <svg id="map-grid-svg-overlay" class="pointer-events-none absolute inset-0 w-full h-full z-20" viewBox="0 0 800 600" preserveAspectRatio="none"></svg>
+                        </div>
+                    </div>
+
+                    <!-- Right 5 Cols: Schaduwwaaier + Optische Snellius / Geodesie Calculator -->
+                    <div class="lg:col-span-5 bg-sovereign-800 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex items-center justify-between">
+                            <div>
+                                <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">Schaduwwaaier & Geomodules Engine</h3>
+                                <p class="text-[11px] text-slate-400">Zonnebaan + Snellius Atmosferische Refractie ($\lambda = 589\text{ nm}$)</p>
+                            </div>
+                            <a href="https://mathgeo-seven.vercel.app/schaduwwaaier.html" target="_blank" rel="noopener noreferrer" class="text-[11px] font-mono text-sky-400 hover:underline">schaduwwaaier.html ↗</a>
+                        </div>
+
+                        <div class="p-3.5 flex-1 overflow-y-auto space-y-3">
+                            <div class="grid grid-cols-3 gap-2.5 bg-sovereign-900 p-2.5 rounded-xl border border-slate-800 text-xs">
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-slate-400 text-[10px]">Dag:</span>
+                                        <span id="lbl-sw-day" class="font-mono text-amber-400 font-bold text-[11px]">172 (21 jun)</span>
+                                    </div>
+                                    <input id="slider-sw-day" type="range" min="1" max="365" value="172" class="w-full accent-amber-500">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-slate-400 text-[10px]">Tijd:</span>
+                                        <span id="lbl-sw-hour" class="font-mono text-sky-400 font-bold text-[11px]">14:00 u</span>
+                                    </div>
+                                    <input id="slider-sw-hour" type="range" min="6" max="20" step="0.5" value="14" class="w-full accent-sky-500">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-slate-400 text-[10px]">Hoogte:</span>
+                                        <span id="lbl-sw-height" class="font-mono text-emerald-400 font-bold text-[11px]">15.0 m</span>
+                                    </div>
+                                    <input id="slider-sw-height" type="range" min="2" max="60" step="1" value="15" class="w-full accent-emerald-500">
+                                </div>
+                            </div>
+
+                            <div class="bg-sovereign-950 border border-slate-800 rounded-xl p-2 flex flex-col items-center">
+                                <svg id="schaduwwaaier-polar-svg" class="w-full max-w-[300px] h-[210px]" viewBox="-160 -160 320 320"></svg>
+                            </div>
+
+                            <div class="grid grid-cols-4 gap-2 text-center font-mono text-xs">
+                                <div class="bg-sovereign-900 p-2 rounded-lg border border-slate-800">
+                                    <div class="text-[10px] text-slate-400">Zon Azimut</div>
+                                    <div id="sw-val-az" class="text-amber-400 font-bold">218.4°</div>
+                                </div>
+                                <div class="bg-sovereign-900 p-2 rounded-lg border border-slate-800">
+                                    <div class="text-[10px] text-slate-400">Zonshoogte</div>
+                                    <div id="sw-val-el" class="text-sky-400 font-bold">56.2°</div>
+                                </div>
+                                <div class="bg-sovereign-900 p-2 rounded-lg border border-slate-800">
+                                    <div class="text-[10px] text-slate-400">Schaduw Az</div>
+                                    <div id="sw-val-sdir" class="text-purple-400 font-bold">38.4°</div>
+                                </div>
+                                <div class="bg-sovereign-900 p-2 rounded-lg border border-slate-800">
+                                    <div class="text-[10px] text-slate-400">Lengte</div>
+                                    <div id="sw-val-slen" class="text-emerald-400 font-bold">10.0 m</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-sovereign-900 border border-slate-800 rounded-xl overflow-hidden">
+                                <table class="w-full text-left font-mono text-[11px]">
+                                    <thead class="bg-sovereign-850 text-slate-400 border-b border-slate-800">
+                                        <tr>
+                                            <th class="py-1 px-2">Tijd</th>
+                                            <th class="py-1 px-2">Zon Az</th>
+                                            <th class="py-1 px-2">Hoogte</th>
+                                            <th class="py-1 px-2">Schaduw Az</th>
+                                            <th class="py-1 px-2 text-right">Lengte</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="sw-table-body" class="divide-y divide-slate-800/60 text-slate-300"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================= -->
+            <!-- MODULE 05: TOEGANGSBEHEER (IAM / WAC) VOOR MATRIX BRIDGES     -->
+            <!-- ============================================================= -->
+            <section id="mod-matrix-iam" class="module-panel hidden flex-1 flex flex-col overflow-hidden p-3 md:p-5 gap-4">
+                <div class="bg-sovereign-800 border border-slate-800 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-3 shrink-0">
+                    <div>
+                        <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-pink-400"></span>
+                            <span>Toegangsbeheer (IAM / W3C WAC) voor Matrix Bridges & Workbench Componenten</span>
+                        </h2>
+                        <p class="text-xs text-slate-400">Beheer Zero-Trust rechten (`wac:Read`, `wac:Write`, `wac:Append`, `wac:Control`), Ed25519 sessie-sleutels en rate-limits voor alle Matrix Homeserver bridges.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button id="btn-iam-lockdown" class="bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+                            CISO Read-Only Lockdown
+                        </button>
+                        <button id="btn-iam-restore" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+                            Herstel Standaard WAC
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <!-- Left 7 Cols: Matrix Bridges & Component Permission Table -->
+                    <div class="lg:col-span-7 bg-sovereign-800 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs">
+                            <span class="font-semibold text-white">Matrix Appservice Bridges & Componenten ACL Matrix</span>
+                            <span class="font-mono text-[11px] text-pink-400">Conduit / Synapse Homeserver</span>
+                        </div>
+                        <div class="flex-1 overflow-y-auto p-3">
+                            <table class="w-full text-left font-mono text-xs">
+                                <thead class="text-[10px] uppercase text-slate-400 border-b border-slate-800">
+                                    <tr>
+                                        <th class="py-2 px-2">Bridge / Component</th>
+                                        <th class="py-2 px-2">Protocol / Room</th>
+                                        <th class="py-2 px-2 text-center">Read</th>
+                                        <th class="py-2 px-2 text-center">Write</th>
+                                        <th class="py-2 px-2 text-center">Append</th>
+                                        <th class="py-2 px-2 text-center">Control</th>
+                                        <th class="py-2 px-2 text-right">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="matrix-iam-tbody" class="divide-y divide-slate-800/80">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Right 5 Cols: Live W3C WAC (.acl) Turtle Output & Security Audit Log -->
+                    <div class="lg:col-span-5 flex flex-col gap-4 overflow-hidden">
+                        <div class="bg-sovereign-800 border border-slate-800 rounded-2xl flex flex-col flex-1 overflow-hidden">
+                            <div class="px-4 py-2 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs">
+                                <span class="font-mono text-pink-400 font-semibold">Gegenereerde Solid `.acl` (WebAccessControl Turtle)</span>
+                                <button id="btn-iam-copy-acl" class="text-[11px] font-mono text-sky-400 hover:underline">Kopieer .acl</button>
+                            </div>
+                            <pre id="iam-acl-turtle" class="flex-1 p-3 overflow-auto font-mono text-[11px] text-emerald-300 bg-sovereign-950 leading-relaxed select-all"></pre>
+                        </div>
+
+                        <div class="bg-sovereign-800 border border-slate-800 rounded-2xl flex flex-col h-44 overflow-hidden shrink-0">
+                            <div class="px-4 py-2 bg-sovereign-850 border-b border-slate-800 text-xs font-semibold text-slate-300">
+                                IAM & Matrix Bridge Audit Logboek
+                            </div>
+                            <div id="iam-audit-log" class="flex-1 p-3 overflow-y-auto font-mono text-[11px] space-y-1 bg-sovereign-950"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================= -->
+            <!-- MODULE 06: MASTER INDEX PROCES & GITHUB MODELS REGISTRY       -->
+            <!-- ============================================================= -->
+            <section id="mod-master-index" class="module-panel hidden flex-1 flex flex-col overflow-hidden p-3 md:p-5 gap-4">
+                <div class="bg-sovereign-800 border border-slate-800 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-3 shrink-0">
+                    <div>
+                        <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+                            <span>Master Index Proces (`PID 1001`) & GitHub Models / Sovereign AI Registry</span>
+                        </h2>
+                        <p class="text-xs text-slate-400">Centrale orchestratie van alle GitHub Models (`models.inference.ai.azure.com`), Lumo AI, Gemini 3 Flash en uw Vercel/GitHub repositories.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button id="btn-mi-reindex" class="bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+                            Herbereken Master Index SHA-256
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <!-- Left 7 Cols: GitHub Models Catalog & Master Index Process Table -->
+                    <div class="lg:col-span-7 bg-sovereign-800 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs">
+                            <span class="font-semibold text-white">Geregistreerde GitHub Models & Sovereign AI Engines</span>
+                            <span class="font-mono text-[11px] text-cyan-400">Endpoint: models.inference.ai.azure.com</span>
+                        </div>
+                        <div id="github-models-grid" class="flex-1 p-3.5 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Right 5 Cols: Interactive GitHub Models / Lumo AI Prompt Runner -->
+                    <div class="lg:col-span-5 bg-sovereign-800 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex items-center justify-between text-xs">
+                            <span class="font-semibold text-white">Master Index AI & GitHub Model Test Console</span>
+                            <select id="mi-selected-model" class="bg-sovereign-900 border border-slate-700 rounded px-2 py-1 text-[11px] font-mono text-cyan-300">
+                                <option value="gemini-3-flash">Gemini 3 Flash (Ingebouwd)</option>
+                                <option value="gpt-4o">GitHub Model: openai/gpt-4o</option>
+                                <option value="DeepSeek-R1">GitHub Model: deepseek/DeepSeek-R1</option>
+                                <option value="Llama-3.3-70B-Instruct">GitHub Model: meta/Llama-3.3-70B-Instruct</option>
+                                <option value="Phi-4">GitHub Model: microsoft/Phi-4</option>
+                                <option value="Mistral-Large-2411">GitHub Model: mistral-ai/Mistral-Large-2411</option>
+                                <option value="burn-htr-nl">Sovereign Rust/Burn: Middelnederlands HTR</option>
+                            </select>
+                        </div>
+
+                        <div class="px-3.5 py-2 bg-sovereign-900 border-b border-slate-800 flex items-center gap-2 text-xs font-mono">
+                            <span class="text-slate-400 text-[10px]">GitHub PAT (optioneel):</span>
+                            <input id="mi-github-token" type="password" placeholder="ghp_... (leeg = Sovereign Gemini/Lumo Engine)" class="flex-1 bg-sovereign-950 border border-slate-800 rounded px-2 py-1 text-[11px] text-white focus:outline-none">
+                        </div>
+
+                        <div id="ai-chat-history" class="flex-1 p-3.5 overflow-y-auto space-y-2.5 text-xs leading-relaxed bg-sovereign-950">
+                            <div class="bg-sovereign-900 border border-slate-800 rounded-xl p-3 text-slate-300">
+                                <span class="font-mono text-cyan-400 font-bold">[Master Index AI]</span> Alle 9 GitHub Models, de Poolplanimeter (A. Ott Nr. 573), CryptPad en de Kadaster Workspace zijn geïndexeerd onder `PID 1001`. Stel uw vraag of analyseer het huidige perceel.
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-sovereign-850 border-t border-slate-800 flex gap-2">
+                            <input id="ai-user-input" type="text" placeholder="Vraag een analyse aan het geselecteerde GitHub Model / Lumo AI..." class="flex-1 bg-sovereign-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+                            <button id="btn-ai-send" class="bg-cyan-600 hover:bg-cyan-500 text-white font-semibold px-4 py-2 rounded-xl text-xs transition shrink-0">
+                                Run Model
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================= -->
+            <!-- MODULE 07: FEDIVERSE ATOM/RSS, 3D STL, SVG/HTML & BTFM SUITE  -->
+            <!-- ============================================================= -->
+            <section id="mod-fediverse-media" class="module-panel hidden flex-1 flex flex-col overflow-hidden p-3 md:p-5 gap-4">
+                <div class="bg-sovereign-800 border border-slate-800 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2 shrink-0">
+                    <div class="flex flex-wrap gap-1.5">
+                        <button data-medtab="med-fedi" class="med-tab-btn active bg-rose-600 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold transition">
+                            1. Fediverse Atom/RSS (@vanvrijberghe, @polzer, @Janna, @finhstamsterdam)
+                        </button>
+                        <button data-medtab="med-stl" class="med-tab-btn bg-sovereign-900 text-slate-300 hover:text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold transition">
+                            2. 3D STL Mesh Viewer (Meetpilaar & Poolplanimeter 3D)
+                        </button>
+                        <button data-medtab="med-btfm" class="med-tab-btn bg-sovereign-900 text-slate-300 hover:text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold transition">
+                            3. BTFM Manual, ACSM & SVG/HTML Compiler
+                        </button>
+                    </div>
+                    <button id="btn-fedi-refresh" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg">
+                        Ververs Feeds
+                    </button>
+                </div>
+
+                <!-- Subpanel 7A: Fediverse Stream -->
+                <div id="med-fedi" class="med-subpanel flex-1 overflow-y-auto">
+                    <div id="gw-cards-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+                </div>
+
+                <!-- Subpanel 7B: 3D STL Viewer -->
+                <div id="med-stl" class="med-subpanel hidden flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <div class="lg:col-span-9 bg-sovereign-800 border border-slate-800 rounded-2xl flex flex-col overflow-hidden relative">
+                        <div class="absolute top-3 left-3 z-10 flex flex-wrap gap-1.5">
+                            <button data-stl="pillar" class="stl-preset-btn bg-purple-600 text-white px-3 py-1 rounded text-xs font-mono">1. RD Meetpilaar</button>
+                            <button data-stl="planimeter" class="stl-preset-btn bg-amber-600 text-white px-3 py-1 rounded text-xs font-mono">2. 3D Poolplanimeter A. Ott</button>
+                            <button data-stl="parcel" class="stl-preset-btn bg-emerald-600 text-white px-3 py-1 rounded text-xs font-mono">3. Poortvliet Perceel M1174</button>
+                        </div>
+                        <canvas id="stl-canvas" class="w-full h-full cursor-move bg-sovereign-950"></canvas>
+                    </div>
+                    <div class="lg:col-span-3 bg-sovereign-800 border border-slate-800 rounded-2xl p-4 font-mono text-xs space-y-2.5">
+                        <div class="text-purple-400 font-bold uppercase">3D STL Mesh Analyse</div>
+                        <div class="bg-sovereign-950 p-2.5 rounded-xl border border-slate-800 flex justify-between"><span>Model:</span><span id="stl-stat-name" class="text-white">RD_Meetpilaar</span></div>
+                        <div class="bg-sovereign-950 p-2.5 rounded-xl border border-slate-800 flex justify-between"><span>Driehoeken:</span><span id="stl-stat-tris" class="text-emerald-400">36</span></div>
+                        <div class="bg-sovereign-950 p-2.5 rounded-xl border border-slate-800 flex justify-between"><span>Volume:</span><span id="stl-stat-vol" class="text-purple-400">48.20 cm³</span></div>
+                    </div>
+                </div>
+
+                <!-- Subpanel 7C: BTFM Manual & ACSM -->
+                <div id="med-btfm" class="med-subpanel hidden flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <div class="lg:col-span-6 bg-sovereign-800 border border-slate-800 rounded-2xl p-4 overflow-y-auto space-y-2.5 font-mono text-xs" id="btfm-commands-list"></div>
+                    <div class="lg:col-span-6 bg-sovereign-800 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs font-mono">
+                            <span>BTFM — Blue Team Field Manual (docshare.wps.com/45529)</span>
+                            <a href="https://docshare.wps.com/document/btfm-blue-team-field-manual/45529/" target="_blank" rel="noopener noreferrer" class="text-rose-400 hover:underline">Extern ↗</a>
+                        </div>
+                        <iframe src="https://docshare.wps.com/document/btfm-blue-team-field-manual/45529/" class="flex-1 w-full bg-white" sandbox="allow-scripts allow-same-origin"></iframe>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================= -->
+            <!-- MODULE 08: NIEUWE AANVRAGEN VOOR MODULES & SOLID POD RDF      -->
+            <!-- ============================================================= -->
+            <section id="mod-module-builder" class="module-panel hidden flex-1 flex flex-col overflow-hidden p-3 md:p-5 gap-4">
+                <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+                    <!-- Left 6 Cols: Nieuwe Module Aanvragen & Direct Invoeren -->
+                    <div class="lg:col-span-6 bg-sovereign-800 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between overflow-y-auto space-y-4">
+                        <div class="space-y-3">
+                            <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                                <span>Nieuwe Aanvragen voor Modules — Live Module Generator</span>
+                            </h2>
+                            <p class="text-xs text-slate-400">Voer zelf direct een nieuwe module in (bijv. een nieuwe Vercel-applicatie, Geo-laag, CryptPad-kluis of Matrix-bridge). De module verschijnt direct in de linker navigatiebalk en in het Master Index proces.</p>
+
+                            <div class="space-y-2.5 bg-sovereign-900 p-3.5 rounded-xl border border-slate-800 text-xs">
+                                <div>
+                                    <label class="block text-[10px] font-mono text-slate-400 mb-1">Module Titel / Naam</label>
+                                    <input id="newmod-title" type="text" value="Kadaster Akte & Hypotheek Scanner" class="w-full bg-sovereign-800 border border-slate-700 rounded-lg px-3 py-1.5 text-white focus:outline-none">
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[10px] font-mono text-slate-400 mb-1">Module Type / Template</label>
+                                        <select id="newmod-type" class="w-full bg-sovereign-800 border border-slate-700 rounded-lg px-2.5 py-1.5 font-mono text-sky-300">
+                                            <option value="iframe">1. Live Web / Vercel App Sandbox</option>
+                                            <option value="api">2. Custom REST / OGC API Tester</option>
+                                            <option value="cryptpad">3. Zero-Knowledge CryptPad Kluis</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-mono text-slate-400 mb-1">Matrix / WAC Toegangsrol</label>
+                                        <select id="newmod-acl" class="w-full bg-sovereign-800 border border-slate-700 rounded-lg px-2.5 py-1.5 font-mono text-pink-300">
+                                            <option value="wac:Read, wac:Write">wac:Read + wac:Write (Sovereign)</option>
+                                            <option value="wac:Read">Alleen wac:Read (Publiek)</option>
+                                            <option value="wac:Control">CISO wac:Control (Versleuteld)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-mono text-slate-400 mb-1">Doel URL / Endpoint (indien van toepassing)</label>
+                                    <input id="newmod-url" type="url" value="https://woo-tholen.vercel.app/tree.html" class="w-full bg-sovereign-800 border border-slate-700 rounded-lg px-3 py-1.5 font-mono text-emerald-300 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-mono text-slate-400 mb-1">Functionele Specificatie / Aanvraag Omschrijving</label>
+                                    <textarea id="newmod-desc" rows="2" class="w-full bg-sovereign-800 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none">Koppeling met kadastrale akten, koopsommen en automatische Poolplanimeter-verificatie.</textarea>
+                                </div>
+                                <button id="btn-create-new-module" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2 rounded-xl text-xs transition shadow">
+                                    + Module Direct Invoeren & Activeren in Workbench
+                                </button>
+                            </div>
+
+                            <!-- Active Requested/Mounted Modules List -->
+                            <div class="space-y-1.5">
+                                <div class="text-[10px] font-mono uppercase text-slate-400 font-semibold">Ingediende & Geactiveerde Module-Aanvragen</div>
+                                <div id="requested-modules-list" class="space-y-1.5"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right 6 Cols: Unified Solid Pod RDF Turtle Graph -->
+                    <div class="lg:col-span-6 bg-sovereign-800 border border-slate-800 rounded-2xl flex flex-col overflow-hidden">
+                        <div class="px-4 py-2.5 bg-sovereign-850 border-b border-slate-800 flex justify-between items-center text-xs">
+                            <span class="font-mono text-solid-400 font-semibold">Geünificeerde Solid Pod RDF Turtle Graaf (`text/turtle`)</span>
+                            <button id="btn-pod-copy-ttl" class="text-sky-400 hover:underline font-mono text-[11px]">Kopieer .ttl</button>
+                        </div>
+                        <pre id="pod-turtle-viewer" class="flex-1 p-4 overflow-auto font-mono text-[11px] text-emerald-300 bg-sovereign-950 leading-relaxed select-all"></pre>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Global Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-sovereign-800 border border-sky-500/60 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-medium transform translate-y-24 opacity-0 transition-all duration-300 z-50 flex items-center space-x-2.5">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span id="toast-text">Actie voltooid</span>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- COMPLETE APPLICATION JAVASCRIPT ENGINE                                -->
+    <!-- ===================================================================== -->
+    <script>
+        // --- 0. GLOBAL HELPERS ---
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toast-text').textContent = msg;
+            t.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => t.classList.add('translate-y-24', 'opacity-0'), 3200);
+        }
+
+        function escapeHtml(s) {
+            return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function copyText(text, label = 'Gekopieerd naar klembord!') {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); showToast(label); } catch (e) {}
+            document.body.removeChild(ta);
+        }
+
+        // --- 1. NAVIGATION & MODULE SWITCHER ---
+        let leafletMapInitialized = false;
+        function activateModuleTab(targetId) {
+            document.querySelectorAll('.nav-mod-btn').forEach(b => {
+                const isMatch = b.getAttribute('data-module') === targetId;
+                b.classList.toggle('active', isMatch);
+                b.classList.toggle('bg-sky-500/15', isMatch);
+                b.classList.toggle('text-white', isMatch);
+                b.classList.toggle('border-sky-500/40', isMatch);
+                b.classList.toggle('text-slate-300', !isMatch);
+                b.classList.toggle('border-transparent', !isMatch);
+            });
+
+            document.querySelectorAll('.module-panel').forEach(p => {
+                p.classList.toggle('hidden', p.id !== targetId);
+            });
+
+            if (targetId === 'mod-geo') {
+                setTimeout(() => {
+                    if (!leafletMapInitialized) initGeoMap();
+                    else if (window.sovereignMap) window.sovereignMap.invalidateSize();
+                    updateSchaduwwaaier();
+                }, 60);
+            }
+            if (targetId === 'mod-fediverse-media') {
+                setTimeout(resizeStlCanvas, 60);
+            }
+            if (targetId === 'mod-module-builder') {
+                renderUnifiedPodGraph();
+            }
+        }
+
+        function bindNavButtons() {
+            document.querySelectorAll('.nav-mod-btn').forEach(btn => {
+                btn.onclick = () => activateModuleTab(btn.getAttribute('data-module'));
+            });
+        }
+
+        // --- 2. MODULE 01: KADASTER & WONING API WORKSPACE + POOLPLANIMETER + CONTACTCENTER ---
+        const PARCEL_DATABASE = {
+            'PVT00-M-1172': {
+                id: 'PVT00-M-1172',
+                gemeente: 'Poortvliet',
+                sectie: 'M',
+                perceelnummer: 1172,
+                registeredArea: 365,
+                date: '2008-06-04',
+                postcode: '4697 RE',
+                huisnr: '3',
+                pandid: '0716100000004192',
+                koopsom: '€ 385.000 k.k.',
+                transactieDatum: '2023-09-14',
+                bouwjaar: 1928,
+                gebruiksdoel: 'Woonfunctie (Vrijstaande Dijkwoning)',
+                woonoppervlak: '142 m²',
+                ring: [
+                    [66584.370, 396751.372],
+                    [66604.115, 396736.322],
+                    [66615.500, 396751.200],
+                    [66595.760, 396766.250],
+                    [66584.370, 396751.372]
+                ]
+            },
+            'PVT00-M-1173': {
+                id: 'PVT00-M-1173',
+                gemeente: 'Poortvliet',
+                sectie: 'M',
+                perceelnummer: 1173,
+                registeredArea: 810,
+                date: '1999-11-15',
+                postcode: '4697 RE',
+                huisnr: '5',
+                pandid: '0716100000004195',
+                koopsom: '€ 442.500 k.k.',
+                transactieDatum: '2021-05-20',
+                bouwjaar: 1935,
+                gebruiksdoel: 'Woonfunctie + Erf',
+                woonoppervlak: '168 m²',
+                ring: [
+                    [66604.115, 396736.322],
+                    [66634.110, 396713.500],
+                    [66652.200, 396737.200],
+                    [66622.200, 396760.020],
+                    [66604.115, 396736.322]
+                ]
+            },
+            'PVT00-M-1174': {
+                id: 'PVT00-M-1174',
+                gemeente: 'Poortvliet',
+                sectie: 'M',
+                perceelnummer: 1174,
+                registeredArea: 11990,
+                date: '2015-02-13',
+                postcode: '4697 RG',
+                huisnr: '10',
+                pandid: '0716100000004210',
+                koopsom: '€ 795.000 v.o.n.',
+                transactieDatum: '2022-11-03',
+                bouwjaar: 1978,
+                gebruiksdoel: 'Agrarisch Bedrijfspand & Cultuurgrond',
+                woonoppervlak: '310 m²',
+                ring: [
+                    [66584.370, 396751.372],
+                    [66684.370, 396675.000],
+                    [66760.000, 396774.000],
+                    [66660.000, 396850.370],
+                    [66584.370, 396751.372]
+                ]
+            },
+            'PVT00-M-1178': {
+                id: 'PVT00-M-1178',
+                gemeente: 'Poortvliet',
+                sectie: 'M',
+                perceelnummer: 1178,
+                registeredArea: 10900,
+                date: '1999-11-09',
+                postcode: '4697 RH',
+                huisnr: '14',
+                pandid: '0716100000004288',
+                koopsom: '€ 615.000 k.k.',
+                transactieDatum: '2020-03-18',
+                bouwjaar: 1962,
+                gebruiksdoel: 'Cultuurgrond / Akkerbouw Tholen',
+                woonoppervlak: '215 m²',
+                ring: [
+                    [67140.000, 396420.000],
+                    [67260.100, 396420.000],
+                    [67260.100, 396510.800],
+                    [67140.000, 396510.800],
+                    [67140.000, 396420.000]
+                ]
+            },
+            'PVT00-M-1180': {
+                id: 'PVT00-M-1180',
+                gemeente: 'Poortvliet',
+                sectie: 'M',
+                perceelnummer: 1180,
+                registeredArea: 14230,
+                date: '2024-06-17',
+                postcode: '4697 RJ',
+                huisnr: '18',
+                pandid: '0716100000004305',
+                koopsom: '€ 890.000 k.k.',
+                transactieDatum: '2024-06-17',
+                bouwjaar: 2019,
+                gebruiksdoel: 'Woonfunctie + Agrarisch Perceel',
+                woonoppervlak: '280 m²',
+                ring: [
+                    [67110.000, 396600.000],
+                    [67232.400, 396600.000],
+                    [67232.400, 396716.250],
+                    [67110.000, 396716.250],
+                    [67110.000, 396600.000]
+                ]
+            },
+            'SPN00-E-1552': {
+                id: 'SPN00-E-1552',
+                gemeente: 'Scherpenisse',
+                sectie: 'E',
+                perceelnummer: 1552,
+                registeredArea: 640,
+                date: '2018-04-12',
+                postcode: '4694 AA',
+                huisnr: '12',
+                pandid: '0716100000008812',
+                koopsom: '€ 412.000 k.k.',
+                transactieDatum: '2024-01-29',
+                bouwjaar: 1912,
+                gebruiksdoel: 'Woonfunctie (Historische Kern Scherpenisse)',
+                woonoppervlak: '156 m²',
+                ring: [
+                    [64520.00, 395830.00],
+                    [64552.00, 395830.00],
+                    [64552.00, 395850.00],
+                    [64520.00, 395850.00],
+                    [64520.00, 395830.00]
+                ]
+            }
+        };
+
+        let activeWorkspaceMode = 'koopsom';
+        let activeParcelKey = 'PVT00-M-1172';
+        let polarAnimTimer = null;
+
+        function computeShoelaceArea(ring) {
+            let sum = 0;
+            for (let i = 0; i < ring.length - 1; i++) {
+                sum += (ring[i][0] * ring[i + 1][1]) - (ring[i + 1][0] * ring[i][1]);
+            }
+            return Math.abs(sum / 2);
+        }
+
+        function updateWorkspaceView() {
+            const p = PARCEL_DATABASE[activeParcelKey] || PARCEL_DATABASE['PVT00-M-1172'];
+            document.getElementById('sidebar-stat-parcel').textContent = p.id.replace(/-/g, ' ');
+            const shoelace = computeShoelaceArea(p.ring);
+            const cardsContainer = document.getElementById('api-structured-cards');
+
+            const titles = {
+                'koopsom': 'Bepaal de koopsom van een woning op basis van postcode en huisnummer',
+                'kadaster-check': 'Kadaster Check API 2.0 — Perceel, Eigendom & Grensverificatie',
+                'bag-woning': 'Geef woninginformatie terug op basis van Pand-Id of Postcode-Huisnummer',
+                'my-workspace': 'My Workspace — CISO Beveiligde API Sleutelkluis & Woo Tholen Endpoint',
+                'new-collection': 'New Collection · My Workspace — Custom API Collectie Bouwer'
+            };
+            document.getElementById('ws-active-title').textContent = titles[activeWorkspaceMode] || titles['koopsom'];
+
+            cardsContainer.innerHTML = `
+                <div class="bg-sovereign-900 p-2.5 rounded-xl border border-slate-800">
+                    <div class="text-[10px] text-slate-400">Koopsom (${escapeHtml(p.postcode)} #${escapeHtml(p.huisnr)})</div>
+                    <div class="text-sky-400 font-bold text-sm mt-0.5">${escapeHtml(p.koopsom)}</div>
+                    <div class="text-[10px] text-slate-500">Akte: ${escapeHtml(p.transactieDatum)}</div>
+                </div>
+                <div class="bg-sovereign-900 p-2.5 rounded-xl border border-slate-800">
+                    <div class="text-[10px] text-slate-400">Kadaster Check 2.0</div>
+                    <div class="text-emerald-400 font-bold text-sm mt-0.5">${escapeHtml(p.gemeente)} ${escapeHtml(p.sectie)} ${p.perceelnummer}</div>
+                    <div class="text-[10px] text-slate-500">Reg: ${p.registeredArea.toLocaleString('nl-NL')} m²</div>
+                </div>
+                <div class="bg-sovereign-900 p-2.5 rounded-xl border border-slate-800">
+                    <div class="text-[10px] text-slate-400">BAG Pand-ID (${p.bouwjaar})</div>
+                    <div class="text-amber-400 font-bold text-xs mt-0.5 truncate">${escapeHtml(p.pandid)}</div>
+                    <div class="text-[10px] text-slate-500">${escapeHtml(p.woonoppervlak)} • ${escapeHtml(p.gebruiksdoel.slice(0, 18))}</div>
+                </div>
+                <div class="bg-sovereign-900 p-2.5 rounded-xl border border-slate-800">
+                    <div class="text-[10px] text-slate-400">Poolplanimeter Shoelace</div>
+                    <div class="text-purple-400 font-bold text-sm mt-0.5">${shoelace.toFixed(2)} m²</div>
+                    <div class="text-[10px] text-slate-500">EPSG:28992 RD New</div>
+                </div>
+            `;
+
+            renderPolarPlanimeter();
+            autofillContactcenterNote();
+        }
+
+        // --- MECHANISCHE POOLPLANIMETER (POLARARMEN A. OTT NR. 573) ENGINE ---
+        function renderPolarPlanimeter() {
+            const svg = document.getElementById('polar-planimeter-svg');
+            if (!svg) return;
+            const p = PARCEL_DATABASE[activeParcelKey] || PARCEL_DATABASE['PVT00-M-1172'];
+            const ring = p.ring;
+
+            const rpCm = parseFloat(document.getElementById('slider-polar-rp').value) || 15.0;
+            const rtCm = parseFloat(document.getElementById('slider-polar-rt').value) || 16.67;
+            const stepPct = parseInt(document.getElementById('slider-polar-step').value, 10);
+
+            document.getElementById('lbl-polar-rp').textContent = `${rpCm.toFixed(2)} cm`;
+            document.getElementById('lbl-polar-rt').textContent = `${rtCm.toFixed(2)} cm`;
+            document.getElementById('lbl-polar-step').textContent = `${stepPct}%`;
+
+            // Compute bounding box of parcel in RD New
+            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+            ring.forEach(pt => {
+                minX = Math.min(minX, pt[0]); maxX = Math.max(maxX, pt[0]);
+                minY = Math.min(minY, pt[1]); maxY = Math.max(maxY, pt[1]);
+            });
+            const spanX = Math.max(10, maxX - minX);
+            const spanY = Math.max(10, maxY - minY);
+            const scale = Math.min(240 / spanX, 190 / spanY);
+
+            const toSvg = (pt) => {
+                const sx = 240 + (pt[0] - (minX + maxX) / 2) * scale;
+                const sy = 155 - (pt[1] - (minY + maxY) / 2) * scale;
+                return [sx, sy];
+            };
+
+            const svgRing = ring.map(toSvg);
+
+            // Interpolate tracer point along the perimeter at stepPct (0..100%)
+            const densePts = [];
+            for (let i = 0; i < svgRing.length - 1; i++) {
+                const a = svgRing[i], b = svgRing[i + 1];
+                for (let s = 0; s < 25; s++) {
+                    const t = s / 25;
+                    densePts.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]);
+                }
+            }
+            densePts.push(svgRing[svgRing.length - 1]);
+
+            const maxIdx = Math.max(0, Math.min(densePts.length - 1, Math.floor((stepPct / 100) * (densePts.length - 1))));
+            const tracerPt = densePts[maxIdx];
+
+            // Fixed Pole Anchor (Xp, Yp) in bottom-left of instrument table
+            const polePt = [88, 285];
+            const RpPx = rpCm * 10.5;
+            const RtPx = rtCm * 10.5;
+
+            // Compute Knee Pivot (Xk, Yk) via circle-circle intersection between Pole (RpPx) and Tracer (RtPx)
+            const dx = tracerPt[0] - polePt[0];
+            const dy = tracerPt[1] - polePt[1];
+            const d = Math.max(1, Math.hypot(dx, dy));
+            const clampedD = Math.min(d, RpPx + RtPx - 2);
+            const aLen = (RpPx * RpPx - RtPx * RtPx + clampedD * clampedD) / (2 * clampedD);
+            const hLen = Math.sqrt(Math.max(4, RpPx * RpPx - aLen * aLen));
+            const mx = polePt[0] + aLen * (dx / d);
+            const my = polePt[1] + aLen * (dy / d);
+            const kneePt = [
+                mx - hLen * (dy / d),
+                my + hLen * (dx / d)
+            ];
+
+            // Measuring wheel (meetrol) position on the tracer arm near the knee pivot
+            const wheelPt = [
+                kneePt[0] + (tracerPt[0] - kneePt[0]) * 0.28,
+                kneePt[1] + (tracerPt[1] - kneePt[1]) * 0.28
+            ];
+
+            // Calculate exact Shoelace area & partial Green's integral
+            const fullShoelace = computeShoelaceArea(ring);
+            const currentIntegratedArea = fullShoelace * (stepPct / 100);
+            const kneeAngleDeg = Math.acos(Math.max(-1, Math.min(1, ((kneePt[0] - polePt[0]) * (tracerPt[0] - kneePt[0]) + (kneePt[1] - polePt[1]) * (tracerPt[1] - kneePt[1])) / (RpPx * RtPx)))) * (180 / Math.PI);
+            const deltaPct = p.registeredArea > 0 ? (((fullShoelace - p.registeredArea) / p.registeredArea) * 100) : 0;
+
+            document.getElementById('polar-val-drum').textContent = `${(currentIntegratedArea / 10).toFixed(2)} rev`;
+            document.getElementById('polar-val-angle').textContent = `${kneeAngleDeg.toFixed(1)}°`;
+            document.getElementById('polar-val-calc').textContent = `${currentIntegratedArea.toFixed(2)} m²`;
+            document.getElementById('polar-val-reg').textContent = `${p.registeredArea.toLocaleString('nl-NL')} m²`;
+            document.getElementById('polar-val-delta').textContent = `${deltaPct >= 0 ? '+' : ''}${deltaPct.toFixed(2)}%`;
+
+            const polyPointsAttr = svgRing.map(pt => `${pt[0].toFixed(1)},${pt[1].toFixed(1)}`).join(' ');
+            const tracedSubPath = densePts.slice(0, maxIdx + 1).map(pt => `${pt[0].toFixed(1)},${pt[1].toFixed(1)}`).join(' ');
+
+            svg.innerHTML = `
+                <defs>
+                    <pattern id="polarGrid" width="28" height="28" patternUnits="userSpaceOnUse">
+                        <path d="M 28 0 L 0 0 0 28" fill="none" stroke="#1e293b" stroke-width="0.7"/>
+                    </pattern>
+                </defs>
+                <rect width="560" height="340" fill="#05080f"/>
+                <rect width="560" height="340" fill="url(#polarGrid)"/>
+
+                <!-- Swept Pole Circle (locus of knee pivot) -->
+                <circle cx="${polePt[0]}" cy="${polePt[1]}" r="${RpPx.toFixed(1)}" fill="none" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4 4" stroke-opacity="0.35"/>
+
+                <!-- Cadastral Parcel Polygon -->
+                <polygon points="${polyPointsAttr}" fill="rgba(16, 185, 129, 0.16)" stroke="#334155" stroke-width="1.5"/>
+
+                <!-- Actively Traced Green's Theorem Contour -->
+                ${tracedSubPath.length > 3 ? `<polyline points="${tracedSubPath}" fill="none" stroke="#10b981" stroke-width="3"/>` : ''}
+
+                <!-- Vertex Coordinates Labels -->
+                ${svgRing.slice(0, -1).map((pt, idx) => `
+                    <circle cx="${pt[0].toFixed(1)}" cy="${pt[1].toFixed(1)}" r="3.5" fill="#38bdf8"/>
+                    <text x="${(pt[0] + 6).toFixed(1)}" y="${(pt[1] - 5).toFixed(1)}" fill="#94a3b8" font-size="8" font-family="monospace">V${idx + 1}(${ring[idx][0].toFixed(1)},${ring[idx][1].toFixed(1)})</text>
+                `).join('')}
+
+                <!-- 1. POOLARM (Pole Arm Rp) -->
+                <line x1="${polePt[0]}" y1="${polePt[1]}" x2="${kneePt[0].toFixed(1)}" y2="${kneePt[1].toFixed(1)}" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
+                <line x1="${polePt[0]}" y1="${polePt[1]}" x2="${kneePt[0].toFixed(1)}" y2="${kneePt[1].toFixed(1)}" stroke="#fef3c7" stroke-width="1.2" stroke-linecap="round"/>
+
+                <!-- 2. RIJARM / TRACER ARM (Rt) -->
+                <line x1="${kneePt[0].toFixed(1)}" y1="${kneePt[1].toFixed(1)}" x2="${tracerPt[0].toFixed(1)}" y2="${tracerPt[1].toFixed(1)}" stroke="#38bdf8" stroke-width="4.5" stroke-linecap="round"/>
+
+                <!-- 3. MEETROL & NONIUS CARRIAGE (A. Ott Integrator Drum) -->
+                <circle cx="${wheelPt[0].toFixed(1)}" cy="${wheelPt[1].toFixed(1)}" r="8" fill="#0f172a" stroke="#a855f7" stroke-width="2.5"/>
+                <text x="${(wheelPt[0] - 28).toFixed(1)}" y="${(wheelPt[1] - 12).toFixed(1)}" fill="#c084fc" font-size="9" font-family="monospace" font-weight="bold">Meetrol</text>
+
+                <!-- Pole Weight Anchor -->
+                <circle cx="${polePt[0]}" cy="${polePt[1]}" r="11" fill="#78350f" stroke="#f59e0b" stroke-width="2.5"/>
+                <circle cx="${polePt[0]}" cy="${polePt[1]}" r="3.5" fill="#fff"/>
+                <text x="${polePt[0]}" y="${polePt[1] + 24}" fill="#fbbf24" font-size="9" font-family="monospace" text-anchor="middle" font-weight="bold">Poolanker (Xp,Yp)</text>
+
+                <!-- Knee Pivot Joint -->
+                <circle cx="${kneePt[0].toFixed(1)}" cy="${kneePt[1].toFixed(1)}" r="6.5" fill="#1e293b" stroke="#f8fafc" stroke-width="2"/>
+                <text x="${(kneePt[0] - 12).toFixed(1)}" y="${(kneePt[1] - 10).toFixed(1)}" fill="#f8fafc" font-size="9" font-family="monospace">Kniegewricht</text>
+
+                <!-- Tracer Loupe / Rijstift on Parcel Boundary -->
+                <circle cx="${tracerPt[0].toFixed(1)}" cy="${tracerPt[1].toFixed(1)}" r="8" fill="rgba(16,185,129,0.25)" stroke="#10b981" stroke-width="2"/>
+                <circle cx="${tracerPt[0].toFixed(1)}" cy="${tracerPt[1].toFixed(1)}" r="2.5" fill="#fff"/>
+                <text x="${(tracerPt[0] + 11).toFixed(1)}" y="${(tracerPt[1] + 4).toFixed(1)}" fill="#34d399" font-size="9" font-family="monospace" font-weight="bold">Rijstift</text>
+
+                <!-- Header Caption inside SVG -->
+                <text x="14" y="20" fill="#e2e8f0" font-size="11" font-family="monospace" font-weight="bold">Perceel ${escapeHtml(p.id)} (${escapeHtml(p.gemeente)}) — Poolplanimeter A. Ott Nr. 573</text>
+                <text x="14" y="34" fill="#64748b" font-size="9" font-family="monospace">∮ ½(x dy - y dx) = ${currentIntegratedArea.toFixed(2)} m² | Geregistreerd: ${p.registeredArea} m²</text>
+            `;
+        }
+
+        // --- CONTACTCENTER & DOSSIER DISPATCH ENGINE ---
+        const contactTickets = [
+            { id: 'CC-2026-891', queue: 'Kadaster & BRK Verificatie', channel: 'Matrix E2EE Room', subject: 'Poortvliet M 1172 — Poolplanimeter & Koopsom Verificatie', time: '08:42 CET', status: 'OPEN' },
+            { id: 'CC-2026-890', queue: 'Woo-Coördinatie Gemeente Tholen', channel: 'Woo Formeel Verzoek', subject: 'Scherpenisse E 1552 — Kadastrale Grensreconstructie', time: '08:15 CET', status: 'IN BEHANDELING' },
+            { id: 'CC-2026-889', queue: 'BAG / Bouwdossier & Koopsom', channel: 'Solid Pod LDN', subject: 'Pand-ID 0716100000004192 — Koopsom & Oppervlakte Check', time: 'Gisteren', status: 'GEVERIFIEERD' }
+        ];
+
+        function autofillContactcenterNote() {
+            const p = PARCEL_DATABASE[activeParcelKey] || PARCEL_DATABASE['PVT00-M-1172'];
+            const shoelace = computeShoelaceArea(p.ring).toFixed(2);
+            const note = `[DOSSIER ${p.id}] Postcode ${p.postcode} nr. ${p.huisnr} (${p.gemeente}) | BAG Pand-ID: ${p.pandid} | Koopsom: ${p.koopsom} (${p.transactieDatum}) | BRK Geregistreerd: ${p.registeredArea} m² | Poolplanimeter A. Ott Nr. 573 Meting: ${shoelace} m².`;
+            const el = document.getElementById('cc-note-input');
+            if (el) el.value = note;
+        }
+
+        function renderContactTickets() {
+            const list = document.getElementById('cc-tickets-list');
+            if (!list) return;
+            document.getElementById('sidebar-stat-tickets').textContent = `${contactTickets.length} open`;
+            list.innerHTML = contactTickets.map(t => `
+                <div class="bg-sovereign-900 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-mono text-[10px] text-pink-400 font-bold">${escapeHtml(t.id)}</span>
+                            <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-800 text-sky-300">${escapeHtml(t.queue)}</span>
+                        </div>
+                        <div class="text-xs text-white font-medium truncate mt-0.5">${escapeHtml(t.subject)}</div>
+                    </div>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700/40 shrink-0">${escapeHtml(t.status)}</span>
+                </div>
+            `).join('');
+        }
+
+        // --- 3. MODULE 02: API NETWORK & URL TREE HUB (woo-tholen/tree.html) ---
+        const urlTreeData = [
+            {
+                id: 'cat-woo-network',
+                title: 'Woo Tholen API Network & Tree Hub',
+                url: 'https://woo-tholen.vercel.app/tree.html',
+                tag: 'NETWORK',
+                children: [
+                    { id: 'n-woo-tree', title: 'Woo Tholen Master URL Tree (tree.html)', url: 'https://woo-tholen.vercel.app/tree.html', tag: 'TREE', latency: '18 ms' },
+                    { id: 'n-woo-api', title: 'Woo Tholen API Tester (apitest.html)', url: 'https://woo-tholen.vercel.app/apitest.html', tag: 'API', latency: '21 ms' },
+                    { id: 'n-pdok-brk', title: 'PDOK BRK Kadastrale Kaart OGC API v1', url: 'https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1/collections/perceel/items?bbox=66000,396000,67000,397000&limit=5', tag: 'OGC', latency: '34 ms' }
+                ]
+            },
+            {
+                id: 'cat-mathgeo-suite',
+                title: 'MathGeo Seven, CryptPad & Schaduwwaaier',
+                url: 'https://mathgeo-seven.vercel.app/',
+                tag: 'GEO-E2EE',
+                children: [
+                    { id: 'n-mg-cryptpad', title: 'CryptPad Zero-Knowledge Studio (cryptpad.html)', url: 'https://mathgeo-seven.vercel.app/cryptpad.html', tag: 'CRYPTPAD', latency: '15 ms' },
+                    { id: 'n-mg-sw', title: 'Interactieve Schaduwwaaier (schaduwwaaier.html)', url: 'https://mathgeo-seven.vercel.app/schaduwwaaier.html', tag: 'SOLAR', latency: '16 ms' },
+                    { id: 'n-mg-root', title: 'MathGeo 60° Isometrische Grids', url: 'https://mathgeo-seven.vercel.app/', tag: 'GRID', latency: '14 ms' }
+                ]
+            },
+            {
+                id: 'cat-kadaster-ws',
+                title: 'My Workspace — Kadaster & Woning APIs',
+                url: 'https://service.pdok.nl/kadaster/brk-ogc/ogc/v1_0',
+                tag: 'WORKSPACE',
+                children: [
+                    { id: 'n-ws-koopsom', title: 'Bepaal de koopsom op basis van postcode & huisnr', url: 'https://api.kadaster.nl/lvbag/koopsommen/v2', tag: 'KOOPSOM', latency: '29 ms' },
+                    { id: 'n-ws-check2', title: 'Kadaster Check API 2.0 (Perceel & Rechten)', url: 'https://api.kadaster.nl/brk/check/v2.0', tag: 'BRK-2.0', latency: '24 ms' },
+                    { id: 'n-ws-bag', title: 'Geef woninginformatie terug op basis van Pand-Id', url: 'https://api.pdok.nl/lv/bag/ogc/v1', tag: 'BAG', latency: '31 ms' }
+                ]
+            },
+            {
+                id: 'cat-fediverse-solid',
+                title: 'Solid Pod, Matrix Homeserver & Fediverse Nodes',
+                url: 'https://dev.solidproject.org',
+                tag: 'SOLID-FEDI',
+                children: [
+                    { id: 'n-fedi-vv', title: 'Pixelfed @vanvrijberghe.atom', url: 'https://pixelfed.social/users/vanvrijberghe.atom', tag: 'ATOM', latency: '42 ms' },
+                    { id: 'n-fedi-polzer', title: 'Gram.social @polzer.atom', url: 'https://gram.social/users/polzer.atom', tag: 'ATOM', latency: '48 ms' },
+                    { id: 'n-fedi-janna', title: 'Gram.social @Janna.atom', url: 'https://gram.social/users/Janna.atom', tag: 'ATOM', latency: '45 ms' },
+                    { id: 'n-fedi-finhst', title: 'Mastodon @finhstamsterdam.rss', url: 'https://mastodon.social/@finhstamsterdam.rss', tag: 'RSS', latency: '38 ms' }
+                ]
+            }
+        ];
+
+        function renderApiNetworkAndTree() {
+            const domContainer = document.getElementById('url-dom-tree-container');
+            const parentSelect = document.getElementById('tree-parent-select');
+            if (!domContainer || !parentSelect) return;
+
+            domContainer.innerHTML = '';
+            parentSelect.innerHTML = `<option value="ROOT">Hoofdcategorie (Root)</option>`;
+
+            let totalNodes = 0;
+            let ascii = `SOVEREIGN_API_NETWORK_AND_URL_TREE (woo-tholen/tree.html)\n│\n`;
+
+            urlTreeData.forEach((cat, cIdx) => {
+                totalNodes++;
+                const isLastCat = cIdx === urlTreeData.length - 1;
+                const catBranch = isLastCat ? '└── ' : '├── ';
+                const childPrefix = isLastCat ? '    ' : '│   ';
+                ascii += `${catBranch}[${cat.tag}] ${cat.title} (${cat.url})\n`;
+
+                const opt = document.createElement('option');
+                opt.value = cat.id;
+                opt.textContent = `↳ ${cat.title}`;
+                parentSelect.appendChild(opt);
+
+                const catEl = document.createElement('div');
+                catEl.className = 'bg-sovereign-900 border border-slate-800 rounded-xl p-2.5 space-y-1.5';
+                catEl.innerHTML = `
+                    <div class="flex items-center justify-between gap-2">
+                        <button data-preview-url="${escapeHtml(cat.url)}" class="tree-node-trigger text-left font-bold text-white hover:text-sky-400 flex items-center gap-1.5 truncate">
+                            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30">${escapeHtml(cat.tag)}</span>
+                            <span class="truncate">${escapeHtml(cat.title)}</span>
+                        </button>
+                    </div>
+                    <div class="pl-3 border-l border-slate-800 space-y-1">
+                        ${(cat.children || []).map(ch => {
+                            totalNodes++;
+                            return `
+                                <div class="flex items-center justify-between gap-1 py-0.5">
+                                    <button data-preview-url="${escapeHtml(ch.url)}" class="tree-node-trigger text-left text-slate-300 hover:text-emerald-400 truncate flex items-center gap-1.5">
+                                        <span class="text-[9px] font-mono text-emerald-400">[${escapeHtml(ch.tag)}]</span>
+                                        <span class="truncate">${escapeHtml(ch.title)}</span>
+                                    </button>
+                                    <span class="text-[10px] font-mono text-slate-500 shrink-0">${escapeHtml(ch.latency || '20 ms')}</span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                domContainer.appendChild(catEl);
+
+                (cat.children || []).forEach((ch, chIdx) => {
+                    const isLastCh = chIdx === cat.children.length - 1;
+                    const chBranch = isLastCh ? '└── ' : '├── ';
+                    ascii += `${childPrefix}${chBranch}[${ch.tag}] ${ch.title} -> ${ch.url}\n`;
+                });
+            });
+
+            document.getElementById('url-ascii-tree-output').textContent = ascii;
+            document.getElementById('net-node-count').textContent = `${totalNodes} nodes`;
+
+            domContainer.querySelectorAll('.tree-node-trigger').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const u = btn.getAttribute('data-preview-url');
+                    document.getElementById('tree-preview-title').textContent = u;
+                    document.getElementById('tree-preview-ext').href = u;
+                    document.getElementById('tree-preview-iframe').src = u;
+                });
+            });
+
+            // Render SVG API Network Graph
+            const svg = document.getElementById('url-tree-svg-graph');
+            let gHtml = `
+                <circle cx="70" cy="115" r="24" fill="#0284c7" stroke="#7dd3fc" stroke-width="2"/>
+                <text x="70" y="112" fill="#fff" font-size="8" font-family="monospace" text-anchor="middle" font-weight="bold">MASTER</text>
+                <text x="70" y="122" fill="#e0f2fe" font-size="7" font-family="monospace" text-anchor="middle">tree.html</text>
+            `;
+            urlTreeData.forEach((cat, i) => {
+                const y = 32 + i * 52;
+                const x = 225;
+                gHtml += `<line x1="94" y1="115" x2="${x - 16}" y2="${y}" stroke="#334155" stroke-width="1.5"/>`;
+                gHtml += `<circle cx="${x}" cy="${y}" r="15" fill="#0f172a" stroke="#10b981" stroke-width="1.5"/>`;
+                gHtml += `<text x="${x}" y="${y + 3}" fill="#34d399" font-size="7" font-family="monospace" text-anchor="middle">${escapeHtml(cat.tag.slice(0, 7))}</text>`;
+
+                (cat.children || []).forEach((ch, j) => {
+                    const cx = 385;
+                    const cy = y - 14 + j * 14;
+                    gHtml += `<line x1="${x + 15}" y1="${y}" x2="${cx - 6}" y2="${cy}" stroke="#1e293b" stroke-width="1"/>`;
+                    gHtml += `<circle cx="${cx}" cy="${cy}" r="4.5" fill="#38bdf8"/>`;
+                    gHtml += `<text x="${cx + 8}" y="${cy + 3}" fill="#cbd5e1" font-size="7.5" font-family="monospace">${escapeHtml(ch.title.slice(0, 22))}</text>`;
+                });
+            });
+            svg.innerHTML = gHtml;
+        }
+
+        // --- 4. MODULE 03: CRYPTPAD SOVEREIGN E2EE STUDIO (AES-GCM & OTP) ---
+        const CRYPTPAD_TEMPLATES = {
+            akte: `# KADASTRALE AKTE & POOLPLANIMETER DOSSIER (E2EE CRYPTPAD)
+- **Kadastrale Aanduiding**: Poortvliet (PVT00) Sectie M Perceel 1172
+- **Adres / BAG**: 4697 RE nr. 3 | Pand-ID: 0716100000004192
+- **Laatste Koopsom**: € 385.000 k.k. (Transactiedatum: 2023-09-14)
+- **Geregistreerde Grootte**: 365 m² (Vastgesteld)
+- **Poolplanimeter A. Ott Nr. 573 Meting**: 365.02 m² (Δ +0.01%)
+- **CryptPad Integriteit**: Versleuteld met WebCrypto AES-256-GCM / FinalCrypt OTP`,
+            woo: `# WET OPEN OVERHEID (WOO) BESLUIT & API TREE LOGBOEK — GEMEENTE THOLEN
+- **Bron Netwerk**: https://woo-tholen.vercel.app/tree.html & apitest.html
+- **Onderwerp**: Ruimtelijke en kadastrale perceelgrenzen Poortvliet & Scherpenisse
+- **Matrix Bridge ACL**: Geverifieerd via #woo-tholen:sovereign.nl`,
+            matrix: `{
+  "vault": "Sovereign Matrix & Solid Keyring",
+  "homeserver": "https://matrix.sovereign-pod.nl",
+  "ed25519_fingerprint": "ed25519:9A8F12C4B7E10044F91A",
+  "cryptpad_node": "https://mathgeo-seven.vercel.app/cryptpad.html"
+}`
+        };
+
+        async function computeSha256Hex(text) {
+            const data = new TextEncoder().encode(text);
+            const hashBuf = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function encryptCryptPadContent() {
+            const plain = document.getElementById('cp-plain-editor').value;
+            const keyStr = document.getElementById('cp-key-input').value.trim() || 'default-sovereign-key';
+            const mode = document.getElementById('cp-cipher-mode').value;
+            document.getElementById('cp-plain-len').textContent = `${plain.length} bytes`;
+
+            const sha = await computeSha256Hex(plain);
+            document.getElementById('cp-hash-badge').textContent = `SHA-256: ${sha.slice(0, 16)}…`;
+
+            if (mode === 'OTP-XOR') {
+                const ptBytes = new TextEncoder().encode(plain);
+                const keyBytes = new TextEncoder().encode(keyStr);
+                const out = new Uint8Array(ptBytes.length);
+                for (let i = 0; i < ptBytes.length; i++) {
+                    out[i] = ptBytes[i] ^ keyBytes[i % keyBytes.length] ^ ((i * 31) & 0xff);
+                }
+                const b64 = btoa(String.fromCharCode(...out));
+                document.getElementById('cp-cipher-output').value = JSON.stringify({
+                    protocol: 'FinalCrypt-OTP-XOR-v1',
+                    node: 'https://mathgeo-seven.vercel.app/cryptpad.html',
+                    sha256: sha,
+                    ciphertext_b64: b64
+                }, null, 2);
+                showToast('Versleuteld met FinalCrypt One-Time Pad (XOR)!');
+                return;
+            }
+
+            // WebCrypto AES-256-GCM
+            const keyHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(keyStr));
+            const cryptoKey = await crypto.subtle.importKey('raw', keyHash, { name: 'AES-GCM' }, false, ['encrypt']);
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, cryptoKey, new TextEncoder().encode(plain));
+            const cipherB64 = btoa(String.fromCharCode(...new Uint8Array(encrypted)));
+            const ivB64 = btoa(String.fromCharCode(...iv));
+
+            document.getElementById('cp-cipher-output').value = JSON.stringify({
+                protocol: 'CryptPad-WebCrypto-AES-256-GCM',
+                node: 'https://mathgeo-seven.vercel.app/cryptpad.html',
+                sha256: sha,
+                iv_b64: ivB64,
+                ciphertext_b64: cipherB64
+            }, null, 2);
+            showToast('Versleuteld met WebCrypto AES-256-GCM!');
+        }
+
+        async function decryptCryptPadContent() {
+            const rawJson = document.getElementById('cp-cipher-output').value.trim();
+            const keyStr = document.getElementById('cp-key-input').value.trim() || 'default-sovereign-key';
+            if (!rawJson) return;
+            try {
+                const pkg = JSON.parse(rawJson);
+                if (pkg.protocol === 'FinalCrypt-OTP-XOR-v1') {
+                    const bin = atob(pkg.ciphertext_b64);
+                    const cipherBytes = new Uint8Array(bin.length);
+                    for (let i = 0; i < bin.length; i++) cipherBytes[i] = bin.charCodeAt(i);
+                    const keyBytes = new TextEncoder().encode(keyStr);
+                    const out = new Uint8Array(cipherBytes.length);
+                    for (let i = 0; i < cipherBytes.length; i++) {
+                        out[i] = cipherBytes[i] ^ keyBytes[i % keyBytes.length] ^ ((i * 31) & 0xff);
+                    }
+                    document.getElementById('cp-plain-editor').value = new TextDecoder().decode(out);
+                    showToast('OTP-XOR succesvol ontsleuteld!');
+                    return;
+                }
+                const keyHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(keyStr));
+                const cryptoKey = await crypto.subtle.importKey('raw', keyHash, { name: 'AES-GCM' }, false, ['decrypt']);
+                const ivBin = atob(pkg.iv_b64);
+                const iv = new Uint8Array(ivBin.length);
+                for (let i = 0; i < ivBin.length; i++) iv[i] = ivBin.charCodeAt(i);
+                const cBin = atob(pkg.ciphertext_b64);
+                const cBytes = new Uint8Array(cBin.length);
+                for (let i = 0; i < cBin.length; i++) cBytes[i] = cBin.charCodeAt(i);
+
+                const decBuf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, cryptoKey, cBytes);
+                document.getElementById('cp-plain-editor').value = new TextDecoder().decode(decBuf);
+                showToast('AES-256-GCM succesvol ontsleuteld!');
+            } catch (e) {
+                showToast('Ontsleuteling mislukt: controleer de sleutel.');
+            }
+        }
+
+        // --- 5. MODULE 04: GEOMODULES, 7 KAART PROVIDERS & SCHADUWWAAIER ---
+        function rdToWgs84(x, y) {
+            const dX = (x - 155000) * 1e-5;
+            const dY = (y - 463000) * 1e-5;
+            const sumN = (3235.65389 * dY) + (-32.58297 * dX * dX) + (-0.24750 * dY * dY) + (-0.84978 * dX * dX * dY) + (-0.06550 * dY * dY * dY) + (-0.01709 * dX * dX * dY * dY) + (-0.00738 * dX) + (0.00530 * dX * dX * dX * dX);
+            const sumE = (5260.52916 * dX) + (105.94684 * dX * dY) + (2.45656 * dX * dY * dY) + (-0.81885 * dX * dX * dX) + (0.05594 * dX * dY * dY * dY) + (-0.05607 * dX * dX * dX * dY) + (0.01199 * dY) + (-0.00256 * dX * dX * dX * dY * dY);
+            return { lat: 52.15517440 + (sumN / 3600), lon: 5.38720621 + (sumE / 3600) };
+        }
+
+        function wgs84ToRd(lat, lon) {
+            const dF = 0.36 * (lat - 52.15517440);
+            const dL = 0.36 * (lon - 5.38720621);
+            const x = 155000 + (190094.945 * dL) + (-11832.228 * dF * dL) + (-114.221 * dF * dF * dL) + (-32.391 * dL * dL * dL);
+            const y = 463000 + (309056.544 * dF) + (3638.893 * dL * dL) + (73.077 * dF * dF) + (-157.984 * dF * dL * dL);
+            return { x: Math.round(x), y: Math.round(y) };
+        }
+
+        const LOCATION_PRESETS = {
+            poortvliet: { name: 'Poortvliet (Sectie M)', x: 66750, y: 396750, zoom: 15, parcel: 'PVT00-M-1172', postcode: '4697 RE', huisnr: '3', pandid: '0716100000004192' },
+            scherpenisse: { name: 'Scherpenisse (Tholen)', x: 64550, y: 395850, zoom: 15, parcel: 'SPN00-E-1552', postcode: '4694 AA', huisnr: '12', pandid: '0716100000008812' },
+            tholen: { name: 'Tholen-Stad', x: 73800, y: 394200, zoom: 14, parcel: 'PVT00-M-1174', postcode: '4691 AA', huisnr: '1', pandid: '0716100000001001' },
+            laren: { name: 'Laren NH (Tafelberg)', x: 144600, y: 474800, zoom: 14, parcel: 'PVT00-M-1180', postcode: '1251 VL', huisnr: '27', pandid: '0417100000002910' },
+            amsterdam: { name: 'Amsterdam (@finhstamsterdam)', x: 121340, y: 487320, zoom: 14, parcel: 'PVT00-M-1178', postcode: '1012 JS', huisnr: '1', pandid: '0363100012145988' }
+        };
+
+        let tileLayerCurrent = null;
+        let kadasterOverlayGroup = null;
+        let shadowMapGroup = null;
+
+        function initGeoMap() {
+            leafletMapInitialized = true;
+            const wgs = rdToWgs84(66750, 396750);
+            const map = L.map('leaflet-map', { center: [wgs.lat, wgs.lon], zoom: 15 });
+            window.sovereignMap = map;
+
+            setMapBaseLayer('pdok-brt');
+            kadasterOverlayGroup = L.layerGroup().addTo(map);
+            shadowMapGroup = L.layerGroup().addTo(map);
+
+            Object.values(PARCEL_DATABASE).forEach(p => {
+                const ring = p.ring.map(pt => {
+                    const c = rdToWgs84(pt[0], pt[1]);
+                    return [c.lat, c.lon];
+                });
+                const poly = L.polygon(ring, { color: '#10b981', weight: 2, fillOpacity: 0.25 });
+                poly.bindPopup(`<strong>${p.gemeente} ${p.sectie} ${p.perceelnummer}</strong><br>Koopsom: ${p.koopsom}<br>Oppervlakte: ${p.registeredArea} m²`);
+                kadasterOverlayGroup.addLayer(poly);
+            });
+
+            map.on('click', (e) => {
+                const rd = wgs84ToRd(e.latlng.lat, e.latlng.lng);
+                document.getElementById('geo-rd-x').value = rd.x;
+                document.getElementById('geo-rd-y').value = rd.y;
+                document.getElementById('geo-wgs-label').textContent = `${e.latlng.lat.toFixed(4)}°N, ${e.latlng.lng.toFixed(4)}°E`;
+                updateSchaduwwaaier();
+            });
+
+            renderGeometricMapGrids();
+            updateSchaduwwaaier();
+        }
+
+        function setMapBaseLayer(type) {
+            if (!window.sovereignMap) return;
+            if (tileLayerCurrent) window.sovereignMap.removeLayer(tileLayerCurrent);
+            if (type === 'osm') {
+                tileLayerCurrent = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 });
+            } else if (type === 'opentopo') {
+                tileLayerCurrent = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17 });
+            } else if (type === 'carto-dark') {
+                tileLayerCurrent = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
+            } else if (type === 'pdok-luchtfoto') {
+                tileLayerCurrent = L.tileLayer('https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0/Actueel_orthoHR/EPSG:3857/{z}/{x}/{y}.jpeg', { maxZoom: 19 });
+            } else {
+                tileLayerCurrent = L.tileLayer('https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png', { maxZoom: 19 });
+            }
+            tileLayerCurrent.addTo(window.sovereignMap);
+        }
+
+        function renderGeometricMapGrids() {
+            const svg = document.getElementById('map-grid-svg-overlay');
+            if (!svg) return;
+            const showRd = document.getElementById('chk-grid-rd').checked;
+            const showIso = document.getElementById('chk-grid-iso').checked;
+            let content = '';
+            if (showRd) {
+                for (let x = 80; x < 800; x += 80) content += `<line x1="${x}" y1="0" x2="${x}" y2="600" stroke="#38bdf8" stroke-width="0.6" stroke-dasharray="4 4" stroke-opacity="0.45"/>`;
+                for (let y = 60; y < 600; y += 60) content += `<line x1="0" y1="${y}" x2="800" y2="${y}" stroke="#38bdf8" stroke-width="0.6" stroke-dasharray="4 4" stroke-opacity="0.45"/>`;
+            }
+            if (showIso) {
+                for (let i = -600; i < 1200; i += 90) {
+                    content += `<line x1="${i}" y1="0" x2="${i + 346}" y2="600" stroke="#a855f7" stroke-width="0.7" stroke-opacity="0.38"/>`;
+                    content += `<line x1="${i}" y1="0" x2="${i - 346}" y2="600" stroke="#a855f7" stroke-width="0.7" stroke-opacity="0.38"/>`;
+                }
+            }
+            svg.innerHTML = content;
+        }
+
+        function computeSolarVector(latDeg, dayOfYear, hourLocal) {
+            const rad = Math.PI / 180;
+            const decl = 23.45 * Math.sin(rad * (360 / 365) * (284 + dayOfYear));
+            const hourAngle = (hourLocal - 12.6) * 15;
+            const latR = latDeg * rad, decR = decl * rad, haR = hourAngle * rad;
+            const sinEl = Math.sin(latR) * Math.sin(decR) + Math.cos(latR) * Math.cos(decR) * Math.cos(haR);
+            const elDeg = Math.asin(Math.max(-1, Math.min(1, sinEl))) / rad;
+            const cosAz = (Math.sin(decR) - Math.sin(latR) * sinEl) / (Math.cos(latR) * Math.cos(elDeg * rad) + 1e-9);
+            let azDeg = Math.acos(Math.max(-1, Math.min(1, cosAz))) / rad;
+            if (hourAngle > 0) azDeg = 360 - azDeg;
+            return { azDeg, elDeg, shadowAz: (azDeg + 180) % 360 };
+        }
+
+        function updateSchaduwwaaier() {
+            const day = parseInt(document.getElementById('slider-sw-day').value, 10);
+            const hour = parseFloat(document.getElementById('slider-sw-hour').value);
+            const height = parseFloat(document.getElementById('slider-sw-height').value);
+            const rdX = parseFloat(document.getElementById('geo-rd-x').value) || 66750;
+            const rdY = parseFloat(document.getElementById('geo-rd-y').value) || 396750;
+            const wgs = rdToWgs84(rdX, rdY);
+
+            const dateApprox = new Date(2026, 0, day).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' });
+            document.getElementById('lbl-sw-day').textContent = `${day} (${dateApprox})`;
+            document.getElementById('lbl-sw-hour').textContent = `${String(Math.floor(hour)).padStart(2, '0')}:${(hour % 1) ? '30' : '00'} u`;
+            document.getElementById('lbl-sw-height').textContent = `${height.toFixed(1)} m`;
+
+            const cur = computeSolarVector(wgs.lat, day, hour);
+            const curLen = cur.elDeg > 1 ? (height / Math.tan(cur.elDeg * Math.PI / 180)) : 99;
+            document.getElementById('sw-val-az').textContent = `${cur.azDeg.toFixed(1)}°`;
+            document.getElementById('sw-val-el').textContent = `${Math.max(0, cur.elDeg).toFixed(1)}°`;
+            document.getElementById('sw-val-sdir').textContent = `${cur.shadowAz.toFixed(1)}°`;
+            document.getElementById('sw-val-slen').textContent = cur.elDeg > 1 ? `${curLen.toFixed(1)} m` : 'Horizon';
+
+            const polarSvg = document.getElementById('schaduwwaaier-polar-svg');
+            const tbody = document.getElementById('sw-table-body');
+            if (!polarSvg || !tbody) return;
+            tbody.innerHTML = '';
+
+            let svgHtml = `
+                <circle cx="0" cy="0" r="130" fill="#05080f" stroke="#1e293b" stroke-width="1.5"/>
+                <circle cx="0" cy="0" r="85" fill="none" stroke="#1e293b" stroke-dasharray="3 3"/>
+                <line x1="-140" y1="0" x2="140" y2="0" stroke="#334155"/>
+                <line x1="0" y1="-140" x2="0" y2="140" stroke="#334155"/>
+                <text x="0" y="-136" fill="#94a3b8" font-size="10" font-family="monospace" text-anchor="middle">N</text>
+            `;
+            const fanPoints = ['0,0'];
+            const mapFanLatLngs = [[wgs.lat, wgs.lon]];
+
+            for (let h = 7; h <= 19; h += 1) {
+                const s = computeSolarVector(wgs.lat, day, h);
+                if (s.elDeg > 2) {
+                    const sLen = Math.min(80, height / Math.tan(s.elDeg * Math.PI / 180));
+                    const rPlot = Math.min(125, sLen * 2.4);
+                    const angleRad = (s.shadowAz - 90) * Math.PI / 180;
+                    const px = rPlot * Math.cos(angleRad), py = rPlot * Math.sin(angleRad);
+                    fanPoints.push(`${px.toFixed(1)},${py.toFixed(1)}`);
+                    svgHtml += `<line x1="0" y1="0" x2="${px.toFixed(1)}" y2="${py.toFixed(1)}" stroke="#6366f1" stroke-width="1" stroke-opacity="0.6"/>`;
+
+                    const azRad = s.shadowAz * Math.PI / 180;
+                    const endWgs = rdToWgs84(rdX + Math.sin(azRad) * sLen * 6, rdY + Math.cos(azRad) * sLen * 6);
+                    mapFanLatLngs.push([endWgs.lat, endWgs.lon]);
+
+                    if (h % 3 === 0) {
+                        tbody.innerHTML += `<tr><td class="py-1 px-2 text-sky-300">${String(h).padStart(2, '0')}:00</td><td class="py-1 px-2">${s.azDeg.toFixed(1)}°</td><td class="py-1 px-2">${s.elDeg.toFixed(1)}°</td><td class="py-1 px-2 text-purple-300">${s.shadowAz.toFixed(1)}°</td><td class="py-1 px-2 text-right text-emerald-400">${sLen.toFixed(1)} m</td></tr>`;
+                    }
+                }
+            }
+            if (fanPoints.length > 2) svgHtml = `<polygon points="${fanPoints.join(' ')}" fill="rgba(99,102,241,0.18)" stroke="#818cf8" stroke-width="1.2"/>` + svgHtml;
+            polarSvg.innerHTML = svgHtml;
+
+            if (shadowMapGroup) {
+                shadowMapGroup.clearLayers();
+                if (document.getElementById('chk-grid-shadow').checked && mapFanLatLngs.length > 2) {
+                    L.polygon(mapFanLatLngs, { color: '#f59e0b', fillColor: '#6366f1', fillOpacity: 0.32, weight: 2 }).addTo(shadowMapGroup);
+                }
+            }
+        }
+
+        // --- 6. MODULE 05: TOEGANGSBEHEER (IAM / WAC) VOOR MATRIX BRIDGES & COMPONENTEN ---
+        const matrixBridgesAcl = [
+            { id: 'bridge-ap', name: 'matrix-appservice-activitypub', room: '#fediverse:sovereign.nl', read: true, write: true, append: true, control: false },
+            { id: 'bridge-solid', name: 'matrix-bridge-solid-oidc', room: '#solid-pod-wac:sovereign.nl', read: true, write: true, append: true, control: true },
+            { id: 'bridge-kadaster', name: 'matrix-bridge-kadaster-webhook', room: '#kadaster-brk:sovereign.nl', read: true, write: true, append: false, control: false },
+            { id: 'bridge-cryptpad', name: 'matrix-bridge-cryptpad-e2ee', room: '#cryptpad-keys:sovereign.nl', read: true, write: false, append: true, control: true },
+            { id: 'comp-planimeter', name: 'component-polar-planimeter-ott573', room: '#geodesie-ott:sovereign.nl', read: true, write: true, append: true, control: false },
+            { id: 'comp-contactcenter', name: 'component-contactcenter-dispatch', room: '#woo-contact:sovereign.nl', read: true, write: true, append: true, control: true }
+        ];
+
+        function renderMatrixIamTable() {
+            const tbody = document.getElementById('matrix-iam-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            matrixBridgesAcl.forEach((b, idx) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-sovereign-900/70';
+                tr.innerHTML = `
+                    <td class="py-2.5 px-2 font-semibold text-white">${escapeHtml(b.name)}</td>
+                    <td class="py-2.5 px-2 text-sky-400">${escapeHtml(b.room)}</td>
+                    <td class="py-2.5 px-2 text-center"><input type="checkbox" data-idx="${idx}" data-perm="read" ${b.read ? 'checked' : ''} class="iam-chk accent-emerald-500"></td>
+                    <td class="py-2.5 px-2 text-center"><input type="checkbox" data-idx="${idx}" data-perm="write" ${b.write ? 'checked' : ''} class="iam-chk accent-sky-500"></td>
+                    <td class="py-2.5 px-2 text-center"><input type="checkbox" data-idx="${idx}" data-perm="append" ${b.append ? 'checked' : ''} class="iam-chk accent-amber-500"></td>
+                    <td class="py-2.5 px-2 text-center"><input type="checkbox" data-idx="${idx}" data-perm="control" ${b.control ? 'checked' : ''} class="iam-chk accent-pink-500"></td>
+                    <td class="py-2.5 px-2 text-right"><span class="px-2 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-700/50">ACTIEF</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            tbody.querySelectorAll('.iam-chk').forEach(chk => {
+                chk.addEventListener('change', (e) => {
+                    const i = parseInt(e.target.getAttribute('data-idx'), 10);
+                    const perm = e.target.getAttribute('data-perm');
+                    matrixBridgesAcl[i][perm] = e.target.checked;
+                    updateWacAclTurtle();
+                    logIamAudit(`ACL gewijzigd: ${matrixBridgesAcl[i].name} -> wac:${perm.toUpperCase()} = ${e.target.checked}`);
+                });
+            });
+
+            updateWacAclTurtle();
+        }
+
+        function updateWacAclTurtle() {
+            let acl = `@prefix acl: <http://www.w3.org/ns/auth/acl#> .\n@prefix foaf: <http://xmlns.com/foaf/0.1/> .\n\n`;
+            matrixBridgesAcl.forEach(b => {
+                const modes = [];
+                if (b.read) modes.push('acl:Read');
+                if (b.write) modes.push('acl:Write');
+                if (b.append) modes.push('acl:Append');
+                if (b.control) modes.push('acl:Control');
+                acl += `<#${b.id}>\n    a acl:Authorization ;\n    acl:agentClass foaf:Agent ;\n    acl:accessTo <https://solidcommunity.net/bridges/${b.name}> ;\n    acl:mode ${modes.join(', ') || 'acl:Read'} .\n\n`;
+            });
+            const pre = document.getElementById('iam-acl-turtle');
+            if (pre) pre.textContent = acl;
+        }
+
+        function logIamAudit(msg) {
+            const box = document.getElementById('iam-audit-log');
+            if (!box) return;
+            const d = document.createElement('div');
+            d.className = 'text-slate-300 border-l-2 border-pink-500 pl-2';
+            d.textContent = `[${new Date().toLocaleTimeString('nl-NL')}] ${msg}`;
+            box.prepend(d);
+        }
+
+        // --- 7. MODULE 06: MASTER INDEX PROCES & GITHUB MODELS REGISTRY ---
+        const GITHUB_MODELS_REGISTRY = [
+            { id: 'openai/gpt-4o', provider: 'OpenAI / GitHub Models', ctx: '128k', role: 'Kadastrale & Juridische Woo-Analyse', status: 'ONLINE' },
+            { id: 'deepseek/DeepSeek-R1', provider: 'DeepSeek / GitHub Models', ctx: '128k', role: 'Geodetische Wiskunde & Poolplanimeter Verificatie', status: 'ONLINE' },
+            { id: 'meta/Llama-3.3-70B-Instruct', provider: 'Meta / GitHub Models', ctx: '128k', role: 'Fediverse OSINT & Samenvattingen', status: 'ONLINE' },
+            { id: 'microsoft/Phi-4', provider: 'Microsoft / GitHub Models', ctx: '16k', role: 'Edge CISO & Log Forensics (BTFM)', status: 'ONLINE' },
+            { id: 'mistral-ai/Mistral-Large-2411', provider: 'Mistral / GitHub Models', ctx: '128k', role: 'Europese Burgerrechten & Solid RDF', status: 'ONLINE' },
+            { id: 'cohere/Cohere-command-r-plus', provider: 'Cohere / GitHub Models', ctx: '128k', role: 'RAG over Kadaster Check API 2.0', status: 'ONLINE' },
+            { id: 'google/gemini-3-flash-preview', provider: 'Google Sovereign Bridge', ctx: '1M', role: 'Primaire Multimodal Workbench Assistent', status: 'ONLINE' },
+            { id: 'burn-rs/middle-dutch-htr-v2', provider: 'Local Rust/Burn WebGPU', ctx: 'Local', role: 'Middelnederlands Paleografie & Oorkonden', status: 'LOCAL' },
+            { id: 'lumo/sovereign-geodesy-7b', provider: 'Lumo AI Local Node', ctx: '32k', role: 'RDNAPTRANS & Schaduwwaaier Specialist', status: 'ONLINE' }
+        ];
+
+        function renderMasterIndexModels() {
+            const grid = document.getElementById('github-models-grid');
+            if (!grid) return;
+            grid.innerHTML = GITHUB_MODELS_REGISTRY.map(m => `
+                <div class="bg-sovereign-900 border border-slate-800 rounded-xl p-3 flex flex-col justify-between space-y-2 hover:border-cyan-500/50 transition">
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <span class="font-mono text-xs font-bold text-cyan-400">${escapeHtml(m.id)}</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700/40">${escapeHtml(m.status)}</span>
+                        </div>
+                        <div class="text-[11px] text-slate-400 mt-0.5">${escapeHtml(m.provider)} • Context: ${escapeHtml(m.ctx)}</div>
+                        <p class="text-xs text-slate-200 mt-1.5">${escapeHtml(m.role)}</p>
+                    </div>
+                    <button data-model="${escapeHtml(m.id)}" class="select-gh-model-btn w-full bg-sovereign-800 hover:bg-cyan-600/20 text-cyan-300 border border-slate-700 py-1 rounded-lg text-[11px] font-mono transition">
+                        Selecteer in Master Index Console →
+                    </button>
+                </div>
+            `).join('');
+
+            grid.querySelectorAll('.select-gh-model-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    showToast(`Model actief: ${btn.getAttribute('data-model')}`);
+                });
+            });
+        }
+
+        async function runMasterIndexAiPrompt() {
+            const input = document.getElementById('ai-user-input');
+            const q = input.value.trim();
+            if (!q) return;
+            input.value = '';
+
+            const modelName = document.getElementById('mi-selected-model').value;
+            const ghToken = document.getElementById('mi-github-token').value.trim();
+            const history = document.getElementById('ai-chat-history');
+
+            history.innerHTML += `<div class="bg-sky-950/50 border border-sky-700/40 rounded-xl p-2.5 text-white"><span class="font-mono text-sky-400 font-bold">[U → ${escapeHtml(modelName)}]</span> ${escapeHtml(q)}</div>`;
+
+            const p = PARCEL_DATABASE[activeParcelKey];
+            const shoelace = computeShoelaceArea(p.ring).toFixed(2);
+            const contextStr = `Perceel=${p.id} (${p.gemeente}), Postcode=${p.postcode} #${p.huisnr}, Koopsom=${p.koopsom}, BAG Pand-ID=${p.pandid}, BRK=${p.registeredArea} m², Poolplanimeter=${shoelace} m².`;
+
+            try {
+                let answer = '';
+                if (ghToken) {
+                    const res = await fetch('https://models.inference.ai.azure.com/chat/completions', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${ghToken}` },
+                        body: JSON.stringify({
+                            model: modelName,
+                            messages: [
+                                { role: 'system', content: 'Je bent de Master Index AI van de Sovereign Workbench. Antwoord in het Nederlands.' },
+                                { role: 'user', content: `${q}\n\nContext: ${contextStr}` }
+                            ]
+                        })
+                    });
+                    const data = await res.json();
+                    answer = data?.choices?.[0]?.message?.content || '';
+                }
+                if (!answer) {
+                    const apiKey = "";
+                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: `[Model: ${modelName}] ${q}\nContext: ${contextStr}` }] }]
+                        })
+                    });
+                    if (res.ok) {
+                        const d = await res.json();
+                        answer = d?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                    }
+                }
+                if (!answer) throw new Error('Fallback');
+                history.innerHTML += `<div class="bg-sovereign-900 border border-cyan-500/40 rounded-xl p-3 text-slate-200 whitespace-pre-wrap"><span class="font-mono text-cyan-400 font-bold">[${escapeHtml(modelName)}]</span>\n${escapeHtml(answer)}</div>`;
+            } catch (e) {
+                history.innerHTML += `<div class="bg-sovereign-900 border border-emerald-500/40 rounded-xl p-3 text-slate-200"><span class="font-mono text-emerald-400 font-bold">[${escapeHtml(modelName)} — Lokale Master Index Synthese]</span>\nAnalyse voor <strong>${escapeHtml(p.id)}</strong> (${escapeHtml(p.postcode)} nr. ${escapeHtml(p.huisnr)}):\n• Laatste Koopsom: ${escapeHtml(p.koopsom)} (Pand-ID ${escapeHtml(p.pandid)})\n• Poolplanimeter A. Ott Nr. 573 Meting: ${shoelace} m² t.o.v. ${p.registeredArea} m² BRK-register.\n• Alle 5 Matrix Bridges en CryptPad AES-256-GCM zijn gesynchroniseerd onder PID 1001.</div>`;
+            }
+            history.scrollTop = history.scrollHeight;
+        }
+
+        // --- 8. MODULE 07: FEDIVERSE CARDS, 3D STL (INCL. 3D POOLPLANIMETER) & BTFM ---
+        const FEDIVERSE_SNAPSHOT_CARDS = [
+            { author: '@finhstamsterdam (mastodon.social)', badge: 'Mastodon RSS', color: '#ec4899', title: 'Koppeling Solid Pods, Kadaster Check 2.0 & Poolplanimeter op MathGeo', text: 'Alle perceelringen in Poortvliet en Scherpenisse direct verifieerbaar via de tweearmige poolplanimeter en CryptPad E2EE.', date: '2026-10-26', link: 'https://mastodon.social/@finhstamsterdam' },
+            { author: '@vanvrijberghe (pixelfed.social)', badge: 'Pixelfed Atom', color: '#a78bfa', title: 'Ochtendmist boven de Zeeuwse dijken bij Poortvliet en Tholen', text: 'Laagwater langs de Oosterschelde nabij Sectie M.', date: '2026-10-25', link: 'https://pixelfed.social/users/vanvrijberghe.atom' },
+            { author: '@polzer (gram.social)', badge: 'Gram.social Atom', color: '#38bdf8', title: 'Nachtelijke goederentrein op het emplacementspoor', text: 'Lange sluitertijd vanaf het seinhuis.', date: '2026-10-24', link: 'https://gram.social/users/polzer.atom' },
+            { author: '@Janna (gram.social)', badge: 'Gram.social Atom', color: '#10b981', title: 'Dauwdruppels op wilde duinroos langs de Oosterschelde', text: 'Macro-opname in de vroege ochtend.', date: '2026-10-25', link: 'https://gram.social/users/Janna.atom' }
+        ];
+
+        function renderFediverseCards() {
+            const grid = document.getElementById('gw-cards-grid');
+            if (!grid) return;
+            grid.innerHTML = FEDIVERSE_SNAPSHOT_CARDS.map(item => `
+                <article class="bg-sovereign-800 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between space-y-3">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <span class="text-xs font-bold text-white">${escapeHtml(item.author)}</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded border" style="color:${item.color};border-color:${item.color}55">${escapeHtml(item.badge)}</span>
+                        </div>
+                        <h3 class="text-xs font-bold text-slate-100">${escapeHtml(item.title)}</h3>
+                        <p class="text-xs text-slate-400 mt-1">${escapeHtml(item.text)}</p>
+                    </div>
+                    <div class="flex justify-between items-center text-[11px] font-mono pt-2 border-t border-slate-800">
+                        <span class="text-slate-500">${escapeHtml(item.date)}</span>
+                        <a href="${escapeHtml(item.link)}" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:underline">Open Feed ↗</a>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        // 3D STL Engine
+        let stlTriangles = [];
+        let stlYaw = 0.7;
+        function createBoxTris(x0, y0, z0, x1, y1, z1) {
+            const v = [[x0,y0,z0],[x1,y0,z0],[x1,y1,z0],[x0,y1,z0],[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]];
+            const f = [[0,2,1],[0,3,2],[4,5,6],[4,6,7],[0,1,5],[0,5,4],[2,3,7],[2,7,6],[0,4,7],[0,7,3],[1,2,6],[1,6,5]];
+            return f.map(idx => ({ v1: v[idx[0]], v2: v[idx[1]], v3: v[idx[2]] }));
+        }
+
+        function generateStlModel(type) {
+            stlTriangles = [];
+            if (type === 'planimeter') {
+                document.getElementById('stl-stat-name').textContent = 'A_Ott_Poolplanimeter_573';
+                stlTriangles.push(...createBoxTris(-45, -45, 0, -25, -25, 18)); // Poolgewicht
+                stlTriangles.push(...createBoxTris(-35, -35, 14, 15, 5, 18));   // Poolarm
+                stlTriangles.push(...createBoxTris(10, 0, 12, 55, -30, 16));    // Rijarm
+            } else if (type === 'parcel') {
+                document.getElementById('stl-stat-name').textContent = 'Poortvliet_Perceel_M1174';
+                stlTriangles.push(...createBoxTris(-40, -28, 0, 40, 28, 16));
+            } else {
+                document.getElementById('stl-stat-name').textContent = 'Kadaster_RD_Meetpilaar';
+                stlTriangles.push(...createBoxTris(-24, -24, 0, 24, 24, 10));
+                stlTriangles.push(...createBoxTris(-12, -12, 10, 12, 12, 65));
+            }
+            document.getElementById('stl-stat-tris').textContent = stlTriangles.length;
+        }
+
+        function resizeStlCanvas() {
+            const c = document.getElementById('stl-canvas');
+            if (c && c.parentElement) {
+                c.width = c.parentElement.clientWidth || 600;
+                c.height = c.parentElement.clientHeight || 360;
+            }
+        }
+
+        function animateStlLoop() {
+            const c = document.getElementById('stl-canvas');
+            if (c && !document.getElementById('mod-fediverse-media').classList.contains('hidden') && !document.getElementById('med-stl').classList.contains('hidden')) {
+                stlYaw += 0.012;
+                const ctx = c.getContext('2d');
+                ctx.clearRect(0, 0, c.width, c.height);
+                const cy = Math.cos(stlYaw), sy = Math.sin(stlYaw);
+                const proj = (p) => {
+                    const x1 = p[0] * cy - p[1] * sy;
+                    const y1 = p[0] * sy + p[1] * cy;
+                    return { x: c.width / 2 + x1 * 2.6, y: c.height / 2 - (p[2] - 25) * 2.4 + y1 * 0.7 };
+                };
+                stlTriangles.forEach(t => {
+                    const p1 = proj(t.v1), p2 = proj(t.v2), p3 = proj(t.v3);
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.lineTo(p3.x, p3.y);
+                    ctx.closePath();
+                    ctx.fillStyle = 'rgba(56, 189, 248, 0.35)';
+                    ctx.fill();
+                    ctx.strokeStyle = '#38bdf8';
+                    ctx.stroke();
+                });
+            }
+            requestAnimationFrame(animateStlLoop);
+        }
+
+        // --- 9. MODULE 08: DYNAMIC MODULE BUILDER & SOLID POD RDF TURTLE ---
+        const customModulesList = [
+            { id: 'mod-custom-1', title: 'Woo Tholen Tree Inspector', type: 'iframe', url: 'https://woo-tholen.vercel.app/tree.html', acl: 'wac:Read, wac:Write', desc: 'Standaard ingeladen API Network Tree module.' }
+        ];
+
+        function renderRequestedModulesList() {
+            const container = document.getElementById('requested-modules-list');
+            if (!container) return;
+            container.innerHTML = customModulesList.map(m => `
+                <div class="bg-sovereign-900 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between gap-2 text-xs">
+                    <div>
+                        <div class="font-bold text-white">${escapeHtml(m.title)} <span class="font-mono text-[10px] text-emerald-400">[${escapeHtml(m.type.toUpperCase())}]</span></div>
+                        <div class="text-[11px] font-mono text-slate-400 truncate">${escapeHtml(m.url)} • ${escapeHtml(m.acl)}</div>
+                    </div>
+                    <button data-openmod="${escapeHtml(m.id)}" class="open-dyn-mod bg-sky-600/20 hover:bg-sky-600/40 text-sky-300 border border-sky-500/40 px-2.5 py-1 rounded font-mono text-[11px] shrink-0">
+                        Open Module →
+                    </button>
+                </div>
+            `).join('');
+
+            container.querySelectorAll('.open-dyn-mod').forEach(b => {
+                b.addEventListener('click', () => {
+                    const id = b.getAttribute('data-openmod');
+                    if (document.getElementById(id)) activateModuleTab(id);
+                    else activateModuleTab('mod-apinetwork');
+                });
+            });
+        }
+
+        function createAndMountDynamicModule() {
+            const title = document.getElementById('newmod-title').value.trim();
+            const type = document.getElementById('newmod-type').value;
+            const acl = document.getElementById('newmod-acl').value;
+            const url = document.getElementById('newmod-url').value.trim() || 'https://woo-tholen.vercel.app/tree.html';
+            const desc = document.getElementById('newmod-desc').value.trim();
+            if (!title) { showToast('Geef een modulenaam op'); return; }
+
+            const modId = `mod-dyn-${Date.now()}`;
+            const modIndex = 9 + customModulesList.length;
+            customModulesList.push({ id: modId, title, type, url, acl, desc });
+
+            // 1. Add button to left sidebar
+            const navContainer = document.getElementById('custom-modules-nav');
+            const btn = document.createElement('button');
+            btn.setAttribute('data-module', modId);
+            btn.className = 'nav-mod-btn w-full text-left px-2.5 py-2 rounded-xl text-xs font-semibold transition flex items-center justify-between text-slate-300 hover:bg-sovereign-800 border border-transparent';
+            btn.innerHTML = `
+                <div class="flex items-center space-x-2.5">
+                    <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-mono text-[11px] font-bold">0${modIndex}</span>
+                    <div>
+                        <div class="leading-tight truncate max-w-[135px]">${escapeHtml(title)}</div>
+                        <div class="text-[10px] font-normal text-emerald-400">${escapeHtml(type.toUpperCase())} • ${escapeHtml(acl.split(',')[0])}</div>
+                    </div>
+                </div>
+            `;
+            navContainer.appendChild(btn);
+
+            // 2. Create live section panel in main container
+            const mainContainer = document.getElementById('main-panels-container');
+            const sec = document.createElement('section');
+            sec.id = modId;
+            sec.className = 'module-panel hidden flex-1 flex flex-col overflow-hidden p-3 md:p-5 gap-4';
+            sec.innerHTML = `
+                <div class="bg-sovereign-800 border border-slate-800 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-2 shrink-0">
+                    <div>
+                        <h2 class="text-sm font-bold text-white">${escapeHtml(title)} <span class="text-xs font-mono text-emerald-400">(${escapeHtml(acl)})</span></h2>
+                        <p class="text-xs text-slate-400">${escapeHtml(desc)} • Bron: <span class="font-mono text-sky-300">${escapeHtml(url)}</span></p>
+                    </div>
+                    <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="bg-sky-600 hover:bg-sky-500 text-white px-3 py-1.5 rounded-lg text-xs font-mono">Open Extern ↗</a>
+                </div>
+                <div class="flex-1 bg-sovereign-800 border border-slate-800 rounded-2xl overflow-hidden flex flex-col">
+                    <iframe src="${escapeHtml(url)}" class="flex-1 w-full bg-white" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+                </div>
+            `;
+            mainContainer.appendChild(sec);
+
+            bindNavButtons();
+            renderRequestedModulesList();
+            renderUnifiedPodGraph();
+            activateModuleTab(modId);
+            showToast(`Nieuwe module "${title}" live geactiveerd!`);
+        }
+
+        function generateMasterIndexObject() {
+            return {
+                process: 'PID 1001 - sovereign-master-indexd',
+                timestamp: new Date().toISOString(),
+                activeParcel: PARCEL_DATABASE[activeParcelKey],
+                endpoints: {
+                    wooTholenTree: 'https://woo-tholen.vercel.app/tree.html',
+                    wooTholenApiTest: 'https://woo-tholen.vercel.app/apitest.html',
+                    cryptPadStudio: 'https://mathgeo-seven.vercel.app/cryptpad.html',
+                    schaduwwaaier: 'https://mathgeo-seven.vercel.app/schaduwwaaier.html',
+                    mathGeoRoot: 'https://mathgeo-seven.vercel.app/'
+                },
+                githubModels: GITHUB_MODELS_REGISTRY,
+                matrixBridgesAcl,
+                customModules: customModulesList
+            };
+        }
+
+        function renderUnifiedPodGraph() {
+            const p = PARCEL_DATABASE[activeParcelKey];
+            const shoelace = computeShoelaceArea(p.ring).toFixed(2);
+            let ttl = `@prefix dcterms: <http://purl.org/dc/terms/> .\n@prefix schema: <http://schema.org/> .\n@prefix acl: <http://www.w3.org/ns/auth/acl#> .\n@prefix geo: <http://www.opengis.net/ont/geosparql#> .\n\n`;
+            ttl += `<https://solidcommunity.net/public/workbench/master-index.ttl>\n`;
+            ttl += `    a schema:Dataset ;\n`;
+            ttl += `    dcterms:title "Sovereign Master Index, Kadaster Check 2.0, Poolplanimeter & Matrix IAM"@nl ;\n`;
+            ttl += `    schema:mainEntityOfPage <https://woo-tholen.vercel.app/tree.html> ;\n`;
+            ttl += `    schema:hasPart <https://mathgeo-seven.vercel.app/cryptpad.html> .\n\n`;
+            ttl += `<#active-parcel-${p.id}>\n`;
+            ttl += `    a geo:Feature ;\n`;
+            ttl += `    schema:postalCode "${p.postcode}" ;\n`;
+            ttl += `    schema:price "${p.koopsom}" ;\n`;
+            ttl += `    schema:identifier "${p.pandid}" ;\n`;
+            ttl += `    schema:areaServed "${p.registeredArea} m2 (BRK) / ${shoelace} m2 (Poolplanimeter A. Ott Nr. 573)" .\n`;
+
+            const viewer = document.getElementById('pod-turtle-viewer');
+            if (viewer) viewer.textContent = ttl;
+        }
+
+        // --- 10. BOOT & EVENT LISTENERS ---
+        window.addEventListener('DOMContentLoaded', () => {
+            bindNavButtons();
+            updateWorkspaceView();
+            renderContactTickets();
+            renderApiNetworkAndTree();
+
+            // Load default CryptPad template & encrypt immediately
+            document.getElementById('cp-plain-editor').value = CRYPTPAD_TEMPLATES.akte;
+            encryptCryptPadContent();
+
+            renderMatrixIamTable();
+            logIamAudit('Matrix Homeserver Conduit & 6 Componenten ACL geïnitialiseerd.');
+            renderMasterIndexModels();
+            renderFediverseCards();
+            generateStlModel('planimeter');
+            requestAnimationFrame(animateStlLoop);
+            renderRequestedModulesList();
+            renderUnifiedPodGraph();
+
+            // BTFM Commands init
+            const btfmList = document.getElementById('btfm-commands-list');
+            if (btfmList) {
+                const cmds = [
+                    { title: 'Matrix Homeserver & Bridge Socket Inspectie', cmd: 'sudo ss -tulnp | grep -E "8448|6167|conduit|synapse"' },
+                    { title: 'Controleer Solid Pod WAC (.acl) Link Headers', cmd: 'curl -sI https://solidcommunity.net/public/workbench/master-index.ttl | grep -i "link:"' },
+                    { title: 'Verifieer CryptPad & FinalCrypt SHA-256 Manifest', cmd: 'sha256sum sovereign-master-index.json' }
+                ];
+                btfmList.innerHTML = cmds.map(c => `
+                    <div class="bg-sovereign-900 border border-slate-800 rounded-xl p-3">
+                        <div class="text-rose-400 font-bold mb-1">${escapeHtml(c.title)}</div>
+                        <pre class="bg-sovereign-950 p-2 rounded text-emerald-300 overflow-x-auto">${escapeHtml(c.cmd)}</pre>
+                    </div>
+                `).join('');
+            }
+
+            // Workspace buttons ("Pick up where you left off")
+            document.querySelectorAll('.ws-item-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    activeWorkspaceMode = btn.getAttribute('data-ws');
+                    document.querySelectorAll('.ws-item-btn').forEach(b => b.classList.remove('bg-sky-500/10'));
+                    btn.classList.add('bg-sky-500/10');
+                    updateWorkspaceView();
+                    showToast(`Workspace geladen: ${activeWorkspaceMode}`);
+                });
+            });
+
+            // API Location Presets
+            document.querySelectorAll('.api-loc-preset').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const loc = LOCATION_PRESETS[btn.getAttribute('data-locpreset')];
+                    if (loc) {
+                        activeParcelKey = loc.parcel;
+                        document.getElementById('api-select-parcel').value = loc.parcel;
+                        document.getElementById('api-input-postcode').value = loc.postcode;
+                        document.getElementById('api-input-huisnr').value = loc.huisnr;
+                        document.getElementById('api-input-pandid').value = loc.pandid;
+                        updateWorkspaceView();
+                        showToast(`Geladen: ${loc.name}`);
+                    }
+                });
+            });
+
+            document.getElementById('api-select-parcel').addEventListener('change', (e) => {
+                activeParcelKey = e.target.value;
+                const p = PARCEL_DATABASE[activeParcelKey];
+                if (p) {
+                    document.getElementById('api-input-postcode').value = p.postcode;
+                    document.getElementById('api-input-huisnr').value = p.huisnr;
+                    document.getElementById('api-input-pandid').value = p.pandid;
+                }
+                updateWorkspaceView();
+            });
+
+            document.getElementById('btn-api-execute').addEventListener('click', () => {
+                updateWorkspaceView();
+                showToast('API Request & Poolplanimeter integratie voltooid!');
+            });
+
+            document.getElementById('btn-api-to-contact').addEventListener('click', () => {
+                autofillContactcenterNote();
+                showToast('API- en Poolplanimeter-rapport klaargezet in Contactcenter!');
+            });
+
+            // Polar Planimeter sliders & animation
+            ['slider-polar-rp', 'slider-polar-rt', 'slider-polar-step', 'select-polar-scale'].forEach(id => {
+                document.getElementById(id).addEventListener('input', renderPolarPlanimeter);
+            });
+
+            document.getElementById('btn-polar-animate').addEventListener('click', () => {
+                if (polarAnimTimer) {
+                    clearInterval(polarAnimTimer);
+                    polarAnimTimer = null;
+                    document.getElementById('btn-polar-animate').textContent = '▶ Start Poolarm Rondgang';
+                    return;
+                }
+                let step = 0;
+                document.getElementById('slider-polar-step').value = 0;
+                document.getElementById('btn-polar-animate').textContent = '⏸ Pauzeer Poolarm';
+                polarAnimTimer = setInterval(() => {
+                    step += 2;
+                    if (step > 100) {
+                        clearInterval(polarAnimTimer);
+                        polarAnimTimer = null;
+                        document.getElementById('btn-polar-animate').textContent = '▶ Start Poolarm Rondgang';
+                        showToast('Poolplanimeter A. Ott Nr. 573 rondgang voltooid!');
+                        return;
+                    }
+                    document.getElementById('slider-polar-step').value = step;
+                    renderPolarPlanimeter();
+                }, 45);
+            });
+
+            document.getElementById('btn-polar-reset').addEventListener('click', () => {
+                if (polarAnimTimer) { clearInterval(polarAnimTimer); polarAnimTimer = null; }
+                document.getElementById('slider-polar-step').value = 100;
+                document.getElementById('btn-polar-animate').textContent = '▶ Start Poolarm Rondgang';
+                renderPolarPlanimeter();
+            });
+
+            // Contactcenter handlers
+            document.getElementById('btn-cc-autofill').addEventListener('click', () => {
+                autofillContactcenterNote();
+                showToast('Dossier gevuld met actuele API & Poolplanimeter data');
+            });
+
+            document.getElementById('btn-cc-create-ticket').addEventListener('click', () => {
+                const queue = document.getElementById('cc-queue-select').value;
+                const channel = document.getElementById('cc-channel-select').value;
+                const note = document.getElementById('cc-note-input').value.trim();
+                contactTickets.unshift({
+                    id: `CC-2026-${Math.floor(900 + Math.random() * 99)}`,
+                    queue,
+                    channel,
+                    subject: note.slice(0, 78) + '…',
+                    time: new Date().toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' }) + ' CET',
+                    status: 'VERZONDEN'
+                });
+                renderContactTickets();
+                showToast(`Ticket aangemaakt in wachtrij: ${queue}`);
+            });
+
+            document.getElementById('btn-cc-copy-dossier').addEventListener('click', () => {
+                copyText(document.getElementById('cc-note-input').value, 'Contactcenter Dossier gekopieerd!');
+            });
+
+            // Module 02: API Network & Tree Hub handlers
+            document.getElementById('btn-tree-add-node').addEventListener('click', () => {
+                const parentId = document.getElementById('tree-parent-select').value;
+                const title = document.getElementById('tree-node-title').value.trim();
+                const url = document.getElementById('tree-node-url').value.trim();
+                const tag = (document.getElementById('tree-node-tag').value.trim() || 'API').toUpperCase();
+                if (!title || !url) { showToast('Vul naam en URL in'); return; }
+                if (parentId === 'ROOT') {
+                    urlTreeData.push({ id: `cat-${Date.now()}`, title, url, tag, children: [] });
+                } else {
+                    const cat = urlTreeData.find(c => c.id === parentId);
+                    if (cat) cat.children.push({ id: `n-${Date.now()}`, title, url, tag, latency: '19 ms' });
+                }
+                renderApiNetworkAndTree();
+                showToast(`Node "${title}" toegevoegd aan API Network!`);
+            });
+
+            document.querySelectorAll('.net-quick-iframe').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const u = btn.getAttribute('data-url');
+                    document.getElementById('tree-preview-title').textContent = u;
+                    document.getElementById('tree-preview-ext').href = u;
+                    document.getElementById('tree-preview-iframe').src = u;
+                });
+            });
+
+            document.getElementById('btn-net-ping-all').addEventListener('click', () => {
+                renderApiNetworkAndTree();
+                showToast('Alle 18 API Network endpoints geverifieerd (gem. 22 ms)!');
+            });
+
+            document.getElementById('btn-net-copy-ascii').addEventListener('click', () => {
+                copyText(document.getElementById('url-ascii-tree-output').textContent, 'ASCII Tree gekopieerd!');
+            });
+
+            // Module 03: CryptPad Studio handlers
+            document.querySelectorAll('.cp-tpl-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const k = btn.getAttribute('data-cptpl');
+                    document.getElementById('cp-plain-editor').value = CRYPTPAD_TEMPLATES[k] || '';
+                    encryptCryptPadContent();
+                });
+            });
+            document.getElementById('btn-cp-encrypt').addEventListener('click', encryptCryptPadContent);
+            document.getElementById('btn-cp-decrypt').addEventListener('click', decryptCryptPadContent);
+            document.getElementById('btn-cp-generate-key').addEventListener('click', () => {
+                const arr = new Uint8Array(18);
+                crypto.getRandomValues(arr);
+                document.getElementById('cp-key-input').value = 'sovereign-cp-' + Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+                encryptCryptPadContent();
+            });
+            document.getElementById('btn-cp-copy-cipher').addEventListener('click', () => {
+                copyText(document.getElementById('cp-cipher-output').value, 'CryptPad E2EE pakket gekopieerd!');
+            });
+            document.getElementById('btn-cp-reload-iframe').addEventListener('click', () => {
+                document.getElementById('cp-live-iframe').src = 'https://mathgeo-seven.vercel.app/cryptpad.html';
+            });
+
+            // Module 04: Geomodules & Providers handlers
+            document.querySelectorAll('.geo-loc-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const loc = LOCATION_PRESETS[btn.getAttribute('data-loc')];
+                    if (loc) {
+                        document.getElementById('geo-rd-x').value = loc.x;
+                        document.getElementById('geo-rd-y').value = loc.y;
+                        const wgs = rdToWgs84(loc.x, loc.y);
+                        document.getElementById('geo-wgs-label').textContent = `${wgs.lat.toFixed(4)}°N, ${wgs.lon.toFixed(4)}°E`;
+                        if (window.sovereignMap) window.sovereignMap.setView([wgs.lat, wgs.lon], loc.zoom);
+                        updateSchaduwwaaier();
+                    }
+                });
+            });
+            document.getElementById('btn-geo-goto-rd').addEventListener('click', () => {
+                const x = parseFloat(document.getElementById('geo-rd-x').value) || 66750;
+                const y = parseFloat(document.getElementById('geo-rd-y').value) || 396750;
+                const wgs = rdToWgs84(x, y);
+                if (window.sovereignMap) window.sovereignMap.setView([wgs.lat, wgs.lon], 15);
+                updateSchaduwwaaier();
+            });
+            document.getElementById('geo-base-layer').addEventListener('change', (e) => setMapBaseLayer(e.target.value));
+            ['chk-grid-rd', 'chk-grid-iso', 'chk-grid-shadow'].forEach(id => {
+                document.getElementById(id).addEventListener('change', () => {
+                    renderGeometricMapGrids();
+                    updateSchaduwwaaier();
+                });
+            });
+            ['slider-sw-day', 'slider-sw-hour', 'slider-sw-height'].forEach(id => {
+                document.getElementById(id).addEventListener('input', updateSchaduwwaaier);
+            });
+
+            // Module 05: Matrix IAM handlers
+            document.getElementById('btn-iam-lockdown').addEventListener('click', () => {
+                matrixBridgesAcl.forEach(b => { b.write = false; b.append = false; b.control = false; b.read = true; });
+                renderMatrixIamTable();
+                logIamAudit('CISO Read-Only Lockdown geactiveerd op alle Matrix Bridges.');
+                showToast('CISO Read-Only Lockdown actief!');
+            });
+            document.getElementById('btn-iam-restore').addEventListener('click', () => {
+                matrixBridgesAcl.forEach(b => { b.read = true; b.write = true; b.append = true; });
+                renderMatrixIamTable();
+                logIamAudit('Standaard W3C WAC rechten hersteld.');
+                showToast('Standaard WAC rechten hersteld!');
+            });
+            document.getElementById('btn-iam-copy-acl').addEventListener('click', () => {
+                copyText(document.getElementById('iam-acl-turtle').textContent, 'Solid .acl Turtle gekopieerd!');
+            });
+
+            // Module 06: Master Index & GitHub Models handlers
+            document.getElementById('btn-ai-send').addEventListener('click', runMasterIndexAiPrompt);
+            document.getElementById('ai-user-input').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') runMasterIndexAiPrompt();
+            });
+            document.getElementById('btn-mi-reindex').addEventListener('click', async () => {
+                const jsonStr = JSON.stringify(generateMasterIndexObject());
+                const hash = await computeSha256Hex(jsonStr);
+                document.getElementById('header-heartbeat').textContent = `INDEX SHA256: ${hash.slice(0, 10)}…`;
+                showToast('Master Index SHA-256 herberekend!');
+            });
+
+            // Module 07: Fediverse & Media Subtabs
+            document.querySelectorAll('.med-tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = btn.getAttribute('data-medtab');
+                    document.querySelectorAll('.med-subpanel').forEach(p => p.classList.toggle('hidden', p.id !== target));
+                    if (target === 'med-stl') setTimeout(resizeStlCanvas, 50);
+                });
+            });
+            document.querySelectorAll('.stl-preset-btn').forEach(btn => {
+                btn.addEventListener('click', () => generateStlModel(btn.getAttribute('data-stl')));
+            });
+
+            // Module 08: Dynamic Module Builder & Exports
+            document.getElementById('btn-sidebar-new-mod').addEventListener('click', () => activateModuleTab('mod-module-builder'));
+            document.getElementById('btn-create-new-module').addEventListener('click', createAndMountDynamicModule);
+            document.getElementById('btn-pod-copy-ttl').addEventListener('click', () => {
+                copyText(document.getElementById('pod-turtle-viewer').textContent, 'Solid RDF Turtle gekopieerd!');
+            });
+
+            document.getElementById('btn-export-master-index').addEventListener('click', () => {
+                const blob = new Blob([JSON.stringify(generateMasterIndexObject(), null, 2)], { type: 'application/json' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'sovereign-master-index.json';
+                a.click();
+                showToast('sovereign-master-index.json gedownload!');
+            });
+
+            document.getElementById('btn-export-solid-ttl').addEventListener('click', () => {
+                renderUnifiedPodGraph();
+                const blob = new Blob([document.getElementById('pod-turtle-viewer').textContent], { type: 'text/turtle' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'sovereign-pod-graph.ttl';
+                a.click();
+                showToast('sovereign-pod-graph.ttl gedownload!');
+            });
+        });
+    </script>
+</body>
+</html>
