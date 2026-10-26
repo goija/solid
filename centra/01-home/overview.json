@@ -1,0 +1,6 @@
+{
+  "system": "SYSTEM ONLINE // PLATTEWEG 3-5-7 (E 108 -> E 1552), BIBLIOTHEEK & RAPPORT-EXPORT",
+  "themes": ["helder", "donker", "daglicht", "nachtlicht"],
+  "iframes": 0,
+  "centra": ["home", "beheer", "juridisch", "geo", "tijd", "kennis", "reken", "bib"]
+}

@@ -1,0 +1,13 @@
+@prefix dc: <http://purl.org/dc/terms/>.
+@prefix geo: <http://www.opengis.net/ont/geosparql#>.
+
+<#perceel-E108>
+    dc:identifier "SPS00-E-108";
+    dc:title "Scherpenisse Sectie E Nr. 108 (Historisch 1926 — Platteweg)";
+    geo:asWKT "POLYGON((64812.400 395418.200, 64848.900 395434.600, 64865.200 395392.100, 64829.100 395376.400, 64812.400 395418.200))"^^geo:wktLiteral.
+
+<#perceel-E1552>
+    dc:identifier "SPS00-E-1552";
+    dc:title "Scherpenisse Sectie E Nr. 1552 (Actueel BRK — Platteweg 3-5-7)";
+    dc:replaces <#perceel-E108>;
+    geo:asWKT "POLYGON((64815.120 395416.850, 64847.450 395431.220, 64861.880 395394.600, 64830.400 395380.150, 64815.120 395416.850))"^^geo:wktLiteral.

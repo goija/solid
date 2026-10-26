@@ -1,0 +1,19 @@
+@prefix dc: <http://purl.org/dc/terms/>.
+@prefix schema: <http://schema.org/>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+<#feed-vanvrijberghe> a schema:DataFeed ;
+    dc:title "Pixelfed @vanvrijberghe" ;
+    schema:url <https://pixelfed.social/users/vanvrijberghe.atom> .
+
+<#feed-polzer> a schema:DataFeed ;
+    dc:title "Gram.social @polzer" ;
+    schema:url <https://gram.social/users/polzer.atom> .
+
+<#feed-janna> a schema:DataFeed ;
+    dc:title "Gram.social @Janna" ;
+    schema:url <https://gram.social/users/Janna.atom> .
+
+<#feed-finhstamsterdam> a schema:DataFeed ;
+    dc:title "Mastodon @finhstamsterdam" ;
+    schema:url <https://mastodon.social/@finhstamsterdam.rss> .

@@ -1,0 +1,8 @@
+@prefix dc: <http://purl.org/dc/terms/>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+<#PVT00-M-1172> dc:identifier "PVT00-M-1172" ; dc:extent "365"^^xsd:integer ; dc:date "2008-06-04" .
+<#PVT00-M-1173> dc:identifier "PVT00-M-1173" ; dc:extent "810"^^xsd:integer ; dc:date "1999-11-15" .
+<#PVT00-M-1174> dc:identifier "PVT00-M-1174" ; dc:extent "11990"^^xsd:integer ; dc:date "2015-02-13" .
+<#PVT00-M-1178> dc:identifier "PVT00-M-1178" ; dc:extent "10900"^^xsd:integer ; dc:date "1999-11-09" .
+<#PVT00-M-1180> dc:identifier "PVT00-M-1180" ; dc:extent "14230"^^xsd:integer ; dc:date "2024-06-17" .
