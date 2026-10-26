@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GOIJA / SOLID // PDOK & OGC API Tester + Vector Workbench</title>
+  <title>GOIJA / SOLID // PDOK & OGC API Tester + Solid Pod & WebRTC DataChannel</title>
   <style>
     :root {
       --purple: #38bdf8;
@@ -18,7 +18,6 @@
       --green: #34d399;
       --amber: #fbbf24;
       --red: #f87171;
-      --blue: #60a5fa;
       --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -41,7 +40,7 @@
       border-bottom: 1px solid var(--border);
     }
     .brand { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    h1 { font-size: 1.25rem; display: flex; align-items: center; gap: 10px; color: var(--purple); font-family: var(--mono); }
+    h1 { font-size: 1.15rem; display: flex; align-items: center; gap: 10px; color: var(--purple); font-family: var(--mono); }
     h1 .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
     .tag {
       font-size: .68rem;
@@ -67,7 +66,7 @@
       border: 1px solid var(--border);
     }
     .nav-links a:hover { border-color: var(--purple); color: var(--purple); }
-    .desc { color: var(--muted); font-size: .82rem; margin-bottom: 16px; font-family: var(--mono); }
+    .desc { color: var(--muted); font-size: .8rem; margin-bottom: 14px; font-family: var(--mono); }
     .panel {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -84,19 +83,20 @@
       font-weight: 700;
       font-family: var(--mono);
     }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
     label { font-size: .7rem; color: var(--muted); display: block; margin-bottom: 4px; font-weight: 600; font-family: var(--mono); }
-    input, select {
+    input, select, textarea {
       width: 100%;
       padding: 8px 10px;
       border: 1px solid var(--border);
       border-radius: 6px;
-      font-size: .83rem;
+      font-size: .8rem;
       background: var(--surface-alt);
       color: var(--text);
       font-family: inherit;
     }
-    input:focus, select:focus { outline: 2px solid var(--purple); outline-offset: -1px; }
+    textarea { font-family: var(--mono); font-size: .72rem; resize: vertical; }
+    input:focus, select:focus, textarea:focus { outline: 2px solid var(--purple); outline-offset: -1px; }
     input.mono { font-family: var(--mono); font-size: .75rem; }
     button {
       background: var(--purple-dark);
@@ -104,7 +104,7 @@
       border: none;
       border-radius: 6px;
       padding: 8px 14px;
-      font-size: .82rem;
+      font-size: .78rem;
       font-weight: 600;
       cursor: pointer;
       font-family: var(--mono);
@@ -116,11 +116,21 @@
     button.sec { background: rgba(56, 189, 248, 0.12); color: var(--purple); border: 1px solid rgba(56, 189, 248, 0.3); }
     button.sec.active { background: var(--purple); color: #0f172a; font-weight: 700; }
     button.ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
-    button.preset { background: rgba(251, 191, 36, 0.12); color: var(--amber); border: 1px solid rgba(251, 191, 36, 0.35); font-size: .75rem; padding: 6px 10px; }
+    button.preset { background: rgba(251, 191, 36, 0.12); color: var(--amber); border: 1px solid rgba(251, 191, 36, 0.35); font-size: .73rem; padding: 6px 10px; }
     button.preset:hover { background: var(--amber); color: #0f172a; }
+    button.rtc-btn { background: rgba(52, 211, 153, 0.16); color: var(--green); border: 1px solid rgba(52, 211, 153, 0.4); }
+    button.rtc-btn:hover { background: var(--green); color: #0f172a; }
     .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
-    .urlbar { display: flex; gap: 8px; align-items: stretch; margin-top: 12px; }
-    .urlbar input { font-family: var(--mono); font-size: .73rem; background: var(--surface-alt); color: var(--green); border: 1px solid var(--border); flex: 1; }
+    .urlbar { display: flex; gap: 8px; align-items: stretch; margin-top: 12px; flex-wrap: wrap; }
+    .urlbar input {
+      font-family: var(--mono);
+      font-size: .74rem;
+      background: var(--surface-alt);
+      color: var(--green);
+      border: 1px solid var(--purple);
+      flex: 1;
+      min-width: 280px;
+    }
     .status { font-size: .8rem; margin-top: 10px; min-height: 1.3em; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; font-family: var(--mono); }
     .status.ok { color: var(--green); }
     .status.err { color: var(--red); }
@@ -132,7 +142,7 @@
       border: 1px solid var(--border);
       background: var(--surface-alt);
       cursor: pointer;
-      font-size: .8rem;
+      font-size: .78rem;
       font-weight: 600;
       color: var(--muted);
       font-family: var(--mono);
@@ -141,7 +151,7 @@
     .page { display: none; }
     .page.active { display: block; }
     .scroll { overflow: auto; max-height: 460px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-alt); }
-    table { width: 100%; border-collapse: collapse; font-size: .76rem; font-family: var(--mono); }
+    table { width: 100%; border-collapse: collapse; font-size: .75rem; font-family: var(--mono); }
     thead th {
       position: sticky;
       top: 0;
@@ -159,9 +169,9 @@
     td { padding: 7px 9px; border-bottom: 1px solid #1e293b; white-space: nowrap; color: var(--text); }
     tbody tr { cursor: pointer; }
     tbody tr:hover { background: rgba(56, 189, 248, 0.08); }
-    tbody tr.sel { background: rgba(56, 189, 248, 0.2); }
+    tbody tr.sel { background: rgba(56, 189, 248, 0.22); }
     td.num { text-align: right; font-variant-numeric: tabular-nums; color: var(--green); }
-    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(235px, 1fr)); gap: 10px; }
     .card {
       background: var(--surface-alt);
       border: 1px solid var(--border);
@@ -170,11 +180,11 @@
       cursor: pointer;
       transition: transform .15s, border-color .15s;
     }
-    .card:hover { transform: translateY(-2px); border-color: var(--purple); box-shadow: 0 4px 12px rgba(56, 189, 248, .12); }
-    .card h3 { font-size: .84rem; margin-bottom: 5px; color: var(--purple); font-family: var(--mono); }
-    .card p { font-size: .72rem; color: var(--muted); line-height: 1.4; }
+    .card:hover, .card.active-card { transform: translateY(-2px); border-color: var(--purple); box-shadow: 0 4px 12px rgba(56, 189, 248, .15); }
+    .card h3 { font-size: .83rem; margin-bottom: 5px; color: var(--purple); font-family: var(--mono); }
+    .card p { font-size: .71rem; color: var(--muted); line-height: 1.4; }
     .card .provider {
-      font-size: .65rem;
+      font-size: .64rem;
       color: var(--amber);
       background: rgba(251, 191, 36, 0.12);
       padding: 2px 7px;
@@ -186,8 +196,15 @@
     #mapwrap { position: relative; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
     svg#map { width: 100%; height: 480px; background: #090d16; display: block; cursor: grab; touch-action: none; }
     svg#map.drag { cursor: grabbing; }
-    .poly { fill: var(--purple); fill-opacity: .18; stroke: var(--purple); stroke-width: 1.2; }
-    .poly:hover, .poly.hl { fill: var(--amber); fill-opacity: .45; stroke: var(--amber); vector-effect: non-scaling-stroke; }
+    .poly { fill: var(--purple); fill-opacity: .18; stroke: var(--purple); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+    .line-feat { fill: none; stroke: #34d399; stroke-width: 2.2; vector-effect: non-scaling-stroke; }
+    .pt-feat { fill: var(--amber); stroke: #090d16; stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+    .poly:hover, .poly.hl, .line-feat:hover, .line-feat.hl, .pt-feat:hover, .pt-feat.hl {
+      fill: var(--amber);
+      fill-opacity: .55;
+      stroke: var(--amber);
+      stroke-width: 2.5;
+    }
     .plabel {
       font-size: 10px;
       font-weight: 700;
@@ -212,7 +229,7 @@
       border-radius: 6px;
       display: none;
       z-index: 5;
-      max-width: 280px;
+      max-width: 300px;
       line-height: 1.4;
       font-family: var(--mono);
     }
@@ -224,12 +241,12 @@
       border: 1px solid var(--border);
       font-size: .73rem;
       overflow: auto;
-      max-height: 500px;
+      max-height: 440px;
       font-family: var(--mono);
       white-space: pre-wrap;
       word-break: break-word;
     }
-    .empty { color: var(--muted); font-size: .83rem; padding: 16px 2px; text-align: center; font-family: var(--mono); }
+    .empty { color: var(--muted); font-size: .82rem; padding: 16px 2px; text-align: center; font-family: var(--mono); }
     .hint { font-size: .72rem; color: var(--muted); font-family: var(--mono); }
     .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
     .filter-chip {
@@ -245,6 +262,60 @@
     .filter-chip.active { background: var(--purple); color: #0f172a; border-color: var(--purple); font-weight: 700; }
     dl dt { color: var(--amber); font-family: var(--mono); font-size: .75rem; }
     dl dd { color: var(--text); font-family: var(--mono); font-size: .78rem; }
+
+    /* Pipe & WebRTC cockpit styles */
+    .pipe-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      font-family: var(--mono);
+      font-size: .73rem;
+    }
+    .pipe-node {
+      padding: 5px 10px;
+      border-radius: 5px;
+      border: 1px solid var(--purple);
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pipe-arrow { color: var(--amber); font-weight: 700; }
+    .rtc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 12px; }
+    .rtc-box {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .rtc-box h3 {
+      font-size: .76rem;
+      color: var(--purple);
+      font-family: var(--mono);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .badge-state {
+      font-family: var(--mono);
+      font-size: .7rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(248, 113, 113, 0.15);
+      color: var(--red);
+      border: 1px solid var(--red);
+    }
+    .badge-state.open {
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--green);
+      border-color: var(--green);
+    }
   </style>
 </head>
 <body>
@@ -252,12 +323,12 @@
 <header>
   <div class="brand">
     <h1><span class="dot"></span>SOVEREIGN PDOK &amp; SOLID OGC API TESTER</h1>
-    <span class="tag">EPSG:28992 // 0% Iframes</span>
-    <span class="tag">Platteweg 3-5-7 (E 108 → E 1552)</span>
+    <span class="tag">CORS-FIXED // 0% Iframes</span>
+    <span class="tag">SOLID POD + WEBRTC DATACHANNEL</span>
   </div>
   <nav class="nav-links">
     <a href="index.html">🏠 Workbench</a>
-    <a href="tree.html">🌳 Repository Tree</a>
+    <a href="tree.html">🌳 Repository &amp; API Tree</a>
     <a href="tree.json">📜 tree.json</a>
     <a href="centra/04-geocentrum/index.html">🌀 Geocentrum</a>
     <a href="filebeheer/index.html">📂 Filebeheer</a>
@@ -265,7 +336,7 @@
 </header>
 
 <div class="desc">
-  Status: ● SYSTEM ONLINE // Directe OGC API Features &amp; Solid Pod Inspectie · Kadastrale Percelen (BRK), BAG, BGT, AHN4 &amp; Zeeland Dossier Presets
+  Status: ● SYSTEM ONLINE // Gevalideerde PDOK OGC API Endpoints + Solid Pod VFS + Unix Stream Pipes + WebRTC P2P DataChannel Transceiver
 </div>
 
 <!-- ═══ SOVEREIGN DOSSIER PRESETS & LOCAL VFS INSPECTOR ═══ -->
@@ -275,7 +346,8 @@
     <button class="preset" id="preScherpenisse">📍 Scherpenisse E 1552 / E 108 (Platteweg 3-5-7)</button>
     <button class="preset" id="prePoortvlietM">📍 Poortvliet Sectie M (1172–1180)</button>
     <button class="preset" id="prePoortvlietN">📍 Poortvliet N 1316</button>
-    <button class="preset" id="preSpeelmansplaten">📍 Speelmansplaten Sectie K</button>
+    <button class="preset" id="preRwsWegen">🛣️ RWS Weggegevens (Rijkswegen)</button>
+    <button class="preset" id="preRdPunten">📐 Kadaster RD-Info (Kernnet Punten)</button>
     <button class="sec" onclick="loadLocalFile('tree.json')">📦 Laad tree.json</button>
     <button class="sec" onclick="loadLocalFile('json/manifest-tree.json')">📦 manifest-tree.json</button>
     <button class="sec" onclick="loadLocalFile('json/scherpenisse-e108-e1552.json')">⚖️ Dossier E108→E1552</button>
@@ -287,109 +359,123 @@
 
 <!-- ═══ DATASET CATALOG ═══ -->
 <div class="panel">
-  <h2>📦 PDOK OGC API Datasets Catalogus</h2>
+  <h2>📦 Gevalideerde PDOK OGC API Datasets (Live Endpoint Discovery)</h2>
   <div class="filter-bar" id="filterBar">
     <span class="filter-chip active" data-provider="all">Alle</span>
     <span class="filter-chip" data-provider="kadaster">Kadaster</span>
     <span class="filter-chip" data-provider="rws">Rijkswaterstaat</span>
-    <span class="filter-chip" data-provider="rvo">RVO</span>
-    <span class="filter-chip" data-provider="bzk">BZK</span>
-    <span class="filter-chip" data-provider="ahn">AHN</span>
-    <span class="filter-chip" data-provider="other">Waterschap &amp; Overig</span>
+    <span class="filter-chip" data-provider="bgt">BGT / LV</span>
+    <span class="filter-chip" data-provider="rvo">RVO / Natuur</span>
+    <span class="filter-chip" data-provider="tno">TNO / BRO</span>
   </div>
-  <div class="cards" id="datasetCards">
-    <div class="empty">Laden van dataset catalogus...</div>
-  </div>
+  <div class="cards" id="datasetCards"></div>
 </div>
 
 <!-- ═══ QUERY PANEL ═══ -->
 <div class="panel" id="queryPanel">
-  <h2>1️⃣ OGC API Query Instellingen</h2>
+  <h2>1️⃣ OGC API Service, Collectie &amp; CRS</h2>
   <div class="grid">
-    <div>
-      <label for="apiSelect">Dataset</label>
-      <select id="apiSelect"></select>
+    <div style="grid-column: span 2;">
+      <label for="baseUrlInput">OGC API Base URL (of kies een kaart hierboven — klik '🔄 Laad Collecties' bij eigen URL)</label>
+      <div style="display:flex;gap:6px">
+        <input id="baseUrlInput" class="mono" value="https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1">
+        <button id="btnDiscover" class="sec" title="Haal live collecties op van deze Base URL">🔄 Laad Collecties</button>
+      </div>
     </div>
     <div>
-      <label for="collSelect">Collectie</label>
+      <label for="collSelect">Collectie (Laag)</label>
       <select id="collSelect"></select>
     </div>
     <div>
       <label for="crsSelect">Coördinatenstelsel (CRS)</label>
       <select id="crsSelect">
         <option value="28992" selected>EPSG:28992 (RD New)</option>
-        <option value="4258">EPSG:4258 (ETRS89)</option>
         <option value="84">CRS84 (WGS84 Lon/Lat)</option>
+        <option value="4258">EPSG:4258 (ETRS89)</option>
+        <option value="none">Standaard (Geen CRS-filter meesturen)</option>
       </select>
     </div>
   </div>
 
-  <h2 style="margin-top:16px">2️⃣ Zoekmodus</h2>
+  <h2 style="margin-top:16px">2️⃣ Zoekmodus &amp; Filters</h2>
   <div class="row">
-    <button class="sec active" data-mode="bbox">📦 BBox (RD / CRS)</button>
-    <button class="sec" data-mode="coords">📍 Punt + Radius</button>
+    <button class="sec active" data-mode="bbox">📦 BBox (RD / WGS84)</button>
+    <button class="sec" data-mode="nofilter">🌐 Zonder BBox (Direct eerste N items)</button>
+    <button class="sec" data-mode="coords">📍 Punt + Radius (RD)</button>
+    <button class="sec" data-mode="location">🏠 PDOK Locatieserver Zoeken</button>
     <button class="sec" data-mode="id">🔢 Feature ID</button>
-    <button class="sec" data-mode="location">🏠 PDOK Locatieserver</button>
   </div>
 
   <div id="mode-bbox" class="page active">
     <div class="grid" style="margin-top:12px">
-      <div><label>min X (RD)</label><input type="number" id="bboxMinX" value="64450"></div>
-      <div><label>min Y (RD)</label><input type="number" id="bboxMinY" value="395750"></div>
-      <div><label>max X (RD)</label><input type="number" id="bboxMaxX" value="64650"></div>
-      <div><label>max Y (RD)</label><input type="number" id="bboxMaxY" value="395950"></div>
-      <div><label>Limit</label><input type="number" id="bboxLimit" value="25" min="1" max="200"></div>
+      <div><label>min X / min Lon</label><input type="number" step="any" id="bboxMinX" value="64450"></div>
+      <div><label>min Y / min Lat</label><input type="number" step="any" id="bboxMinY" value="395750"></div>
+      <div><label>max X / max Lon</label><input type="number" step="any" id="bboxMaxX" value="64650"></div>
+      <div><label>max Y / max Lat</label><input type="number" step="any" id="bboxMaxY" value="395950"></div>
+      <div><label>Limit (1–200)</label><input type="number" id="bboxLimit" value="25" min="1" max="200"></div>
+    </div>
+  </div>
+
+  <div id="mode-nofilter" class="page">
+    <div class="grid" style="margin-top:12px">
+      <div><label>Limit (Aantal items zonder BBox-filter — ideaal als er in Tholen geen rijksweg ligt)</label><input type="number" id="noFilterLimit" value="25" min="1" max="200"></div>
     </div>
   </div>
 
   <div id="mode-coords" class="page">
     <div class="grid" style="margin-top:12px">
-      <div><label>X / Lon</label><input type="text" id="coordX" value="64540" placeholder="64540"></div>
-      <div><label>Y / Lat</label><input type="text" id="coordY" value="395835" placeholder="395835"></div>
-      <div><label>Radius (m)</label><input type="number" id="coordRadius" value="120"></div>
-      <div><label>Limit</label><input type="number" id="coordLimit" value="15"></div>
+      <div><label>RD X</label><input type="text" id="coordX" value="64540"></div>
+      <div><label>RD Y</label><input type="text" id="coordY" value="395835"></div>
+      <div><label>Straal (m)</label><input type="number" id="coordRadius" value="150"></div>
+      <div><label>Limit</label><input type="number" id="coordLimit" value="25"></div>
     </div>
-    <div class="row" style="margin-top:10px"><button id="btnCoords">📍 Zoek rondom punt</button></div>
-  </div>
-
-  <div id="mode-id" class="page">
-    <div class="grid" style="margin-top:12px">
-      <div style="grid-column:span 2"><label>Feature ID</label><input id="idValue" class="mono" placeholder="Voer PDOK Feature UUID of Lokaal ID in"></div>
-    </div>
-    <div class="row" style="margin-top:10px"><button id="btnId">🔎 Lookup Feature</button></div>
+    <div class="row" style="margin-top:10px"><button id="btnCoords">📍 Bereken BBox &amp; Execute</button></div>
   </div>
 
   <div id="mode-location" class="page">
     <div class="row" style="margin-top:12px">
-      <input id="locationQuery" value="Platteweg Scherpenisse" placeholder="Adres of perceel (bijv. 'Platteweg Scherpenisse')" style="flex:1">
-      <button id="btnLocSearch">🔎 Zoek Locatie</button>
+      <input id="locationQuery" value="Platteweg Scherpenisse" placeholder="Adres, plaats of perceel (bijv. 'Platteweg Scherpenisse')" style="flex:1">
+      <button id="btnLocSearch">🔎 Zoek RD-locatie &amp; Execute</button>
     </div>
   </div>
 
-  <div class="row" style="margin-top:14px">
-    <button id="btnRun">▶ Execute OGC Query</button>
+  <div id="mode-id" class="page">
+    <div class="grid" style="margin-top:12px">
+      <div style="grid-column:span 2"><label>Feature ID (UUID of lokaal_id)</label><input id="idValue" class="mono" placeholder="Plak een Feature ID uit de resultatentabel"></div>
+    </div>
+    <div class="row" style="margin-top:10px"><button id="btnId">🔎 Lookup Feature</button></div>
+  </div>
+
+  <h2 style="margin-top:16px">3️⃣ Directe Request URL (Vrij bewerkbaar — plak hier elke gewenste URL)</h2>
+  <div class="urlbar">
+    <input id="urlDisplay" placeholder="Plak of bewerk hier rechtstreeks je volledige OGC API URL...">
+    <button id="btnRunDirect" title="Voer exact de URL uit die in het tekstveld staat">▶ Execute URL</button>
+    <button id="btnCopy" class="sec" title="Kopieer Request URL">⧉ Kopieer URL</button>
+  </div>
+
+  <div class="row" style="margin-top:12px">
+    <button id="btnRun">▶ Bouw URL &amp; Execute Query</button>
+    <button id="btnPipeAll" class="rtc-btn" title="Stuur geladen features direct door de Solid Pod & WebRTC Pijplijn">🚀 Pipe ➔ Pod + WebRTC TX</button>
     <button id="btnPrev" class="sec" disabled>◀ Prev</button>
     <button id="btnNext" class="sec" disabled>Next ▶</button>
     <span id="pgInfo" class="hint"></span>
   </div>
 
-  <div class="urlbar">
-    <input id="urlDisplay" readonly>
-    <button id="btnCopy" class="sec" title="Kopieer Request URL">⧉ Kopieer URL</button>
-  </div>
-  <div class="status" id="status"><span class="hint">Klaar voor OGC API request.</span></div>
+  <div class="status" id="status"><span class="hint">Gereed.</span></div>
 </div>
 
-<!-- ═══ RESULTS PANEL ═══ -->
+<!-- ═══ RESULTS & SOLID POD / WEBRTC PANEL ═══ -->
 <div class="panel" id="resultsPanel">
   <div class="tabs">
     <div class="tab active" data-page="res">📋 Tabel Resultaten</div>
     <div class="tab" data-page="map">🗺️ Native Vector Kaart (SVG)</div>
-    <div class="tab" data-page="detail">📄 Perceel / Feature Detail</div>
-    <div class="tab" data-page="code">💻 cURL / Python / Turtle</div>
+    <div class="tab" data-page="podrtc">📡 Solid Pod + Pipes + WebRTC Transceiver</div>
+    <div class="tab" data-page="detail">📄 Feature / Perceel Detail</div>
+    <div class="tab" data-page="code">💻 cURL / Python</div>
     <div class="tab" data-page="raw">📜 Raw JSON / RDF</div>
   </div>
 
+  <!-- TAB 1: TABEL -->
   <div class="page active" id="p-res">
     <div class="row" style="justify-content:space-between;margin-bottom:10px;margin-top:0">
       <span class="hint" id="resultMeta">Geen data geladen.</span>
@@ -404,9 +490,10 @@
         <tbody id="tbody"></tbody>
       </table>
     </div>
-    <div class="empty" id="emptyRes">Klik op "▶ Execute OGC Query" of kies een Dossier Preset hierboven.</div>
+    <div class="empty" id="emptyRes">Klik op "▶ Execute URL" of kies een Dossier Preset hierboven.</div>
   </div>
 
+  <!-- TAB 2: VECTOR KAART -->
   <div class="page" id="p-map">
     <div id="mapwrap">
       <svg id="map" xmlns="http://www.w3.org/2000/svg"></svg>
@@ -420,42 +507,206 @@
     </div>
   </div>
 
-  <div class="page" id="p-detail">
-    <div id="detailContent"><p class="empty">Selecteer een rij in de tabel of klik op een perceel op de kaart.</p></div>
+  <!-- TAB 3: SOLID POD + STREAM PIPES + WEBRTC DATACHANNEL TRANSCEIVER -->
+  <div class="page" id="p-podrtc">
+    <div class="pipe-bar">
+      <span style="color:var(--amber);font-weight:700">UNIX STREAM PIPE:</span>
+      <label class="pipe-node"><input type="checkbox" checked disabled style="width:auto"> 1. OGC-INGEST</label>
+      <span class="pipe-arrow">➔</span>
+      <label class="pipe-node"><input type="checkbox" id="pipeOptAudit" checked style="width:auto"> 2. SHOELACE-AUDIT (m²)</label>
+      <span class="pipe-arrow">➔</span>
+      <label class="pipe-node"><input type="checkbox" id="pipeOptTurtle" checked style="width:auto"> 3. GEOSPARQL (.ttl)</label>
+      <span class="pipe-arrow">➔</span>
+      <label class="pipe-node"><input type="checkbox" id="pipeOptPod" checked style="width:auto"> 4. SOLID-POD PUT</label>
+      <span class="pipe-arrow">➔</span>
+      <label class="pipe-node"><input type="checkbox" id="pipeOptRtc" checked style="width:auto"> 5. WEBRTC-TX (16KB Chunks)</label>
+      <button id="btnExecPipe" class="rtc-btn" style="margin-left:auto">▶ Run Volledige Pijplijn Nu</button>
+    </div>
+
+    <div class="rtc-grid">
+      <!-- Box 1: WebRTC Transceiver Control -->
+      <div class="rtc-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <h3>📡 WebRTC DataChannel Transceiver</h3>
+          <span id="rtcStateBadge" class="badge-state">CLOSED</span>
+        </div>
+        <p class="hint" style="margin-bottom:10px">
+          Gebruik <b>Dual-Peer Loopback</b> voor directe in-browser SCTP DataChannel transmissie (Zender ⇄ Ontvanger met SHA-256 controle) of koppel 2 aparte apparaten via Serverless SDP.
+        </p>
+        <div class="row" style="margin-top:0">
+          <button id="btnRtcLoopback" class="rtc-btn">⚡ Koppel Loopback Peers (Tx ⇄ Rx)</button>
+          <button id="btnRtcSendCurrent" class="sec">📤 Zend Huidige Features</button>
+          <button id="btnRtcPing" class="ghost">🔔 Test Ping Packet</button>
+        </div>
+        <div class="hint" id="rtcStatsBar" style="margin-top:10px;color:var(--green)">
+          TX: 0 B (0 pkts) | RX: 0 B (0 pkts)
+        </div>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:10px 0">
+        <h3>🤝 Handmatige Serverless P2P Handshake (Base64 SDP)</h3>
+        <div class="row" style="margin-top:6px">
+          <button id="btnSdpOffer" class="sec">1. Genereer Offer (Peer A)</button>
+          <button id="btnSdpAnswer" class="sec">2. Beantwoord Offer (Peer B)</button>
+          <button id="btnSdpFinalize" class="sec">3. Koppel Answer (Peer A)</button>
+        </div>
+        <textarea id="sdpText" rows="3" style="margin-top:8px" placeholder="Plak of kopieer hier de Base64 SDP Offer / Answer..."></textarea>
+      </div>
+
+      <!-- Box 2: Solid Pod Container Explorer -->
+      <div class="rtc-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <h3>🗄️ Sovereign Solid Pod Containers (solid://goija.pod)</h3>
+          <button id="btnClearPod" class="ghost" style="padding:3px 8px;font-size:.68rem">🗑️ Wis Pod Cache</button>
+        </div>
+        <div class="scroll" style="max-height:245px">
+          <table>
+            <thead>
+              <tr>
+                <th>Container / Resource</th>
+                <th>Type</th>
+                <th>Bytes</th>
+                <th>SHA-256</th>
+                <th>Actie</th>
+              </tr>
+            </thead>
+            <tbody id="podTableBody">
+              <tr><td colspan="5" class="empty">Nog geen resources in Solid Pod. Run de Pijplijn!</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="margin-top:14px">📜 Live Stream Pipe &amp; WebRTC Transceiver Telemetry Log</h2>
+    <pre id="rtcLog" style="max-height:220px">// Sovereign Pod & WebRTC Telemetry gereed...</pre>
   </div>
 
+  <!-- TAB 4: DETAIL -->
+  <div class="page" id="p-detail">
+    <div id="detailContent"><p class="empty">Selecteer een rij in de tabel of klik op een object op de kaart.</p></div>
+  </div>
+
+  <!-- TAB 5: CODE -->
   <div class="page" id="p-code">
     <h2 style="margin:0 0 8px">cURL Request</h2>
     <pre id="curlSnip">—</pre>
-    <h2 style="margin:14px 0 8px">Python (Requests / GeoJSON)</h2>
+    <h2 style="margin:14px 0 8px">Python (Requests)</h2>
     <pre id="pySnip">—</pre>
   </div>
 
+  <!-- TAB 6: RAW -->
   <div class="page" id="p-raw">
     <pre id="rawJson">// Geen data geladen...</pre>
   </div>
 </div>
 
-<script>
+<script type="module">
+import SovereignPodRTC from "./pod/sovereign-pod-rtc.js";
+
 (function() {
   "use strict";
 
   const ALL_DATASETS = [
-    {id:"brk-kadastrale-kaart",name:"Kadastrale Kaart (BRK v1)",provider:"kadaster",baseUrl:"https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1",colls:["perceel","bebouwing","nummeraanduidingreeks","openbareruimtenaam"],bbox:[64450,395750,64650,395950],desc:"Kadastrale percelen, grenzen, bebouwing & nummeraanduiding"},
-    {id:"brk-kadastrale-percelen",name:"Kadastrale Percelen (INSPIRE)",provider:"kadaster",baseUrl:"https://api.pdok.nl/kadaster/brk-kadastrale-percelen/ogc/v1",colls:["cadastralparcel"],bbox:[64450,395750,64650,395950],desc:"Geharmoniseerde kadastrale percelen (INSPIRE)"},
-    {id:"bag-ogc-v2",name:"BAG (Adressen & Gebouwen v2)",provider:"kadaster",baseUrl:"https://api.pdok.nl/kadaster/bag/ogc/v2",colls:["pand","verblijfsobject","ligplaats","standplaats","adres"],bbox:[64450,395750,64650,395950],desc:"Basisregistratie Adressen en Gebouwen (Platteweg 3-5-7)"},
-    {id:"bgt",name:"BGT (Grootschalige Topografie)",provider:"kadaster",baseUrl:"https://api.pdok.nl/bgt/ogc/v1",colls:["pand","wegdeel","waterdeel","ondersteunendwaterdeel","begroeidterreindeel","onbegroeidterreindeel"],bbox:[64450,395750,64650,395950],desc:"Grootschalige topografie: erfgrenzen, dijksloten, verharding"},
-    {id:"3d-basisvoorziening",name:"3D Basisvoorziening Gebouwen",provider:"kadaster",baseUrl:"https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1",colls:["basisbestand_gebouwen"],bbox:[64450,395750,64650,395950],desc:"3D gebouwmodellen LoD 2.2"},
-    {id:"ahn4",name:"AHN 4 (Actueel Hoogtebestand)",provider:"ahn",baseUrl:"https://api.pdok.nl/ahn/ogc/v1/ahn4",colls:["hoogte","ruwheid"],bbox:[64450,395750,64650,395950],desc:"Digitale hoogtemodellen Nederland"},
-    {id:"rws-vervoersnetwerken-wegen",name:"Vervoersnetwerken - Wegen",provider:"rws",baseUrl:"https://api.pdok.nl/rws/vervoersnetwerken-wegen/ogc/v1",colls:["netwerk","knooppunt","node"],bbox:[64000,395000,68000,398000],desc:"Rijkswaterstaat wegen en netwerken"},
-    {id:"rws-vervoersnetwerken-binnenwateren",name:"Vervoersnetwerken - Binnenwateren",provider:"rws",baseUrl:"https://api.pdok.nl/rws/vervoersnetwerken-binnenwateren/ogc/v1",colls:["netwerk","vaarwaterkilometerpaal"],bbox:[62000,390000,72000,400000],desc:"Vaarwegen, Oosterschelde & Schelde-Rijnverbinding"},
-    {id:"rvo-gsa-agrarisch-areaal",name:"GSA Agrarisch Areaal",provider:"rvo",baseUrl:"https://api.pdok.nl/rvo/gsa-agrarisch-areaal/ogc/v1",colls:["perceel"],bbox:[66000,396000,67260,397200],desc:"Agrarische percelen en gewaspercelen (Poortvliet)"},
-    {id:"rvo-rev",name:"REV (Register Externe Veiligheid)",provider:"rvo",baseUrl:"https://api.pdok.nl/rvo/rev/ogc/v1",colls:["seveso_inrichting"],bbox:[60000,390000,75000,405000],desc:"Externe veiligheidsrisico's & leidingstroken"},
-    {id:"waterschappen-hydrografie",name:"Waterschappen Hydrografie (INSPIRE)",provider:"other",baseUrl:"https://api.pdok.nl/waterschappen/hydrografie-inspire/ogc/v1",colls:["hydrography"],bbox:[64000,395000,68000,398000],desc:"Hydrologische objecten Waterschap Scheldestromen"},
-    {id:"waterschappen-keringen",name:"Waterschappen Waterkeringen (IMWA)",provider:"other",baseUrl:"https://api.pdok.nl/waterschappen/keringen-imwa/ogc/v1",colls:["waterkering"],bbox:[64000,395000,68000,398000],desc:"Waterkeringen en legger-objecten"},
-    {id:"brr-bestemmingsplannen",name:"BRR Bestemmingsplannen",provider:"bzk",baseUrl:"https://api.pdok.nl/brr/bestemmingsplannen/ogc/v1",colls:["bestemmingsplan"],bbox:[64450,395750,64650,395950],desc:"Gemeentelijke bestemmingsplannen (Tholen)"},
-    {id:"omgevingswet",name:"Omgevingswet Documenten",provider:"bzk",baseUrl:"https://api.pdok.nl/bzk/omgevingswet/ogc/v1",colls:["document"],bbox:[64450,395750,64650,395950],desc:"Omgevingswet besluiten en gebieden"},
-    {id:"cbs-gebiedsstukken",name:"CBS Gebiedsstukken",provider:"other",baseUrl:"https://api.pdok.nl/cbs/gebiedsstukken/ogc/v1",colls:["gebiedsstuk"],bbox:[60000,390000,75000,405000],desc:"CBS statistische gebieden en wijken"}
+    {
+      id: "brk-kadastrale-kaart",
+      name: "Kadastrale Kaart (BRK v1)",
+      provider: "kadaster",
+      baseUrl: "https://api.pdok.nl/kadaster/brk-kadastrale-kaart/ogc/v1",
+      colls: ["perceel", "kadastralegrens", "bebouwing", "nummeraanduidingreeks", "openbareruimtenaam"],
+      bbox: [64450, 395750, 64650, 395950],
+      crs: "28992",
+      desc: "Kadastrale percelen, kadastrale grenzen, bebouwing & nummeraanduiding"
+    },
+    {
+      id: "bag-ogc-v2",
+      name: "BAG (Adressen & Gebouwen v2)",
+      provider: "kadaster",
+      baseUrl: "https://api.pdok.nl/kadaster/bag/ogc/v2",
+      colls: ["pand", "verblijfsobject", "nummeraanduiding", "openbareruimte", "woonplaats", "ligplaats", "standplaats"],
+      bbox: [64450, 395750, 64650, 395950],
+      crs: "28992",
+      desc: "Basisregistratie Adressen en Gebouwen (Panden, Verblijfsobjecten, Bouwjaren)"
+    },
+    {
+      id: "bgt-lv",
+      name: "BGT (Grootschalige Topografie)",
+      provider: "bgt",
+      baseUrl: "https://api.pdok.nl/lv/bgt/ogc/v1",
+      colls: ["pand", "wegdeel", "waterdeel", "ondersteunendwaterdeel", "onbegroeidterreindeel", "begroeidterreindeel", "scheiding", "kunstwerkdeel"],
+      bbox: [64450, 395750, 64650, 395950],
+      crs: "28992",
+      desc: "Landelijke Voorziening BGT: panden, wegdelen, sloten, erfgrenzen & kunstwerken"
+    },
+    {
+      id: "rws-weggegevens",
+      name: "RWS Weggegevens (WEGGEG)",
+      provider: "rws",
+      baseUrl: "https://api.pdok.nl/rws/weggegevens/ogc/v1",
+      colls: ["wegvak_rijstroken", "maximum_snelheid"],
+      bbox: [78000, 388000, 86000, 396000],
+      crs: "28992",
+      desc: "Officiële RWS OGC API voor Rijkswegen: rijstroken en maximumsnelheden"
+    },
+    {
+      id: "rws-vaarwegmarkeringen",
+      name: "RWS Vaarwegmarkeringen NL",
+      provider: "rws",
+      baseUrl: "https://api.pdok.nl/rws/vaarwegmarkeringen-nederland/ogc/v1",
+      colls: ["vaarwegmarkering_drijvend", "vaarwegmarkering_vast"],
+      bbox: [60000, 390000, 75000, 402000],
+      crs: "28992",
+      desc: "Betonning, boeien en vaste vaarwegmarkeringen (Oosterschelde / RWS)"
+    },
+    {
+      id: "brk-bestuurlijke-gebieden",
+      name: "Bestuurlijke Gebieden (BRK)",
+      provider: "kadaster",
+      baseUrl: "https://api.pdok.nl/kadaster/brk-bestuurlijke-gebieden/ogc/v1",
+      colls: ["gemeentegebied", "provinciegebied", "landgebied"],
+      bbox: [60000, 390000, 75000, 405000],
+      crs: "28992",
+      desc: "Gemeentegrenzen (Gemeente Tholen), provinciegrenzen (Zeeland) en rijksgrens"
+    },
+    {
+      id: "kadaster-rdinfo",
+      name: "Kadaster RD-Info (Meetpunten)",
+      provider: "kadaster",
+      baseUrl: "https://api.pdok.nl/kadaster/rdinfo/ogc/v1",
+      colls: ["punten", "stations"],
+      bbox: [60000, 390000, 75000, 405000],
+      crs: "28992",
+      desc: "Rijksdriehoeksmeting (RD) kernnetpunten en GNSS-referentiestations"
+    },
+    {
+      id: "3d-basisvoorziening",
+      name: "3D Basisvoorziening Gebouwen",
+      provider: "kadaster",
+      baseUrl: "https://api.pdok.nl/kadaster/3d-basisvoorziening/ogc/v1",
+      colls: ["basisbestand_gebouwen"],
+      bbox: [64450, 395750, 64650, 395950],
+      crs: "28992",
+      desc: "3D gebouwmodellen (LoD 2.2) gekoppeld aan BAG en AHN"
+    },
+    {
+      id: "rvo-nationale-parken",
+      name: "Nationale Parken (RVO)",
+      provider: "rvo",
+      baseUrl: "https://api.pdok.nl/rvo/nationale-parken/ogc/v1",
+      colls: ["nationaleparken"],
+      bbox: [50000, 390000, 75000, 410000],
+      crs: "28992",
+      desc: "Begrenzing Nationale Parken (o.a. Nationaal Park Oosterschelde)"
+    },
+    {
+      id: "tno-bro-gm",
+      name: "BRO Grondwatermonitoring (TNO)",
+      provider: "tno",
+      baseUrl: "https://api.pdok.nl/tno/bro-grondwatermonitoring-in-samenhang-karakteristieken/ogc/v1",
+      colls: ["gm_gmw", "gm_gmw_monitoringtube", "gm_gld"],
+      bbox: [60000, 390000, 75000, 405000],
+      crs: "28992",
+      desc: "Basisregistratie Ondergrond: Grondwatermonitoringputten en peilbuizen"
+    }
   ];
 
   const CRS_URIS = {
@@ -467,23 +718,90 @@
   const S = {
     datasets: ALL_DATASETS,
     filteredDatasets: ALL_DATASETS,
-    currentDataset: null,
-    currentColl: null,
+    currentDataset: ALL_DATASETS[0],
+    currentColl: "perceel",
     crs: "28992",
     mode: "bbox",
     features: [],
     links: {},
     lastUrl: "",
-    lastCursor: null,
     isLoading: false
   };
 
   const $ = id => document.getElementById(id);
 
+  // Initialiseer Sovereign Solid Pod + WebRTC Engine
+  const podRtc = new SovereignPodRTC({
+    podUri: "solid://goija.pod/tholen-scherpenisse",
+    onLog: (line) => {
+      const el = $("rtcLog");
+      el.textContent = line + "\n" + el.textContent.slice(0, 12000);
+    },
+    onChannelState: (state, stats) => {
+      const badge = $("rtcStateBadge");
+      badge.textContent = state;
+      badge.classList.toggle("open", state === "OPEN");
+      $("rtcStatsBar").textContent = `TX: ${stats.txBytes.toLocaleString("nl-NL")} B (${stats.txPackets} pkts) | RX: ${stats.rxBytes.toLocaleString("nl-NL")} B (${stats.rxPackets} pkts)`;
+    },
+    onPodUpdate: (resources) => renderPodTable(resources),
+    onReceiveDataset: (geojson, meta) => {
+      if (Array.isArray(geojson.features) && geojson.features.length > 0) {
+        S.features = geojson.features;
+        $("rawJson").textContent = JSON.stringify(geojson, null, 2);
+        renderTable();
+        renderMap();
+        setStatus(`📡 WebRTC RX ➔ ${geojson.features.length} feature(s) live ontvangen uit DataChannel ("${meta.name}")!`, "ok");
+      }
+    }
+  });
+
+  function renderPodTable(resources) {
+    const tbody = $("podTableBody");
+    if (!resources.length) {
+      tbody.innerHTML = `<tr><td colspan="5" class="empty">Nog geen resources in Solid Pod. Run de Pijplijn!</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = "";
+    resources.forEach(r => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td title="${r.uri}">${r.container}<b>${r.name}</b></td>
+        <td>${r.contentType}</td>
+        <td class="num">${r.size.toLocaleString("nl-NL")}</td>
+        <td><code>${r.sha256.slice(0, 10)}…</code></td>
+        <td>
+          <button class="sec" style="padding:2px 7px;font-size:.68rem" data-act="inspect">🔎 View</button>
+          <button class="rtc-btn" style="padding:2px 7px;font-size:.68rem" data-act="tx">📤 TX</button>
+        </td>
+      `;
+      tr.querySelector('[data-act="inspect"]').onclick = (ev) => {
+        ev.stopPropagation();
+        $("rawJson").textContent = r.raw;
+        try {
+          const parsed = JSON.parse(r.raw);
+          if (Array.isArray(parsed.features)) {
+            S.features = parsed.features;
+            renderTable();
+            renderMap();
+          }
+        } catch (_) {}
+        switchTab("raw");
+      };
+      tr.querySelector('[data-act="tx"]').onclick = (ev) => {
+        ev.stopPropagation();
+        podRtc.transmitOverDataChannel(r.raw, r.name);
+      };
+      tbody.appendChild(tr);
+    });
+  }
+
   function init() {
     renderDatasetCards(ALL_DATASETS);
     setupEvents();
-    loadDataset(ALL_DATASETS[0]);
+    renderPodTable(podRtc.listAllResources());
+    selectDataset(ALL_DATASETS[0], false);
+    // Start standaard de in-browser WebRTC Loopback zodat de DataChannel direct OPEN staat
+    podRtc.connectLoopbackPair();
   }
 
   function renderDatasetCards(datasets) {
@@ -491,42 +809,28 @@
     container.innerHTML = "";
     datasets.forEach(ds => {
       const card = document.createElement("div");
-      card.className = "card";
+      card.className = "card" + (S.currentDataset && S.currentDataset.id === ds.id ? " active-card" : "");
+      card.dataset.id = ds.id;
       card.innerHTML = `
         <h3>${ds.name}</h3>
-        <p>${ds.desc || "Geen beschrijving"}</p>
+        <p>${ds.desc || ""}</p>
         <span class="provider">${ds.provider.toUpperCase()}</span>
-        <span style="font-size:.68rem;color:var(--muted);float:right;margin-top:6px;font-family:var(--mono)">${(ds.colls || []).length} lagen</span>
+        <span style="font-size:.68rem;color:var(--muted);float:right;margin-top:6px;font-family:var(--mono)">${(ds.colls || []).length} collecties</span>
       `;
-      card.onclick = () => loadDataset(ds);
+      card.onclick = () => selectDataset(ds, true);
       container.appendChild(card);
     });
   }
 
-  function loadDataset(dataset) {
+  async function selectDataset(dataset, autoExecute = false) {
     S.currentDataset = dataset;
-    S.currentColl = dataset.colls?.[0] || "items";
-    S.lastCursor = null;
+    document.querySelectorAll(".card").forEach(c => c.classList.toggle("active-card", c.dataset.id === dataset.id));
 
-    const apiSel = $("apiSelect");
-    apiSel.innerHTML = "";
-    S.datasets.forEach(d => {
-      const opt = document.createElement("option");
-      opt.value = d.id;
-      opt.textContent = d.name;
-      if (d.id === dataset.id) opt.selected = true;
-      apiSel.appendChild(opt);
-    });
-
-    const collSel = $("collSelect");
-    collSel.innerHTML = "";
-    (dataset.colls || []).forEach(c => {
-      const opt = document.createElement("option");
-      opt.value = c;
-      opt.textContent = c;
-      collSel.appendChild(opt);
-    });
-
+    $("baseUrlInput").value = dataset.baseUrl;
+    if (dataset.crs) {
+      S.crs = dataset.crs;
+      $("crsSelect").value = dataset.crs;
+    }
     if (dataset.bbox) {
       $("bboxMinX").value = dataset.bbox[0];
       $("bboxMinY").value = dataset.bbox[1];
@@ -534,8 +838,48 @@
       $("bboxMaxY").value = dataset.bbox[3];
     }
 
-    syncUrl();
-    setStatus(`✅ Dataset geselecteerd: ${dataset.name} (${S.currentColl})`, "ok");
+    populateCollectionsDropdown(dataset.colls || []);
+    S.currentColl = $("collSelect").value;
+    buildUrlFromControls();
+
+    discoverCollections(dataset.baseUrl, true).then(() => {
+      if (autoExecute) executeUrl($("urlDisplay").value);
+    });
+  }
+
+  function populateCollectionsDropdown(colls, keepCurrent = null) {
+    const collSel = $("collSelect");
+    collSel.innerHTML = "";
+    colls.forEach(c => {
+      const opt = document.createElement("option");
+      const id = typeof c === "string" ? c : c.id;
+      const title = typeof c === "string" ? c : (c.title ? `${c.id} (${c.title})` : c.id);
+      opt.value = id;
+      opt.textContent = title;
+      if (keepCurrent && id === keepCurrent) opt.selected = true;
+      collSel.appendChild(opt);
+    });
+    if (collSel.options.length > 0) {
+      S.currentColl = collSel.value;
+    }
+  }
+
+  async function discoverCollections(baseUrl, silent = false) {
+    const cleanBase = baseUrl.trim().replace(/\/+$/, "");
+    if (!silent) setStatus(`⏳ Collecties ophalen van ${cleanBase}/collections?f=json ...`, "info");
+    try {
+      const res = await fetch(`${cleanBase}/collections?f=json`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (Array.isArray(data.collections) && data.collections.length > 0) {
+        const currentVal = $("collSelect").value;
+        populateCollectionsDropdown(data.collections, currentVal);
+        buildUrlFromControls();
+        if (!silent) setStatus(`✅ ${data.collections.length} collectie(s) live geladen van endpoint!`, "ok");
+      }
+    } catch (err) {
+      if (!silent) setStatus(`⚠️ Kon /collections niet automatisch lezen (${err.message}). Gebruik handmatige URL of preset.`, "err");
+    }
   }
 
   function setupEvents() {
@@ -556,12 +900,92 @@
         document.querySelectorAll('[id^="mode-"]').forEach(p => p.classList.remove("active"));
         $(`mode-${btn.dataset.mode}`).classList.add("active");
         S.mode = btn.dataset.mode;
+        buildUrlFromControls();
       };
     });
 
-    $("btnRun").onclick = () => { S.lastCursor = null; executeQuery(); };
-    $("btnPrev").onclick = () => cursorQuery(S.links.prev);
-    $("btnNext").onclick = () => cursorQuery(S.links.next);
+    $("btnDiscover").onclick = () => discoverCollections($("baseUrlInput").value, false);
+    $("baseUrlInput").onchange = () => buildUrlFromControls();
+    $("collSelect").onchange = () => { S.currentColl = $("collSelect").value; buildUrlFromControls(); };
+    $("crsSelect").onchange = () => { S.crs = $("crsSelect").value; buildUrlFromControls(); };
+    ["bboxMinX", "bboxMinY", "bboxMaxX", "bboxMaxY", "bboxLimit", "noFilterLimit"].forEach(id => {
+      if ($(id)) $(id).oninput = buildUrlFromControls;
+    });
+
+    $("btnRun").onclick = () => {
+      buildUrlFromControls();
+      executeUrl($("urlDisplay").value);
+    };
+    $("btnRunDirect").onclick = () => {
+      executeUrl($("urlDisplay").value.trim());
+    };
+    $("urlDisplay").addEventListener("keydown", ev => {
+      if (ev.key === "Enter") {
+        ev.preventDefault();
+        executeUrl($("urlDisplay").value.trim());
+      }
+    });
+
+    // Pijplijn & WebRTC knoppen
+    const triggerPipeline = async () => {
+      if (!S.features.length) {
+        await executeUrl($("urlDisplay").value);
+      }
+      if (!S.features.length) {
+        setStatus("⚠️ Geen features geladen om door de pijplijn te sturen.", "err");
+        return;
+      }
+      switchTab("podrtc");
+      await podRtc.runPipeline(
+        S.features,
+        { collection: S.currentColl, url: S.lastUrl, crs: S.crs },
+        {
+          audit: $("pipeOptAudit").checked,
+          turtle: $("pipeOptTurtle").checked,
+          storePod: $("pipeOptPod").checked,
+          transmitRtc: $("pipeOptRtc").checked
+        }
+      );
+      setStatus(`🚀 Pijplijn voltooid: ${S.features.length} features opgeslagen in Solid Pod & verzonden over WebRTC DataChannel!`, "ok");
+    };
+
+    $("btnPipeAll").onclick = triggerPipeline;
+    $("btnExecPipe").onclick = triggerPipeline;
+    $("btnRtcLoopback").onclick = () => podRtc.connectLoopbackPair();
+    $("btnRtcSendCurrent").onclick = () => {
+      if (!S.features.length) { setStatus("⚠️ Laad eerst features voordat je verzendt", "err"); return; }
+      podRtc.transmitOverDataChannel({ type: "FeatureCollection", features: S.features }, `${S.currentColl}-direct.geojson`);
+    };
+    $("btnRtcPing").onclick = () => {
+      podRtc.transmitOverDataChannel({
+        type: "FeatureCollection",
+        ping: true,
+        timestamp: new Date().toISOString(),
+        features: S.features.slice(0, 3)
+      }, `ping-${Date.now()}.geojson`);
+    };
+    $("btnClearPod").onclick = () => {
+      localStorage.removeItem("sovereign_solid_pod_v1");
+      Object.values(podRtc.containers).forEach(m => m.clear());
+      renderPodTable([]);
+      podRtc.log("POD ➔ Lokale Solid Pod containers gewist.", "info");
+    };
+
+    // Handmatige SDP knoppen
+    $("btnSdpOffer").onclick = async () => {
+      $("sdpText").value = await podRtc.createManualOffer();
+    };
+    $("btnSdpAnswer").onclick = async () => {
+      if (!$("sdpText").value.trim()) { setStatus("❌ Plak eerst een SDP Offer in het tekstvak", "err"); return; }
+      $("sdpText").value = await podRtc.acceptManualOfferAndCreateAnswer($("sdpText").value);
+    };
+    $("btnSdpFinalize").onclick = async () => {
+      if (!$("sdpText").value.trim()) { setStatus("❌ Plak eerst de SDP Answer van Peer B in het tekstvak", "err"); return; }
+      await podRtc.acceptManualAnswer($("sdpText").value);
+    };
+
+    $("btnPrev").onclick = () => { if (S.links.prev) executeUrl(S.links.prev); };
+    $("btnNext").onclick = () => { if (S.links.next) executeUrl(S.links.next); };
     $("btnCoords").onclick = execCoords;
     $("btnId").onclick = execId;
     $("btnLocSearch").onclick = execLoc;
@@ -569,11 +993,11 @@
     $("btnCsv").onclick = downloadCsv;
     $("btnGeojson").onclick = downloadGeojson;
 
-    // Presets Zeeland / Tholen
     $("preScherpenisse").onclick = () => applyPreset("brk-kadastrale-kaart", "perceel", [64450, 395750, 64650, 395950], "Scherpenisse Platteweg 3-5-7 (E 1552 / E 108)");
     $("prePoortvlietM").onclick = () => applyPreset("brk-kadastrale-kaart", "perceel", [66000, 396000, 67260, 397000], "Poortvliet Sectie M (1172–1180)");
     $("prePoortvlietN").onclick = () => applyPreset("brk-kadastrale-kaart", "perceel", [67800, 395500, 68400, 396100], "Poortvliet Sectie N 1316");
-    $("preSpeelmansplaten").onclick = () => applyPreset("brk-kadastrale-kaart", "perceel", [71500, 391500, 73000, 393000], "Speelmansplaten Sectie K (Oesterdam)");
+    $("preRwsWegen").onclick = () => applyPreset("rws-weggegevens", "wegvak_rijstroken", [78000, 388000, 86000, 396000], "RWS Weggegevens Rijkswegen (A4/A58 Zoomweg)");
+    $("preRdPunten").onclick = () => applyPreset("kadaster-rdinfo", "punten", [60000, 390000, 75000, 405000], "Kadaster RD-Info Meetpunten (Tholen)");
 
     document.querySelectorAll('.tab').forEach(t => t.onclick = () => switchTab(t.dataset.page));
     ["zIn", "zOut", "zFit", "zReset"].forEach(id => $(id).onclick = {
@@ -582,41 +1006,127 @@
       zFit: zoomFit,
       zReset: zoomReset
     }[id]);
-
-    $("apiSelect").onchange = () => {
-      const ds = S.datasets.find(d => d.id === $("apiSelect").value);
-      if (ds) loadDataset(ds);
-    };
-    $("collSelect").onchange = () => { S.currentColl = $("collSelect").value; S.lastCursor = null; syncUrl(); };
-    $("crsSelect").onchange = () => { S.crs = $("crsSelect").value; syncUrl(); };
-    ["bboxMinX", "bboxMinY", "bboxMaxX", "bboxMaxY", "bboxLimit"].forEach(id => $(id).oninput = syncUrl);
   }
 
   function applyPreset(dsId, coll, bbox, label) {
     const ds = S.datasets.find(d => d.id === dsId) || S.datasets[0];
-    loadDataset(ds);
+    S.currentDataset = ds;
+    $("baseUrlInput").value = ds.baseUrl;
+    populateCollectionsDropdown(ds.colls || [], coll);
     S.currentColl = coll;
     $("collSelect").value = coll;
     $("crsSelect").value = "28992";
     S.crs = "28992";
+    document.querySelector('[data-mode="bbox"]').click();
     $("bboxMinX").value = bbox[0];
     $("bboxMinY").value = bbox[1];
     $("bboxMaxX").value = bbox[2];
     $("bboxMaxY").value = bbox[3];
-    syncUrl();
+    buildUrlFromControls();
     setStatus(`🎯 Preset geladen: ${label}`, "info");
-    executeQuery();
+    executeUrl($("urlDisplay").value);
+  }
+
+  function buildUrlFromControls() {
+    const baseUrl = $("baseUrlInput").value.trim().replace(/\/+$/, "");
+    const coll = $("collSelect").value || "perceel";
+    if (!baseUrl) return;
+
+    let url = `${baseUrl}/collections/${encodeURIComponent(coll)}/items`;
+    const p = [];
+
+    if (S.mode === "bbox") {
+      const b = [$("bboxMinX").value, $("bboxMinY").value, $("bboxMaxX").value, $("bboxMaxY").value].join(",");
+      p.push(`bbox=${encodeURIComponent(b)}`);
+      if (S.crs !== "none" && CRS_URIS[S.crs]) {
+        p.push(`bbox-crs=${encodeURIComponent(CRS_URIS[S.crs])}`);
+      }
+      p.push(`limit=${parseInt($("bboxLimit").value) || 25}`);
+    } else if (S.mode === "nofilter") {
+      p.push(`limit=${parseInt($("noFilterLimit").value) || 25}`);
+    } else {
+      p.push(`limit=25`);
+    }
+
+    if (S.crs !== "none" && CRS_URIS[S.crs]) {
+      p.push(`crs=${encodeURIComponent(CRS_URIS[S.crs])}`);
+    }
+    p.push(`f=json`);
+
+    url += "?" + p.join("&");
+    S.lastUrl = url;
+    $("urlDisplay").value = url;
+    renderCode(url);
+  }
+
+  function sanitizePdokUrl(rawUrl) {
+    let u = rawUrl.trim();
+    if (u.includes("/rws/vervoersnetwerken-wegen/ogc/v1")) {
+      u = u.replace("/rws/vervoersnetwerken-wegen/ogc/v1", "/rws/weggegevens/ogc/v1")
+           .replace("/collections/netwerk/", "/collections/wegvak_rijstroken/");
+      setStatus("ℹ️ Verouderde RWS-URL automatisch gecorrigeerd naar /rws/weggegevens/ogc/v1/collections/wegvak_rijstroken", "info");
+    }
+    if (u.includes("api.pdok.nl/bgt/ogc/v1")) {
+      u = u.replace("api.pdok.nl/bgt/ogc/v1", "api.pdok.nl/lv/bgt/ogc/v1");
+    }
+    return u;
+  }
+
+  async function executeUrl(targetUrl) {
+    if (S.isLoading || !targetUrl) return;
+    const url = sanitizePdokUrl(targetUrl);
+    $("urlDisplay").value = url;
+    S.lastUrl = url;
+
+    S.isLoading = true;
+    setStatus("⏳ OGC API Request uitvoeren (CORS Simple GET)...", "info");
+    setButtons(false);
+    renderCode(url);
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        let errBody = "";
+        try { errBody = await res.text(); } catch (_) {}
+        throw new Error(`HTTP ${res.status} ${res.statusText}` + (errBody ? ` — ${errBody.slice(0, 180)}` : ""));
+      }
+
+      const json = await res.json();
+      S.features = Array.isArray(json.features) ? json.features : (json.type === "Feature" ? [json] : []);
+      S.links = {};
+      (json.links || []).forEach(l => { if (l.rel && l.href) S.links[l.rel] = l.href; });
+
+      $("rawJson").textContent = JSON.stringify(json, null, 2);
+      renderTable();
+      renderMap();
+
+      const n = json.numberReturned ?? S.features.length;
+      if (n === 0) {
+        setStatus(`⚠️ 0 features gevonden in dit BBox-gebied. Tip: kies zoekmodus '🌐 Zonder BBox' om direct alle items van deze laag te zien!`, "info");
+      } else {
+        setStatus(`✅ ${n} feature(s) succesvol geladen! Klik op '🚀 Pipe ➔ Pod + WebRTC TX' om door te sturen.`, "ok");
+      }
+      $("resultMeta").textContent = `${n} resultaten geladen` + (S.links.next ? " · vervolgpagina beschikbaar (Next ▶)" : "");
+      setButtons(true);
+    } catch (err) {
+      setStatus(`❌ OGC Fout: ${err.message}. Controleer of de collectienaam bestaat via '🔄 Laad Collecties'.`, "err");
+      setButtons(true);
+    } finally {
+      S.isLoading = false;
+    }
   }
 
   window.loadLocalFile = async function(path) {
     setStatus(`⏳ Lokaal/Repository bestand laden: ${path}...`, "info");
-    $("urlDisplay").value = window.location.origin + "/" + path;
+    const fullUrl = window.location.origin + "/" + path;
+    $("urlDisplay").value = fullUrl;
     try {
       const res = await fetch(path);
       if (!res.ok) throw new Error(`HTTP ${res.status} (${path})`);
       const text = await res.text();
       $("rawJson").textContent = text;
-      renderCode(window.location.origin + "/" + path);
+      renderCode(fullUrl);
+      await podRtc.putResource("/kadaster/percelen/", path.split("/").pop(), text, path.endsWith(".ttl") ? "text/turtle" : "application/json");
       try {
         const json = JSON.parse(text);
         if (Array.isArray(json.features)) {
@@ -630,105 +1140,38 @@
       } catch (_) {
         switchTab("raw");
       }
-      setStatus(`✅ Bestand geladen: ${path}`, "ok");
+      setStatus(`✅ Bestand geladen & gemount in Solid Pod: ${path}`, "ok");
     } catch (err) {
       setStatus(`❌ Kan ${path} niet laden: ${err.message}`, "err");
     }
   };
 
-  function syncUrl() {
-    if (!S.currentDataset || !S.currentColl) return;
-    let url = `${S.currentDataset.baseUrl}/collections/${S.currentColl}/items`;
-    const p = [];
-    if (S.mode === "bbox") {
-      const b = [$("bboxMinX").value, $("bboxMinY").value, $("bboxMaxX").value, $("bboxMaxY").value].join(",");
-      p.push(`bbox=${encodeURIComponent(b)}`);
-      p.push(`bbox-crs=${encodeURIComponent(CRS_URIS[S.crs])}`);
-      p.push(`limit=${parseInt($("bboxLimit").value) || 25}`);
-    }
-    p.push(`crs=${encodeURIComponent(CRS_URIS[S.crs])}`);
-    p.push(`f=json`);
-    if (S.lastCursor) p.push(`cursor=${encodeURIComponent(S.lastCursor)}`);
-    url += "?" + p.join("&");
-    S.lastUrl = url;
-    $("urlDisplay").value = url;
-  }
-
-  function cursorQuery(linkUrl) {
-    if (!linkUrl) return;
-    executeQuery(linkUrl);
-  }
-
-  async function executeQuery(urlOverride) {
-    if (S.isLoading) return;
-    S.isLoading = true;
-    setStatus("⏳ OGC API Features ophalen...", "info");
-    setButtons(false);
-
-    if (!urlOverride) syncUrl();
-    const url = urlOverride || S.lastUrl;
-    $("urlDisplay").value = url;
-
-    try {
-      const res = await fetch(url, { headers: { "Accept": "application/geo+json, application/json" } });
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      const json = await res.json();
-      S.features = json.features || [];
-      S.links = {};
-      (json.links || []).forEach(l => { if (l.rel) S.links[l.rel] = l.href; });
-
-      $("rawJson").textContent = JSON.stringify(json, null, 2);
-      renderTable();
-      renderMap();
-      renderCode(url);
-
-      const n = json.numberReturned ?? S.features.length;
-      setStatus(`✅ ${n} feature(s) geladen in EPSG:${S.crs}`, "ok");
-      $("resultMeta").textContent = `${n} resultaten geladen` + (S.links.next ? " · vervolgpagina beschikbaar" : "");
-      setButtons(true);
-    } catch (err) {
-      setStatus("❌ OGC Fout: " + err.message, "err");
-      setButtons(true);
-    } finally {
-      S.isLoading = false;
-    }
-  }
-
   async function execCoords() {
-    const x = parseFloat($("coordX").value), y = parseFloat($("coordY").value), r = parseFloat($("coordRadius").value) || 100;
-    if (isNaN(x) || isNaN(y)) { setStatus("❌ Ongeldige coördinaten", "err"); return; }
+    const x = parseFloat($("coordX").value), y = parseFloat($("coordY").value), r = parseFloat($("coordRadius").value) || 150;
+    if (isNaN(x) || isNaN(y)) { setStatus("❌ Ongeldige RD-coördinaten", "err"); return; }
     $("bboxMinX").value = Math.round(x - r);
     $("bboxMinY").value = Math.round(y - r);
     $("bboxMaxX").value = Math.round(x + r);
     $("bboxMaxY").value = Math.round(y + r);
     $("bboxLimit").value = $("coordLimit").value;
     document.querySelector('[data-mode="bbox"]').click();
-    syncUrl();
-    await executeQuery();
+    buildUrlFromControls();
+    await executeUrl($("urlDisplay").value);
   }
 
   async function execId() {
     const id = $("idValue").value.trim();
     if (!id) { setStatus("❌ Voer een Feature ID in", "err"); return; }
-    const url = `${S.currentDataset.baseUrl}/collections/${S.currentColl}/items/${encodeURIComponent(id)}?crs=${encodeURIComponent(CRS_URIS[S.crs])}&f=json`;
-    S.lastUrl = url;
-    $("urlDisplay").value = url;
-    try {
-      const res = await fetch(url, { headers: { "Accept": "application/geo+json, application/json" } });
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      const json = await res.json();
-      $("rawJson").textContent = JSON.stringify(json, null, 2);
-      S.features = [json.type === "Feature" ? json : { properties: json, geometry: null }];
-      S.links = {};
-      renderTable();
-      renderMap();
-      renderCode(url);
+    const baseUrl = $("baseUrlInput").value.trim().replace(/\/+$/, "");
+    const coll = $("collSelect").value;
+    let url = `${baseUrl}/collections/${encodeURIComponent(coll)}/items/${encodeURIComponent(id)}?f=json`;
+    if (S.crs !== "none" && CRS_URIS[S.crs]) {
+      url += `&crs=${encodeURIComponent(CRS_URIS[S.crs])}`;
+    }
+    await executeUrl(url);
+    if (S.features.length === 1) {
       showDetail(S.features[0]);
       switchTab("detail");
-      setStatus("✅ Feature geladen", "ok");
-      setButtons(true);
-    } catch (err) {
-      setStatus("❌ " + err.message, "err");
     }
   }
 
@@ -744,13 +1187,15 @@
       const m = doc.centroide_rd.match(/POINT\(([0-9.]+)\s+([0-9.]+)\)/);
       if (!m) throw new Error("Kon RD-punt niet parsen");
       const rdX = parseFloat(m[1]), rdY = parseFloat(m[2]);
+      $("crsSelect").value = "28992";
+      S.crs = "28992";
       $("bboxMinX").value = Math.round(rdX - 150);
       $("bboxMinY").value = Math.round(rdY - 150);
       $("bboxMaxX").value = Math.round(rdX + 150);
       $("bboxMaxY").value = Math.round(rdY + 150);
       document.querySelector('[data-mode="bbox"]').click();
-      syncUrl();
-      await executeQuery();
+      buildUrlFromControls();
+      await executeUrl($("urlDisplay").value);
       setStatus("✅ Locatie gevonden: " + (doc.weergavenaam || q), "ok");
     } catch (err) {
       setStatus("❌ " + err.message, "err");
@@ -765,8 +1210,8 @@
     empty.style.display = "none";
 
     const sample = S.features[0], props = sample.properties || {};
-    const priority = ["kadastrale_gemeente_code", "sectie", "perceelnummer", "kadastrale_grootte_waarde", "soort_grootte_waarde", "begin_geldigheid", "identificatie", "bouwjaar", "status"];
-    const cols = priority.filter(k => k in props).concat(Object.keys(props).filter(k => !priority.includes(k) && typeof props[k] !== "object").slice(0, 4));
+    const priority = ["kadastrale_gemeente_code", "sectie", "perceelnummer", "kadastrale_grootte_waarde", "_pipe_shoelace_m2", "_pipe_delta_m2", "soort_grootte_waarde", "wegnummer", "rijstrook", "maximum_snelheid", "station", "identificatie", "bouwjaar", "status"];
+    const cols = priority.filter(k => k in props).concat(Object.keys(props).filter(k => !priority.includes(k) && typeof props[k] !== "object").slice(0, 5));
 
     thead.innerHTML = "";
     cols.slice(0, 8).forEach(c => {
@@ -793,15 +1238,17 @@
   }
 
   function hl(i, on) {
-    const p = document.querySelector(`#map path[data-idx="${i}"]`);
-    if (p) p.classList.toggle("hl", on);
+    document.querySelectorAll(`#map [data-idx="${i}"]`).forEach(el => el.classList.toggle("hl", on));
     const r = document.querySelector(`#tbody tr[data-idx="${i}"]`);
     if (r) r.classList.toggle("sel", on);
   }
 
   function showDetail(f) {
     const p = f.properties || {}, g = f.geometry || {}, cont = $("detailContent");
-    let html = `<h3 style="margin-bottom:12px;color:var(--purple);font-family:var(--mono)">${p.perceelnummer ? "Perceel " + (p.kadastrale_gemeente_code || "") + " " + (p.sectie || "") + " " + p.perceelnummer : "Feature Details"}</h3><dl style="display:grid;grid-template-columns:auto 1fr;gap:8px 16px">`;
+    const title = p.perceelnummer
+      ? `Perceel ${p.kadastrale_gemeente_code || ""} ${p.sectie || ""} ${p.perceelnummer}`
+      : (p.identificatie || f.id || "Feature Details");
+    let html = `<h3 style="margin-bottom:12px;color:var(--purple);font-family:var(--mono)">${title}</h3><dl style="display:grid;grid-template-columns:auto 1fr;gap:8px 16px">`;
     if (p.kadastrale_grootte_waarde) html += `<dt>BRK Geregistreerd</dt><dd>${Number(p.kadastrale_grootte_waarde).toLocaleString("nl-NL")} m²</dd>`;
     const calc = geomArea(f);
     if (calc > 0) html += `<dt>Geometrisch Berekend (Shoelace)</dt><dd>${Math.round(calc).toLocaleString("nl-NL")} m²</dd>`;
@@ -815,6 +1262,16 @@
 
   let mapState = { k: 1, tx: 0, ty: 0, base: null };
 
+  function extractAllCoords(geom) {
+    if (!geom || !geom.coordinates) return [];
+    const t = geom.type;
+    if (t === "Point") return [geom.coordinates];
+    if (t === "MultiPoint" || t === "LineString") return geom.coordinates;
+    if (t === "MultiLineString" || t === "Polygon") return geom.coordinates.flat();
+    if (t === "MultiPolygon") return geom.coordinates.flat(2);
+    return [];
+  }
+
   function renderMap() {
     const svg = $("map");
     svg.innerHTML = "";
@@ -822,7 +1279,8 @@
     if (!S.features.length) { addMapText("Geen geometrie geladen"); return; }
 
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity, hasGeom = false;
-    S.features.forEach(f => getRings(f).forEach(r => r.forEach(([x, y]) => {
+    S.features.forEach(f => extractAllCoords(f.geometry).forEach(pt => {
+      const x = pt[0], y = pt[1];
       if (isFinite(x) && isFinite(y)) {
         if (x < minX) minX = x;
         if (x > maxX) maxX = x;
@@ -830,15 +1288,15 @@
         if (y > maxY) maxY = y;
         hasGeom = true;
       }
-    })));
-    if (!hasGeom) { addMapText("Geen geldige polygoon-coördinaten gevonden"); return; }
+    }));
+    if (!hasGeom) { addMapText("Geen geldige coördinaten gevonden"); return; }
 
     const vb = { w: 960, h: 480 }, pad = 40;
-    const sx = (vb.w - 2 * pad) / Math.max(maxX - minX, 1);
-    const sy = (vb.h - 2 * pad) / Math.max(maxY - minY, 1);
-    const s = Math.min(sx, sy);
-    const ox = pad + ((vb.w - 2 * pad) - (maxX - minX) * s) / 2;
-    const oy = pad + ((vb.h - 2 * pad) - (maxY - minY) * s) / 2;
+    const spanX = Math.max(maxX - minX, 0.0001);
+    const spanY = Math.max(maxY - minY, 0.0001);
+    const s = Math.min((vb.w - 2 * pad) / spanX, (vb.h - 2 * pad) / spanY);
+    const ox = pad + ((vb.w - 2 * pad) - spanX * s) / 2;
+    const oy = pad + ((vb.h - 2 * pad) - spanY * s) / 2;
     const TX = x => ox + (x - minX) * s;
     const TY = y => vb.h - (oy + (y - minY) * s);
     mapState.base = { TX, TY, vb };
@@ -848,50 +1306,77 @@
     svg.appendChild(g);
 
     S.features.forEach((f, i) => {
-      const p = f.properties || {};
-      getRings(f).forEach(r => {
-        if (r.length < 3) return;
-        let d = "";
-        r.forEach(([x, y], j) => { d += (j ? "L" : "M") + TX(x).toFixed(2) + "," + TY(y).toFixed(2); });
-        d += "Z";
-        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        path.setAttribute("d", d);
-        path.setAttribute("class", "poly");
-        path.dataset.idx = i;
-        path.onclick = () => { S.selected = f; showDetail(f); switchTab("detail"); };
-        path.onmousemove = ev => {
+      const p = f.properties || {}, geom = f.geometry;
+      if (!geom) return;
+
+      const attachEvents = el => {
+        el.dataset.idx = i;
+        el.onclick = () => { S.selected = f; showDetail(f); switchTab("detail"); };
+        el.onmousemove = ev => {
           $("tip").style.display = "block";
           $("tip").style.left = (ev.clientX - svg.getBoundingClientRect().left + 12) + "px";
           $("tip").style.top = (ev.clientY - svg.getBoundingClientRect().top + 12) + "px";
           let tipHtml = p.perceelnummer ? `<b>${p.kadastrale_gemeente_code || ""} ${p.sectie || ""} ${p.perceelnummer}</b><br>` : "";
           if (p.kadastrale_grootte_waarde) tipHtml += `Grootte: ${p.kadastrale_grootte_waarde} m²<br>`;
+          if (p.wegnummer) tipHtml += `Weg: ${p.wegnummer} (${p.rijstrook || ""})<br>`;
+          if (p.station) tipHtml += `RD Station: ${p.station}<br>`;
           if (p.identificatie) tipHtml += `<span style='opacity:.75'>${p.identificatie}</span>`;
-          $("tip").innerHTML = tipHtml || "Feature #" + (i + 1);
+          $("tip").innerHTML = tipHtml || `Feature #${i + 1} (${geom.type})`;
         };
-        path.onmouseleave = () => $("tip").style.display = "none";
-        g.appendChild(path);
-      });
+        el.onmouseleave = () => $("tip").style.display = "none";
+      };
+
+      if (geom.type === "Polygon" || geom.type === "MultiPolygon") {
+        const rings = geom.type === "Polygon" ? geom.coordinates : geom.coordinates.flat();
+        rings.forEach(r => {
+          if (r.length < 3) return;
+          let d = "";
+          r.forEach(([x, y], j) => { d += (j ? "L" : "M") + TX(x).toFixed(2) + "," + TY(y).toFixed(2); });
+          d += "Z";
+          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          path.setAttribute("d", d);
+          path.setAttribute("class", "poly");
+          attachEvents(path);
+          g.appendChild(path);
+        });
+      } else if (geom.type === "LineString" || geom.type === "MultiLineString") {
+        const lines = geom.type === "LineString" ? [geom.coordinates] : geom.coordinates;
+        lines.forEach(line => {
+          if (line.length < 2) return;
+          let d = "";
+          line.forEach(([x, y], j) => { d += (j ? "L" : "M") + TX(x).toFixed(2) + "," + TY(y).toFixed(2); });
+          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          path.setAttribute("d", d);
+          path.setAttribute("class", "line-feat");
+          attachEvents(path);
+          g.appendChild(path);
+        });
+      } else if (geom.type === "Point" || geom.type === "MultiPoint") {
+        const pts = geom.type === "Point" ? [geom.coordinates] : geom.coordinates;
+        pts.forEach(([x, y]) => {
+          const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          c.setAttribute("cx", TX(x).toFixed(2));
+          c.setAttribute("cy", TY(y).toFixed(2));
+          c.setAttribute("r", 5);
+          c.setAttribute("class", "pt-feat");
+          attachEvents(c);
+          g.appendChild(c);
+        });
+      }
+
       const c = centroid(f);
       if (c) {
         const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
         t.setAttribute("x", TX(c[0]));
         t.setAttribute("y", TY(c[1]));
         t.setAttribute("class", "plabel");
-        t.textContent = (p.sectie ? p.sectie + " " : "") + (p.perceelnummer || p.bouwjaar || "");
+        t.textContent = (p.sectie ? p.sectie + " " : "") + (p.perceelnummer || p.wegnummer || p.station || p.bouwjaar || "");
         g.appendChild(t);
       }
     });
 
     applyTransform();
     attachPanZoom(svg);
-  }
-
-  function getRings(f) {
-    const g = f.geometry;
-    if (!g) return [];
-    if (g.type === "Polygon") return g.coordinates;
-    if (g.type === "MultiPolygon") return g.coordinates.flat();
-    return [];
   }
 
   function geomArea(f) {
@@ -908,12 +1393,11 @@
   }
 
   function centroid(f) {
-    const rings = getRings(f);
-    if (!rings.length || !rings[0] || rings[0].length < 3) return null;
-    const r = rings[0];
+    const pts = extractAllCoords(f.geometry);
+    if (!pts.length) return null;
     let sx = 0, sy = 0;
-    for (let i = 0; i < r.length; i++) { sx += r[i][0]; sy += r[i][1]; }
-    return [sx / r.length, sy / r.length];
+    for (let i = 0; i < pts.length; i++) { sx += pts[i][0]; sy += pts[i][1]; }
+    return [sx / pts.length, sy / pts.length];
   }
 
   function addMapText(t) {
@@ -973,59 +1457,70 @@
     mapState.k = k2;
     applyTransform();
   }
-  function zoomFit() { mapState = { k: 1, tx: 0, ty: 0, base: mapState.base }; applyTransform(); }
-  function zoomReset() { mapState = { k: 1, tx: 0, ty: 0, base: mapState.base }; applyTransform(); }
 
-  function switchTab(pageId) {
-    const clean = pageId.replace("p-", "");
-    document.querySelectorAll('.tab').forEach(t => t.classList.toggle("active", t.dataset.page === clean));
-    document.querySelectorAll('[id^="p-"]').forEach(p => p.classList.toggle("active", p.id === "p-" + clean));
+  function zoomFit() {
+    mapState.k = 1;
+    mapState.tx = 0;
+    mapState.ty = 0;
+    applyTransform();
+  }
+
+  function zoomReset() {
+    renderMap();
+  }
+
+  function switchTab(page) {
+    document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.page === page));
+    document.querySelectorAll("#resultsPanel > .page").forEach(p => p.classList.toggle("active", p.id === `p-${page}`));
   }
 
   function renderCode(url) {
-    $("curlSnip").textContent = `curl -sSL -H "Accept: application/geo+json" "${url}" -o sovereign-output.geojson`;
-    $("pySnip").textContent = `import requests\n\nurl = "${url}"\nres = requests.get(url, headers={"Accept": "application/geo+json"})\ndata = res.json()\nprint(f"Geladen features: {len(data.get('features', []))}")`;
+    $("curlSnip").textContent = `curl -sS "${url}" | jq .`;
+    $("pySnip").textContent = `import requests\n\nurl = "${url}"\nres = requests.get(url, timeout=15)\nres.raise_for_status()\ndata = res.json()\nprint(f"Geladen features: {len(data.get('features', []))}")`;
+  }
+
+  function copyUrl() {
+    navigator.clipboard.writeText($("urlDisplay").value.trim());
+    setStatus("📋 Request URL gekopieerd naar klembord!", "ok");
   }
 
   function downloadCsv() {
     if (!S.features.length) return;
-    const cols = Object.keys(S.features[0].properties || {}).slice(0, 12);
-    cols.unshift("id");
-    const q = v => { const s = String(v ?? ""); return /[,"\n;]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
-    const lines = [cols.map(q).join(";")];
+    const keys = Object.keys(S.features[0].properties || {});
+    const rows = [keys.join(",")];
     S.features.forEach(f => {
       const p = f.properties || {};
-      lines.push(cols.map(c => q(c === "id" ? f.id : p[c])).join(";"));
+      rows.push(keys.map(k => JSON.stringify(p[k] ?? "")).join(","));
     });
-    downloadBlob("sovereign-pdok-export.csv", "\ufeff" + lines.join("\n"), "text/csv");
+    triggerDownload(rows.join("\n"), `${S.currentColl}-export.csv`, "text/csv");
   }
 
   function downloadGeojson() {
     if (!S.features.length) return;
-    downloadBlob("sovereign-pdok-export.geojson", JSON.stringify({ type: "FeatureCollection", features: S.features }, null, 2), "application/geo+json");
+    const fc = JSON.stringify({ type: "FeatureCollection", features: S.features }, null, 2);
+    triggerDownload(fc, `${S.currentColl}-export.geojson`, "application/geo+json");
   }
 
-  function downloadBlob(n, t, m) {
-    const b = new Blob([t], { type: m }), a = document.createElement("a");
-    a.href = URL.createObjectURL(b);
-    a.download = n;
+  function triggerDownload(content, filename, mime) {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([content], { type: mime }));
+    a.download = filename;
     a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
   }
 
-  function setStatus(m, c) { $("status").innerHTML = m; $("status").className = "status" + (c ? " " + c : ""); }
-  function setButtons(e) {
-    $("btnRun").disabled = !e || S.isLoading;
-    $("btnPrev").disabled = !e || !S.links.prev;
-    $("btnNext").disabled = !e || !S.links.next;
-    $("btnCsv").disabled = !e || !S.features.length;
-    $("btnGeojson").disabled = !e || !S.features.length;
+  function setStatus(msg, type = "info") {
+    const el = $("status");
+    el.className = "status " + type;
+    el.textContent = msg;
   }
-  function copyUrl() {
-    navigator.clipboard.writeText($("urlDisplay").value)
-      .then(() => setStatus("✅ Request URL gekopieerd naar klembord", "ok"))
-      .catch(() => { $("urlDisplay").select(); document.execCommand("copy"); });
+
+  function setButtons(enabled) {
+    $("btnRun").disabled = !enabled;
+    $("btnRunDirect").disabled = !enabled;
+    $("btnCsv").disabled = !enabled || !S.features.length;
+    $("btnGeojson").disabled = !enabled || !S.features.length;
+    $("btnPrev").disabled = !enabled || !S.links.prev;
+    $("btnNext").disabled = !enabled || !S.links.next;
   }
 
   init();
