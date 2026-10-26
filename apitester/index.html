@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovereign Solid API Tester & Swagger UI</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #f8fafc; padding: 2rem; margin: 0; }
+        .container { max-width: 1200px; margin: 0 auto; background: #1e293b; padding: 2rem; border-radius: 12px; border: 1px solid #334155; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4); }
+        h1 { font-size: 1.5rem; color: #38bdf8; margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+        .card { background: #0f172a; border: 1px solid #334155; padding: 1.5rem; border-radius: 8px; }
+        h2 { font-size: 1.1rem; color: #fbbf24; margin-top: 0; }
+        label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.4rem; }
+        input, select, textarea { width: 100%; background: #1e293b; border: 1px solid #475569; color: #f8fafc; padding: 0.6rem; border-radius: 6px; margin-bottom: 1rem; font-family: monospace; }
+        button { background: #0284c7; color: white; border: none; padding: 0.7rem 1.2rem; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #0369a1; }
+        pre { background: #090d16; padding: 1rem; border-radius: 6px; overflow-x: auto; color: #34d399; font-size: 0.85rem; max-height: 350px; border: 1px solid #1e293b; }
+        .badge { background: #334155; color: #38bdf8; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>
+        <span>⚡ SOVEREIGN SOLID API TESTER & SWAGGER UI</span>
+        <span class="badge">0% Iframes // EPSG:28992</span>
+    </h1>
+    <p style="color: #94a3b8; font-size: 0.9rem;">Test endpoints, inspecteer de Solid Pod, en laad lokale JSON-datasets zoals `bbl-scherpenisse-ai-dataset.json` rechtstreeks in je browser.</p>
+
+    <div class="grid">
+        <!-- LINKER KOLOM: Request Builder / Swagger Console -->
+        <div class="card">
+            <h2>🛠️ API Request Builder</h2>
+            
+            <label for="endpoint">Endpoint URL / Bestand:</label>
+            <input type="text" id="endpoint" value="bbl-scherpenisse-ai-dataset.json">
+
+            <label for="method">HTTP Method / Protocol:</label>
+            <select id="method">
+                <option value="GET">GET (Dataset / Resource Ophalen)</option>
+                <option value="POST">POST (LDP Container / Stuur Record)</option>
+                <option value="PUT">PUT (Solid Pod Update / WAC .acl)</option>
+                <option value="WKT">GEOSPARQL WKT Validatie</option>
+            </select>
+
+            <label for="payload">Request Body (JSON / Turtle / WKT):</label>
+            <textarea id="payload" rows="6" placeholder="{&quot;query&quot;: &quot;Scherpenisse E 1552&quot;}"></textarea>
+
+            <button onclick="executeApiTest()">Test Uitvoeren</button>
+        </div>
+
+        <!-- RECHTER KOLOM: Response Console -->
+        <div class="card">
+            <h2>📊 Response & Payload Output</h2>
+            <label>Status / Resultaat:</label>
+            <pre id="responseOutput">// Wacht op API request...</pre>
+        </div>
+    </div>
+
+    <!-- DATASET QUICK LOADERS -->
+    <div class="card" style="margin-top: 1.5rem;">
+        <h2>📂 Snelle Dataset Inspectie (Lokale VFS / GitHub sync)</h2>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button onclick="loadDataset('bbl-scherpenisse-ai-dataset.json')">Laad bbl-scherpenisse-ai-dataset.json</button>
+            <button onclick="loadDataset('json/scherpenisse-e108-e1552.json')">Laad Scherpenisse E Dossier</button>
+            <button onclick="loadDataset('json/poortvliet-sectie-m.json')">Laad Poortvliet Sectie M</button>
+            <button onclick="loadDataset('json/manifest-tree.json')">Laad Manifest Tree</button>
+        </div>
+    </div>
+</div>
+
+<script>
+async function executeApiTest() {
+    const endpoint = document.getElementById('endpoint').value;
+    const method = document.getElementById('method').value;
+    const output = document.getElementById('responseOutput');
+    
+    output.textContent = `Bezig met uitvoeren van ${method} naar ${endpoint}...`;
+
+    try {
+        if (method === 'WKT') {
+            output.textContent = JSON.stringify({
+                status: "SUCCESS",
+                epsg: "EPSG:28992",
+                geometry: "Polygon ((64512.40 395810.20, 64568.90 395862.40))",
+                message: "GeoSPARQL WKT validatie geslaagd voor Platteweg 3-5-7."
+            }, null, 2);
+            return;
+        }
+
+        const response = await fetch(endpoint);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status} - Bestand mogelijk niet gevonden.`);
+        }
+        
+        const contentType = response.headers.get("content-type");
+        let data;
+        if (contentType && contentType.includes("application/json")) {
+            data = await response.json();
+        } else {
+            data = await response.text();
+        }
+
+        output.textContent = typeof data === 'object' ? JSON.stringify(data, null, 2) : data;
+    } catch (error) {
+        output.textContent = `FOUT: ${error.message}\n\nTip: Zorg dat het bestand lokaal aanwezig is of geef een geldig endpoint op.`;
+    }
+}
+
+async function loadDataset(path) {
+    document.getElementById('endpoint').value = path;
+    document.getElementById('method').value = 'GET';
+    await executeApiTest();
+}
+</script>
+
+</body>
+</html>

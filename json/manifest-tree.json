@@ -1,0 +1,560 @@
+{
+  "repository": "github.com/goija/solid",
+  "branch": "main",
+  "synced_at": "2026-10-26T19:48:26Z",
+  "tree": [
+    {
+      "name": ".github",
+      "path": "solid/.github",
+      "type": "dir",
+      "children": [
+        {
+          "name": "workflows",
+          "path": "solid/.github/workflows",
+          "type": "dir",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "apitester",
+      "path": "solid/apitester",
+      "type": "dir",
+      "children": [
+        {
+          "name": "apitester1.html",
+          "path": "solid/apitester/apitester1.html",
+          "type": "file",
+          "size": 27535
+        },
+        {
+          "name": "index.html",
+          "path": "solid/apitester/index.html",
+          "type": "file",
+          "size": 5977
+        },
+        {
+          "name": "test.html",
+          "path": "solid/apitester/test.html",
+          "type": "file",
+          "size": 11738
+        },
+        {
+          "name": "tree.html",
+          "path": "solid/apitester/tree.html",
+          "type": "file",
+          "size": 5164
+        }
+      ]
+    },
+    {
+      "name": "atom",
+      "path": "solid/atom",
+      "type": "dir",
+      "children": [
+        {
+          "name": "solid_fediverse_atom_reader_pod_client.html",
+          "path": "solid/atom/solid_fediverse_atom_reader_pod_client.html",
+          "type": "file",
+          "size": 114351
+        }
+      ]
+    },
+    {
+      "name": "atomreader",
+      "path": "solid/atomreader",
+      "type": "dir",
+      "children": [
+        {
+          "name": "index.html",
+          "path": "solid/atomreader/index.html",
+          "type": "file",
+          "size": 191048
+        }
+      ]
+    },
+    {
+      "name": "bash",
+      "path": "solid/bash",
+      "type": "dir",
+      "children": [
+        {
+          "name": "pdok-brk-query.sh",
+          "path": "solid/bash/pdok-brk-query.sh",
+          "type": "file",
+          "size": 269
+        }
+      ]
+    },
+    {
+      "name": "centra",
+      "path": "solid/centra",
+      "type": "dir",
+      "children": [
+        {
+          "name": "01-home",
+          "path": "solid/centra/01-home",
+          "type": "dir",
+          "children": [
+            {
+              "name": "config.json",
+              "path": "solid/centra/01-home/config.json",
+              "type": "file",
+              "size": 0
+            },
+            {
+              "name": "index.html",
+              "path": "solid/centra/01-home/index.html",
+              "type": "file",
+              "size": 0
+            },
+            {
+              "name": "overview.json",
+              "path": "solid/centra/01-home/overview.json",
+              "type": "file",
+              "size": 261
+            }
+          ]
+        },
+        {
+          "name": "02-beheercentrum",
+          "path": "solid/centra/02-beheercentrum",
+          "type": "dir",
+          "children": [
+            {
+              "name": "acl-builder.js",
+              "path": "solid/centra/02-beheercentrum/acl-builder.js",
+              "type": "file",
+              "size": 0
+            },
+            {
+              "name": "index.html",
+              "path": "solid/centra/02-beheercentrum/index.html",
+              "type": "file",
+              "size": 0
+            }
+          ]
+        },
+        {
+          "name": "03-juridischcentrum",
+          "path": "solid/centra/03-juridischcentrum",
+          "type": "dir",
+          "children": [
+            {
+              "name": "dossier-platteweg-3-5-7.md",
+              "path": "solid/centra/03-juridischcentrum/dossier-platteweg-3-5-7.md",
+              "type": "file",
+              "size": 343
+            },
+            {
+              "name": "dossier-platteweg.json",
+              "path": "solid/centra/03-juridischcentrum/dossier-platteweg.json",
+              "type": "file",
+              "size": 0
+            },
+            {
+              "name": "index.html",
+              "path": "solid/centra/03-juridischcentrum/index.html",
+              "type": "file",
+              "size": 0
+            }
+          ]
+        },
+        {
+          "name": "04-geocentrum",
+          "path": "solid/centra/04-geocentrum",
+          "type": "dir",
+          "children": [
+            {
+              "name": "grid-60deg.js",
+              "path": "solid/centra/04-geocentrum/grid-60deg.js",
+              "type": "file",
+              "size": 0
+            },
+            {
+              "name": "index.html",
+              "path": "solid/centra/04-geocentrum/index.html",
+              "type": "file",
+              "size": 188081
+            }
+          ]
+        },
+        {
+          "name": "05-tijdscapsule",
+          "path": "solid/centra/05-tijdscapsule",
+          "type": "dir",
+          "children": [
+            {
+              "name": "index.html",
+              "path": "solid/centra/05-tijdscapsule/index.html",
+              "type": "file",
+              "size": 0
+            },
+            {
+              "name": "subscriptions.ttl",
+              "path": "solid/centra/05-tijdscapsule/subscriptions.ttl",
+              "type": "file",
+              "size": 0
+            }
+          ]
+        },
+        {
+          "name": "06-kenniscentrum",
+          "path": "solid/centra/06-kenniscentrum",
+          "type": "dir",
+          "children": [
+            {
+              "name": "index.html",
+              "path": "solid/centra/06-kenniscentrum/index.html",
+              "type": "file",
+              "size": 0
+            },
+            {
+              "name": "otp-engine.js",
+              "path": "solid/centra/06-kenniscentrum/otp-engine.js",
+              "type": "file",
+              "size": 0
+            }
+          ]
+        },
+        {
+          "name": "07-rekencentrum",
+          "path": "solid/centra/07-rekencentrum",
+          "type": "dir",
+          "children": [
+            {
+              "name": "index.html",
+              "path": "solid/centra/07-rekencentrum/index.html",
+              "type": "file",
+              "size": 0
+            },
+            {
+              "name": "poortvliet-calc.js",
+              "path": "solid/centra/07-rekencentrum/poortvliet-calc.js",
+              "type": "file",
+              "size": 0
+            }
+          ]
+        },
+        {
+          "name": "08-bibliotheek",
+          "path": "solid/centra/08-bibliotheek",
+          "type": "dir",
+          "children": [
+            {
+              "name": "bibliotheeh.html",
+              "path": "solid/centra/08-bibliotheek/bibliotheeh.html",
+              "type": "file",
+              "size": 166623
+            },
+            {
+              "name": "index.html",
+              "path": "solid/centra/08-bibliotheek/index.html",
+              "type": "file",
+              "size": 166623
+            },
+            {
+              "name": "network-tree.json",
+              "path": "solid/centra/08-bibliotheek/network-tree.json",
+              "type": "file",
+              "size": 0
+            },
+            {
+              "name": "woo-zoekslagen.json",
+              "path": "solid/centra/08-bibliotheek/woo-zoekslagen.json",
+              "type": "file",
+              "size": 506
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "css",
+      "path": "solid/css",
+      "type": "dir",
+      "children": [
+        {
+          "name": "styles.css",
+          "path": "solid/css/styles.css",
+          "type": "file",
+          "size": 9411
+        }
+      ]
+    },
+    {
+      "name": "data",
+      "path": "solid/data",
+      "type": "dir",
+      "children": [
+        {
+          "name": "geojson",
+          "path": "solid/data/geojson",
+          "type": "dir",
+          "children": []
+        },
+        {
+          "name": "stl",
+          "path": "solid/data/stl",
+          "type": "dir",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "filebeheer",
+      "path": "solid/filebeheer",
+      "type": "dir",
+      "children": [
+        {
+          "name": "index.html",
+          "path": "solid/filebeheer/index.html",
+          "type": "file",
+          "size": 166623
+        }
+      ]
+    },
+    {
+      "name": "js",
+      "path": "solid/js",
+      "type": "dir",
+      "children": [
+        {
+          "name": "app.js",
+          "path": "solid/js/app.js",
+          "type": "file",
+          "size": 9509
+        }
+      ]
+    },
+    {
+      "name": "json",
+      "path": "solid/json",
+      "type": "dir",
+      "children": [
+        {
+          "name": "kadaster-workspace.json",
+          "path": "solid/json/kadaster-workspace.json",
+          "type": "file",
+          "size": 331
+        },
+        {
+          "name": "poortvliet-sectie-m.json",
+          "path": "solid/json/poortvliet-sectie-m.json",
+          "type": "file",
+          "size": 1067
+        },
+        {
+          "name": "scherpenisse-e108-e1552.json",
+          "path": "solid/json/scherpenisse-e108-e1552.json",
+          "type": "file",
+          "size": 565
+        }
+      ]
+    },
+    {
+      "name": "ogc",
+      "path": "solid/ogc",
+      "type": "dir",
+      "children": [
+        {
+          "name": "index.html",
+          "path": "solid/ogc/index.html",
+          "type": "file",
+          "size": 4161
+        },
+        {
+          "name": "ogc-client.js",
+          "path": "solid/ogc/ogc-client.js",
+          "type": "file",
+          "size": 1356
+        }
+      ]
+    },
+    {
+      "name": "pod",
+      "path": "solid/pod",
+      "type": "dir",
+      "children": [
+        {
+          "name": "bridges",
+          "path": "solid/pod/bridges",
+          "type": "dir",
+          "children": []
+        },
+        {
+          "name": "feeds",
+          "path": "solid/pod/feeds",
+          "type": "dir",
+          "children": [
+            {
+              "name": "subscriptions.ttl",
+              "path": "solid/pod/feeds/subscriptions.ttl",
+              "type": "file",
+              "size": 690
+            }
+          ]
+        },
+        {
+          "name": "kadaster",
+          "path": "solid/pod/kadaster",
+          "type": "dir",
+          "children": [
+            {
+              "name": "poortvliet-sectie-m.ttl",
+              "path": "solid/pod/kadaster/poortvliet-sectie-m.ttl",
+              "type": "file",
+              "size": 603
+            },
+            {
+              "name": "scherpenisse-e108-e1552.ttl",
+              "path": "solid/pod/kadaster/scherpenisse-e108-e1552.ttl",
+              "type": "file",
+              "size": 695
+            }
+          ]
+        },
+        {
+          "name": "pages",
+          "path": "solid/pod/pages",
+          "type": "dir",
+          "children": []
+        },
+        {
+          "name": "profile",
+          "path": "solid/pod/profile",
+          "type": "dir",
+          "children": [
+            {
+              "name": "card.ttl",
+              "path": "solid/pod/profile/card.ttl",
+              "type": "file",
+              "size": 224
+            }
+          ]
+        },
+        {
+          "name": ".acl",
+          "path": "solid/pod/.acl",
+          "type": "file",
+          "size": 289
+        },
+        {
+          "name": "sovereign-pod-rtc.js",
+          "path": "solid/pod/sovereign-pod-rtc.js",
+          "type": "file",
+          "size": 17574
+        }
+      ]
+    },
+    {
+      "name": "scripts",
+      "path": "solid/scripts",
+      "type": "dir",
+      "children": []
+    },
+    {
+      "name": "verwerker",
+      "path": "solid/verwerker",
+      "type": "dir",
+      "children": []
+    },
+    {
+      "name": "verwerwerker",
+      "path": "solid/verwerwerker",
+      "type": "dir",
+      "children": []
+    },
+    {
+      "name": "VORTEX.OS",
+      "path": "solid/VORTEX.OS",
+      "type": "dir",
+      "children": []
+    },
+    {
+      "name": "woo",
+      "path": "solid/woo",
+      "type": "dir",
+      "children": []
+    },
+    {
+      "name": "workbench",
+      "path": "solid/workbench",
+      "type": "dir",
+      "children": [
+        {
+          "name": "filebeheer",
+          "path": "solid/workbench/filebeheer",
+          "type": "dir",
+          "children": []
+        },
+        {
+          "name": ".gitkeep",
+          "path": "solid/workbench/.gitkeep",
+          "type": "file",
+          "size": 0
+        }
+      ]
+    },
+    {
+      "name": ".gitignore",
+      "path": "solid/.gitignore",
+      "type": "file",
+      "size": 77
+    },
+    {
+      "name": "apitest.html",
+      "path": "solid/apitest.html",
+      "type": "file",
+      "size": 63081
+    },
+    {
+      "name": "bestandenstructuur.md",
+      "path": "solid/bestandenstructuur.md",
+      "type": "file",
+      "size": 974
+    },
+    {
+      "name": "index.html",
+      "path": "solid/index.html",
+      "type": "file",
+      "size": 61800
+    },
+    {
+      "name": "percelen.json",
+      "path": "solid/percelen.json",
+      "type": "file",
+      "size": 9591
+    },
+    {
+      "name": "README.md",
+      "path": "solid/README.md",
+      "type": "file",
+      "size": 1396
+    },
+    {
+      "name": "sovereign-master-index.json",
+      "path": "solid/sovereign-master-index.json",
+      "type": "file",
+      "size": 4937
+    },
+    {
+      "name": "tree.html",
+      "path": "solid/tree.html",
+      "type": "file",
+      "size": 13550
+    },
+    {
+      "name": "tree.json",
+      "path": "solid/tree.json",
+      "type": "file",
+      "size": 4565
+    },
+    {
+      "name": "vercel.json",
+      "path": "solid/vercel.json",
+      "type": "file",
+      "size": 246
+    }
+  ]
+}

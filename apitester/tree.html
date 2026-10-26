@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VORTEX OS // Repository &amp; API Tree Navigator v158.3</title>
+  <style>
+    :root {
+      --bg: #030712;
+      --panel: #0f172a;
+      --surface: #1e293b;
+      --border: #334155;
+      --cyan: #38bdf8;
+      --green: #34d399;
+      --amber: #fbbf24;
+      --magenta: #f87171;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--mono);
+      background: var(--bg);
+      color: var(--text);
+      padding: 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+    h1 { font-size: 1.2rem; color: var(--cyan); display: flex; align-items: center; gap: 10px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
+    .nav-links { display: flex; gap: 8px; }
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.78rem;
+      background: var(--surface);
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+    .nav-links a:hover { border-color: var(--cyan); color: var(--cyan); }
+    .grid { display: grid; grid-template-columns: 350px 1fr; gap: 16px; }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber); margin-bottom: 12px; }
+    ul { list-style: none; padding-left: 10px; }
+    li { margin: 6px 0; font-size: 0.78rem; }
+    li a { color: var(--cyan); text-decoration: none; display: flex; align-items: center; gap: 6px; }
+    li a:hover { text-decoration: underline; color: var(--green); }
+    .folder { color: var(--amber); font-weight: bold; margin-top: 10px; }
+    pre {
+      background: var(--surface);
+      color: var(--green);
+      padding: 14px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      overflow: auto;
+      max-height: 600px;
+      white-space: pre-wrap;
+    }
+    .badge {
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--cyan);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1><span class="dot"></span>VORTEX OS // REPOSITORY &amp; API TREE</h1>
+  <nav class="nav-links">
+    <a href="index.html">🏠 Omni Master Workbench</a>
+    <a href="apitest.html">⚡ PDOK &amp; Solid Pod Tester</a>
+    <a href="tree.json">📜 tree.json Raw</a>
+  </nav>
+</header>
+
+<div class="grid">
+  <!-- BOOMSTRUCTUUR NAVIGATOR -->
+  <div class="panel">
+    <h2>📂 VFS &amp; Repository Tree</h2>
+    <div id="tree-view">
+      <div class="folder">📁 /home/ontwerp/solid (root)</div>
+      <ul>
+        <li><a href="index.html">📄 index.html <span class="badge">Omni Master</span></a></li>
+        <li><a href="apitest.html">📄 apitest.html <span class="badge">PDOK + Solid Pod</span></a></li>
+        <li><a href="mapglobe.html">📄 mapglobe.html <span class="badge">MapLibre Globe</span></a></li>
+        <li><a href="procesdossier.html">📄 procesdossier.html <span class="badge">Markdown Dossier</span></a></li>
+        <li><a href="podcast_player.html">📄 podcast_player.html <span class="badge">Audio Player</span></a></li>
+        <div class="folder">📁 ogc/</div>
+        <ul>
+          <li><a href="ogc/ogc-client.js">📦 ogc-client.js <span class="badge">CORS Client</span></a></li>
+        </ul>
+        <div class="folder">📁 pod/</div>
+        <ul>
+          <li><a href="pod/sovereign-pod-rtc.js">📦 sovereign-pod-rtc.js <span class="badge">WebRTC P2P</span></a></li>
+        </ul>
+        <div class="folder">📁 json/ &amp; beheercentrum/</div>
+        <ul>
+          <li><a href="tree.json">📜 tree.json <span class="badge">JSON Manifest</span></a></li>
+          <li><a href="json/scherpenisse-e108-e1552.json">📜 scherpenisse-e108-e1552.json</a></li>
+        </ul>
+      </ul>
+    </div>
+  </div>
+
+  <!-- DETAILS & API INSPECTOR -->
+  <div class="panel">
+    <h2>📡 Active Manifest &amp; API Endpoints Inspector</h2>
+    <pre id="json-preview">Laden van tree.json manifest...</pre>
+  </div>
+</div>
+
+<script>
+  async function loadManifest() {
+    try {
+      const res = await fetch('tree.json');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      document.getElementById('json-preview').textContent = JSON.stringify(data, null, 2);
+    } catch (err) {
+      document.getElementById('json-preview').textContent = `// Kon tree.json niet laden (${err.message}). Controleer of het bestand lokaal aanwezig is.`;
+    }
+  }
+  loadManifest();
+</script>
+</body>
+</html>
