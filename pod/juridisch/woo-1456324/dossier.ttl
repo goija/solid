@@ -1,0 +1,33 @@
+@prefix schema: <http://schema.org/>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix geo: <http://www.opengis.net/ont/geosparql#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+<#woo-zaak-1456324>
+    a schema:LegalCase, prov:Entity;
+    schema:name "Hernieuwd Woo-verzoek Visserijrechten, Molenplaat & Dossier-Zuurdeeg";
+    schema:identifier "1456324", "1425030", "1398201", "1504535", "BRE 24/5455 WOO";
+    schema:creator <https://solid-virid.vercel.app/profile/card.ttl#me>;
+    schema:dateModified "2026-10-27"^^xsd:date;
+    prov:wasGeneratedBy <#postnl-blaricum-3SDQYS603048929>;
+    geo:hasGeometry [
+        a geo:Geometry;
+        geo:asWKT "POLYGON((4.09 51.54, 4.10 51.54, 4.10 51.55, 4.09 51.55, 4.09 51.54))"^^geo:wktLiteral
+    ].
+
+<#postnl-blaricum-3SDQYS603048929>
+    a prov:Activity, schema:ParcelDelivery;
+    schema:trackingNumber "3SDQYS603048929";
+    schema:additionalType "R Aangetekend D-A-1";
+    schema:originAddress "Bosstraat 48, Roosendaal (2026-10-08T22:41:00+02:00)";
+    schema:deliveryAddress "Business Point Van der Wal, Binnendelta 1 T, 1261 WZ Blaricum (Depot: 2026-10-12)";
+    prov:endedAtTime "2026-10-23T11:42:00+02:00"^^xsd:dateTime;
+    schema:description "Feitelijke afhaling brief 1504535 op 23-10-2026 -> 0-dagen hersteltermijn (Strijd met art. 3:2 & 2:4 Awb).".
+
+<#afgescheiden-spoor-c-1463739>
+    a schema:Legislation;
+    schema:identifier "1463739";
+    schema:dateCreated "2026-04-21"^^xsd:date;
+    schema:datePublished "2026-04-22"^^xsd:date;
+    schema:author "J.K. Fraanje (gemeentesecretaris)", "M.L.P. Sijbers (burgemeester)";
+    schema:description "Beslissing op bezwaar BRP/AVG-auditlogs (Spoor C). Strikt gescheiden van Woo-visserijzaak 1456324 ex art. 4.1 lid 3 Woo jo. art. 5 AVG.".

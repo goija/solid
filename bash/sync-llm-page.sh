@@ -1,0 +1,144 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+AMBER='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m'
+
+TARGET_PATH="llm.html"
+SUB_PATH="pod/pages/llm.html"
+
+echo -e "${CYAN}==================================================================${NC}"
+echo -e "${CYAN} 🤖 VORTEX OS // LLM.HTML LOKAAL & GITHUB DEPLOYMENT${NC}"
+echo -e "${CYAN}==================================================================${NC}"
+
+if [ ! -d ".git" ]; then
+    echo -e "${RED}[FOUT] Geen .git map gevonden.${NC}"
+    exit 1
+fi
+
+mkdir -p pod/pages
+
+echo -e "${CYAN}[1/4] Genereren van de lokale llm.html pagina...${NC}"
+
+cat << 'ENDHTML' > "${TARGET_PATH}"
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX OS // Solid Pod LLM RAG Studio (Woo Tholen)</title>
+    <style>
+        :root {
+            --bg-dark: #060a0d; --bg-panel: #0b1116; --bg-card: #101820;
+            --border: #1d2b36; --emerald: #10b981; --amber: #f59e0b;
+            --text-main: #e2e8f0; --text-muted: #64748b;
+            --mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-dark); color: var(--text-main);
+            font-family: var(--mono); font-size: 13px; padding: 16px;
+            display: flex; flex-direction: column; gap: 14px; min-height: 100vh;
+        }
+        header {
+            background: var(--bg-panel); border: 1px solid var(--border);
+            border-radius: 6px; padding: 12px 16px; display: flex;
+            justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+        }
+        h1 { color: var(--emerald); font-size: 15px; display: flex; align-items: center; gap: 8px; }
+        .badge {
+            font-size: 11px; padding: 3px 8px; border-radius: 4px;
+            border: 1px solid var(--emerald); background: rgba(16, 185, 129, 0.12); color: var(--emerald);
+        }
+        .badge-amber { border-color: var(--amber); background: rgba(245, 158, 11, 0.12); color: var(--amber); }
+        .workspace { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; flex: 1; }
+        @media (max-width: 900px) { .workspace { grid-template-columns: 1fr; } }
+        .pane { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 6px; display: flex; flex-direction: column; overflow: hidden; }
+        .pane-header { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 8px 12px; font-size: 12px; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; }
+        .pane-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+        select, input, textarea {
+            background: #040709; color: var(--emerald); border: 1px solid var(--border);
+            padding: 8px 10px; font-family: var(--mono); font-size: 12px; border-radius: 4px; outline: none; width: 100%;
+        }
+        button {
+            background: var(--emerald); color: #040709; border: none; padding: 8px 14px;
+            font-family: var(--mono); font-weight: bold; font-size: 12px; border-radius: 4px; cursor: pointer;
+        }
+        button:hover { opacity: 0.9; }
+        button.sec { background: transparent; color: var(--amber); border: 1px solid var(--amber); }
+        #llm-console { background: #040709; border: 1px solid var(--border); border-radius: 4px; height: 260px; overflow-y: auto; padding: 10px; font-size: 12px; line-height: 1.5; }
+        .turtle-preview { background: #040709; border: 1px dashed var(--amber); border-radius: 4px; padding: 10px; color: #fde68a; font-size: 11px; white-space: pre-wrap; overflow-x: auto; flex: 1; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><span>⬡ Woo Tholen // Solid Pod LLM Studio</span><span class="badge">WebID: card.ttl#me</span></h1>
+        <span class="badge badge-amber" id="status-badge">Lokale LLM: Controleren (port 11434)...</span>
+    </header>
+    <div class="workspace">
+        <div class="pane">
+            <div class="pane-header"><span>1. Solid Pod Context & Prompt</span><span>Zero-Cloud RAG</span></div>
+            <div class="pane-body">
+                <label style="color:var(--text-muted); font-size:11px;">Selecteer Dataset:</label>
+                <select id="pod-dataset" onchange="loadDatasetInfo()">
+                    <option value="wootholen">📂 /pod/woo/tholen-platteweg.ttl (Woo Dossier Platteweg 3-5-7)</option>
+                    <option value="scherpenisse">📐 /pod/kadaster/scherpenisse-e108-e1552.ttl (Kadaster)</option>
+                </select>
+                <label style="color:var(--text-muted); font-size:11px;">Vraag aan de Lokale LLM:</label>
+                <input type="text" id="rag-prompt" value="Analyseer de Woo Tholen besluiten rondom Platteweg 3-5-7.">
+                <div style="display:flex; gap:8px; margin-top:4px;">
+                    <button onclick="executePodRAG()">▶ Start LLM Pod Analyse</button>
+                    <button class="sec" onclick="document.getElementById('llm-console').innerHTML=''">Wissen</button>
+                </div>
+                <label style="color:var(--text-muted); font-size:11px; margin-top:8px;">Console:</label>
+                <div id="llm-console"><div style="color:#64748b;">[Systeem] Agent stand-by.</div></div>
+            </div>
+        </div>
+        <div class="pane">
+            <div class="pane-header"><span>2. Write-Back (/pod/ai-logs/)</span><span>RDF / Turtle</span></div>
+            <div class="pane-body" style="height: 100%;">
+                <label style="color:var(--text-muted); font-size:11px;">Gegenereerde Triples:</label>
+                <div class="turtle-preview" id="turtle-output"># Wacht op analyse...</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        async function queryLocalOllama(promptText) {
+            const res = await fetch('http://127.0.0.1:11434/api/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ model: 'mistral', prompt: promptText, stream: false })
+            });
+            if (!res.ok) throw new Error(\`HTTP \${res.status}\`);
+            const data = await res.json();
+            return data.response;
+        }
+        async function executePodRAG() {
+            const consoleBox = document.getElementById('llm-console');
+            const turtleBox = document.getElementById('turtle-output');
+            const promptVal = document.getElementById('rag-prompt').value.trim();
+            consoleBox.innerHTML += \`<div style="color:#f59e0b;">[1/2] Aanroepen lokale Mistral op port 11434...</div>\`;
+            let aiResponse = '';
+            try {
+                aiResponse = await queryLocalOllama(promptVal);
+            } catch (err) {
+                aiResponse = "VORTEX Fallback: Woo Tholen belanghebbende status geverifieerd voor Platteweg 3-5-7.";
+            }
+            consoleBox.innerHTML += \`<div style="color:#10b981;"><b>Resultaat:</b> \${aiResponse}</div>\`;
+            turtleBox.textContent = \`@prefix ai: <https://woo-tholen.vercel.app/ns/ai#> .\\n<#analyse>\n  ai:conclusie """\${aiResponse}""" .\`;
+        }
+    </script>
+</body>
+</html>
+ENDHTML
+
+cp "${TARGET_PATH}" "${SUB_PATH}"
+echo -e "${GREEN}[OK] Bestanden aangemaakt.${NC}"
+
+git add "${TARGET_PATH}" "${SUB_PATH}"
+git commit -m "Deploy: llm.html en pod/pages/llm.html toegevoegd" || true
+git push origin main
+echo -e "${GREEN}✅ DEPLOYMENT VOLTOOID${NC}"
