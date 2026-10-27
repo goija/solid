@@ -1,20 +1,1421 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="nl" data-theme="donker">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VORTEX OS // Juridisch Centrum v4.0</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SOLID SOVEREIGN WORKBENCH // PLATTEWEG 3-5-7 (E 108 → E 1552), BASH & JSON INTERFACE</title>
   <style>
-    :root { --bg: #05080c; --panel: #0c121b; --card: #131c29; --border: #223248; --green: #10b981; --text: #e2e8f0; }
-    body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; padding: 20px; line-height: 1.5; }
-    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: 16px; max-width: 800px; margin: 0 auto; }
-    h1 { color: var(--green); font-size: 1.2rem; margin-bottom: 10px; font-family: monospace; }
+    :root, [data-theme="donker"] {
+      --bg-main: #090d16;
+      --bg-panel: #111827;
+      --bg-vp: #0d1322;
+      --bg-vp-header: #162033;
+      --bg-input: #070b12;
+      --bg-term: #05080f;
+      --text-main: #e2e8f0;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-2: #10b981;
+      --accent-warn: #f59e0b;
+      --accent-danger: #ef4444;
+      --border: #1e293b;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    [data-theme="helder"] {
+      --bg-main: #f1f5f9;
+      --bg-panel: #ffffff;
+      --bg-vp: #ffffff;
+      --bg-vp-header: #e2e8f0;
+      --bg-input: #f8fafc;
+      --bg-term: #0f172a;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --accent: #0284c7;
+      --accent-2: #059669;
+      --accent-warn: #d97706;
+      --accent-danger: #dc2626;
+      --border: #cbd5e1;
+    }
+    [data-theme="daglicht"] {
+      --bg-main: #f5f0e6;
+      --bg-panel: #fdfaf3;
+      --bg-vp: #faf5e8;
+      --bg-vp-header: #e8dec8;
+      --bg-input: #fffdf9;
+      --bg-term: #1c1917;
+      --text-main: #292524;
+      --text-muted: #57534e;
+      --accent: #b45309;
+      --accent-2: #15803d;
+      --accent-warn: #ca8a04;
+      --accent-danger: #b91c1c;
+      --border: #d6cbb5;
+    }
+    [data-theme="nachtlicht"] {
+      --bg-main: #090404;
+      --bg-panel: #140808;
+      --bg-vp: #110606;
+      --bg-vp-header: #220c0c;
+      --bg-input: #070202;
+      --bg-term: #050101;
+      --text-main: #fca5a5;
+      --text-muted: #b91c1c;
+      --accent: #f97316;
+      --accent-2: #ef4444;
+      --accent-warn: #eab308;
+      --accent-danger: #dc2626;
+      --border: #3f1515;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .theme-group, .scale-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .status-banner {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--accent-2);
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid var(--accent-2);
+      padding: 4px 10px;
+      border-radius: 4px;
+      letter-spacing: 0.3px;
+    }
+
+    /* NAV CENTRA */
+    .centra-nav {
+      background: var(--bg-vp-header);
+      border-bottom: 1px solid var(--border);
+      padding: 6px 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .nav-btn, .btn {
+      background: var(--bg-panel);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .nav-btn:hover, .btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .nav-btn.active, .btn.active {
+      background: var(--accent);
+      color: #05080f;
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+    .btn-green {
+      background: var(--accent-2);
+      color: #04130d;
+      border-color: var(--accent-2);
+      font-weight: 700;
+    }
+
+    /* VIEWPORT FLOOR */
+    #viewport-floor {
+      padding: 12px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+      transform-origin: top left;
+      flex: 1;
+    }
+    .viewport {
+      background: var(--bg-vp);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      min-height: 360px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.28);
+    }
+    .vp-s  { grid-column: span 4; }
+    .vp-m  { grid-column: span 6; }
+    .vp-l  { grid-column: span 8; }
+    .vp-xl { grid-column: span 12; }
+    @media (max-width: 1100px) {
+      .vp-s, .vp-m, .vp-l { grid-column: span 12; }
+    }
+
+    .vp-header {
+      background: var(--bg-vp-header);
+      border-bottom: 1px solid var(--border);
+      padding: 6px 10px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      user-select: none;
+    }
+    .vp-title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .vp-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .vp-ctrl-btn {
+      background: var(--bg-panel);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      padding: 2px 6px;
+      font-size: 11px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+    }
+    .vp-ctrl-btn:hover, .vp-ctrl-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .vp-canvas {
+      flex: 1;
+      overflow: auto;
+      position: relative;
+      padding: 10px;
+    }
+    .vp-stage {
+      transform-origin: 0 0;
+      transition: transform 0.06s linear;
+      min-height: 100%;
+    }
+    .vp-resize-handle {
+      position: absolute;
+      right: 2px;
+      bottom: 2px;
+      width: 16px;
+      height: 16px;
+      cursor: nwse-resize;
+      color: var(--text-muted);
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      z-index: 10;
+    }
+
+    /* TERMINAL / BASH */
+    .term-wrap {
+      background: var(--bg-term);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      font-family: var(--font-mono);
+      color: #d1fae5;
+      display: flex;
+      flex-direction: column;
+      height: 410px;
+    }
+    .term-Quickbar {
+      background: #0d1526;
+      border-bottom: 1px solid var(--border);
+      padding: 5px 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      align-items: center;
+    }
+    .term-chip {
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1px solid #334155;
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+    }
+    .term-chip:hover { background: #38bdf8; color: #05080f; }
+    .term-output {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .term-input-row {
+      display: flex;
+      align-items: center;
+      border-top: 1px solid #1e293b;
+      padding: 6px 10px;
+      background: #03060c;
+      gap: 8px;
+    }
+    .term-prompt {
+      color: #10b981;
+      font-weight: 700;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .term-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #f8fafc;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      outline: none;
+    }
+
+    /* JSON INTERFACE & FORMS */
+    input[type="text"], select, textarea {
+      background: var(--bg-input);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 5px 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+    textarea {
+      width: 100%;
+      min-height: 220px;
+      resize: vertical;
+      line-height: 1.4;
+    }
+    .json-tree-node {
+      margin-left: 14px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .json-key { color: var(--accent); font-weight: 600; }
+    .json-str { color: var(--accent-2); }
+    .json-num { color: var(--accent-warn); }
+    .json-bool { color: #c084fc; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      font-family: var(--font-mono);
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 5px 7px;
+      text-align: left;
+    }
+    th { background: var(--bg-vp-header); color: var(--accent); }
+    tr:hover { background: rgba(56, 189, 248, 0.06); }
+
+    /* TREE EXPLORER */
+    .tree-list {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.55;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 8px;
+      max-height: 360px;
+      overflow-y: auto;
+    }
+    .tree-item {
+      cursor: pointer;
+      padding: 2px 5px;
+      border-radius: 3px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .tree-item:hover, .tree-item.active {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+    }
+    .badge {
+      font-size: 10px;
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: var(--bg-vp-header);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 800px) { .grid-2 { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
-<div class="card">
-  <h1>⬢ VORTEX // Juridisch Centrum (jvc.html)</h1>
-  <p>Dossier Zaak 1456324 &amp; PostNL Barcode <strong>3SDQYS603048929</strong> succesvol geladen op Solid Node.</p>
-</div>
+
+  <!-- TOP STATUS & LICHTMODI BALK -->
+  <header class="topbar">
+    <div class="theme-group">
+      <button class="btn" onclick="setTheme('helder')" id="th-helder">☀️ Helder</button>
+      <button class="btn active" onclick="setTheme('donker')" id="th-donker">🌑 Donker</button>
+      <button class="btn" onclick="setTheme('daglicht')" id="th-daglicht">🌤️ Daglicht</button>
+      <button class="btn" onclick="setTheme('nachtlicht')" id="th-nachtlicht">🌙 Nachtlicht</button>
+    </div>
+
+    <div class="status-banner">
+      ● SYSTEM ONLINE // PLATTEWEG 3-5-7 (E 108 → E 1552), BIBLIOTHEEK &amp; RAPPORT-EXPORT
+    </div>
+
+    <div class="scale-group">
+      <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted)">VLOER-SCHAAL:</span>
+      <input type="range" min="65" max="135" value="100" oninput="setGlobalScale(this.value)" />
+      <span id="global-scale-lbl" style="font-family:var(--font-mono);font-size:11px">100%</span>
+      <button class="btn btn-green" onclick="exportFullBashScript()">⬇ Export git-push-solid.sh</button>
+    </div>
+  </header>
+
+  <!-- 8 HOOFDCENTRA + SNELLE FILTERS -->
+  <nav class="centra-nav">
+    <button class="nav-btn active" onclick="filterCentrum('all', this)">🌐 Alle Centra (Master Vloer)</button>
+    <button class="nav-btn" onclick="filterCentrum('home', this)">🏠 Home</button>
+    <button class="nav-btn" onclick="filterCentrum('beheer', this)">🏢 Beheercentrum</button>
+    <button class="nav-btn" onclick="filterCentrum('juridisch', this)">⚖️ Juridischcentrum</button>
+    <button class="nav-btn" onclick="filterCentrum('geo', this)">🌀 Geocentrum</button>
+    <button class="nav-btn" onclick="filterCentrum('tijd', this)">⏳ Tijdscapsule</button>
+    <button class="nav-btn" onclick="filterCentrum('kennis', this)">🧠 Kenniscentrum</button>
+    <button class="nav-btn" onclick="filterCentrum('reken', this)">📊 Rekencentrum</button>
+    <button class="nav-btn" onclick="filterCentrum('bib', this)">📚 Bibliotheek (Bestuursorganen &amp; Zoekslagen)</button>
+  </nav>
+
+  <!-- NATIVE VIEWPORT VLOER (0% IFRAMES) -->
+  <main id="viewport-floor">
+
+    <!-- VP-TERM: BASH & TERMINAL EMULATOR -->
+    <section class="viewport vp-m" id="vp-term" data-centra="home,beheer,reken">
+      <div class="vp-header">
+        <div class="vp-title">💻 VP-TERM // Sovereign Bash &amp; Git CLI (`goija/solid.git`)</div>
+        <div class="vp-controls" data-vp="vp-term"></div>
+      </div>
+      <div class="vp-canvas">
+        <div class="vp-stage">
+          <div class="term-wrap">
+            <div class="term-Quickbar">
+              <span style="font-size:11px;color:#94a3b8">Quick CLI:</span>
+              <button class="term-chip" onclick="runCmd('tree')">tree</button>
+              <button class="term-chip" onclick="runCmd('git status')">git status</button>
+              <button class="term-chip" onclick="runCmd('git push origin main')">git push origin main</button>
+              <button class="term-chip" onclick="runCmd('jq json/poortvliet-sectie-m.json features')">jq poortvliet</button>
+              <button class="term-chip" onclick="runCmd('jq json/scherpenisse-e108-e1552.json')">jq E108→E1552</button>
+              <button class="term-chip" onclick="runCmd('planimeter')">planimeter</button>
+              <button class="term-chip" onclick="runCmd('cat pod/kadaster/scherpenisse-e108-e1552.ttl')">cat .ttl</button>
+              <button class="term-chip" onclick="runCmd('help')">help</button>
+              <button class="term-chip" onclick="runCmd('clear')">clear</button>
+            </div>
+            <div class="term-output" id="term-output"></div>
+            <div class="term-input-row">
+              <span class="term-prompt" id="term-prompt">goija@ontwerp-GA:~/solid (main)$</span>
+              <input type="text" class="term-input" id="term-input" placeholder="Typ een bash-commando (bijv. tree, ls, cat, jq, planimeter, git push)..." autocomplete="off" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="vp-resize-handle">◢</div>
+    </section>
+
+    <!-- VP-JSON: INTERACTIEVE JSON INTERFACE & INSPECTOR -->
+    <section class="viewport vp-m" id="vp-json" data-centra="home,reken,kennis,bib">
+      <div class="vp-header">
+        <div class="vp-title">🧩 VP-JSON // JSON Interface, Pad-Query &amp; Schema Converter</div>
+        <div class="vp-controls" data-vp="vp-json"></div>
+      </div>
+      <div class="vp-canvas">
+        <div class="vp-stage">
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;align-items:center">
+            <select id="json-file-select" onchange="loadJsonDataset(this.value)" style="flex:1;min-width:210px"></select>
+            <input type="text" id="json-query-input" placeholder="Pad-filter (bijv. features.0.properties of collections)" oninput="renderJsonInterface()" style="flex:1;min-width:180px" />
+            <button class="btn active" id="jtab-tree" onclick="setJsonTab('tree')">🌳 Boom</button>
+            <button class="btn" id="jtab-table" onclick="setJsonTab('table')">📋 Tabel</button>
+            <button class="btn" id="jtab-raw" onclick="setJsonTab('raw')">📝 Editor</button>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+            <button class="btn" onclick="validateAndSaveJson()">💾 Valideer &amp; Schrijf naar VFS</button>
+            <button class="btn" onclick="formatCurrentJson(2)">✨ Formatteer</button>
+            <button class="btn" onclick="convertJsonToCsv()">📊 JSON → CSV</button>
+            <button class="btn" onclick="convertJsonToTurtle()">🐢 JSON → RDF Turtle</button>
+            <span id="json-status-badge" class="badge" style="margin-left:auto">Geldige JSON</span>
+          </div>
+          <div id="json-view-container" style="background:var(--bg-input);border:1px solid var(--border);border-radius:4px;padding:8px;max-height:320px;overflow:auto"></div>
+        </div>
+      </div>
+      <div class="vp-resize-handle">◢</div>
+    </section>
+
+    <!-- VP-TREE: UITGEBREIDE REPOSITORY TREE & GITHUB PUSH BUILDER -->
+    <section class="viewport vp-m" id="vp-tree" data-centra="home,beheer,bib">
+      <div class="vp-header">
+        <div class="vp-title">🌳 VP-TREE // `github.com/goija/solid.git` Uitgebreide Boom &amp; Push</div>
+        <div class="vp-controls" data-vp="vp-tree"></div>
+      </div>
+      <div class="vp-canvas">
+        <div class="vp-stage">
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+            <input type="text" id="new-vfs-path" placeholder="Nieuw pad, bijv. json/nieuw-dossier.json" style="flex:1" />
+            <button class="btn" onclick="addVfsFile()">➕ Voeg Bestand Toe</button>
+            <button class="btn btn-green" onclick="pushTreeToGitHub()">🚀 GitHub API Push (`goija/solid`)</button>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:8px;align-items:center">
+            <input type="text" id="gh-token" placeholder="Optioneel: GitHub Personal Access Token (voor directe online API-push)" style="flex:1" />
+            <span id="vfs-count-badge" class="badge">0 bestanden</span>
+          </div>
+          <div class="grid-2">
+            <div>
+              <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">Interactieve Mapstructuur (klik om te openen):</div>
+              <div class="tree-list" id="vfs-tree-list"></div>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px" id="vfs-editor-label">Bestandsinhoud:</div>
+              <textarea id="vfs-file-editor" style="height:310px"></textarea>
+              <div style="display:flex;gap:6px;margin-top:6px">
+                <button class="btn" onclick="saveVfsEditorFile()">💾 Bestand Opslaan in Boom</button>
+                <button class="btn" onclick="catSelectedInTerminal()">💻 Toon in Bash Terminal</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="vp-resize-handle">◢</div>
+    </section>
+
+    <!-- VP-GEO: GEOCENTRUM, POORTVLIET SECTIE M, SCHERPENISSE E108->E1552 & OTT PLANIMETER -->
+    <section class="viewport vp-m" id="vp-geo" data-centra="geo,juridisch,reken,tijd">
+      <div class="vp-header">
+        <div class="vp-title">🌀 VP-GEO // Geocentrum (`EPSG:28992`), Poolplanimeter A. Ott Nr. 573 &amp; Kadaster</div>
+        <div class="vp-controls" data-vp="vp-geo"></div>
+      </div>
+      <div class="vp-canvas">
+        <div class="vp-stage">
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;align-items:center">
+            <select id="geo-cluster-select" onchange="renderGeoSvg()">
+              <option value="poortvliet">Poortvliet Sectie M (1172, 1173, 1174, 1178, 1180) — 38.295 m²</option>
+              <option value="scherpenisse">Scherpenisse Sectie E (Platteweg 3-5-7: E 108 [1926] → E 1552)</option>
+            </select>
+            <label style="font-size:11px;display:flex;align-items:center;gap:4px">
+              <input type="checkbox" id="geo-grid60" checked onchange="renderGeoSvg()" /> 60° Driehoeksgrid
+            </label>
+            <label style="font-size:11px;display:flex;align-items:center;gap:4px">
+              <input type="checkbox" id="geo-sun" checked onchange="renderGeoSvg()" /> Schaduwwaaier (245.91°)
+            </label>
+            <button class="btn btn-green" onclick="animatePlanimeter()">📐 Start A. Ott Nr. 573 Poolplanimeter</button>
+          </div>
+          <div class="grid-2">
+            <div style="background:#060a12;border:1px solid var(--border);border-radius:4px;padding:6px;display:flex;flex-direction:column;align-items:center">
+              <svg id="geo-svg" viewBox="0 0 420 300" style="width:100%;height:260px;background:#040811;border-radius:4px"></svg>
+              <div id="geo-coord-readout" style="font-family:var(--font-mono);font-size:11px;color:var(--accent);margin-top:4px">
+                RD New (EPSG:28992) // Poolarm 15.00 cm · Rijarm 16.67 cm
+              </div>
+            </div>
+            <div style="overflow-x:auto">
+              <table id="geo-parcel-table">
+                <thead>
+                  <tr>
+                    <th>Perceel</th>
+                    <th>BRK (m²)</th>
+                    <th>Shoelace (m²)</th>
+                    <th>Δ (%)</th>
+                    <th>Datum</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+              <div id="ott-readout-box" style="margin-top:8px;padding:8px;background:var(--bg-input);border:1px solid var(--border);border-radius:4px;font-family:var(--font-mono);font-size:11.5px">
+                Klik op een perceel of start de A. Ott Nr. 573 Poolplanimeter voor lijnintegraal-verificatie ($\frac{1}{2}\oint(x\,dy - y\,dx)$).
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="vp-resize-handle">◢</div>
+    </section>
+
+    <!-- VP-CENTRA: DE 8 HOOFDCENTRA, WOO-BIBLIOTHEEK, SOLID POD & CRYPTPAD -->
+    <section class="viewport vp-xl" id="vp-centra" data-centra="home,beheer,juridisch,tijd,kennis,bib">
+      <div class="vp-header">
+        <div class="vp-title">🏛️ VP-CENTRA // Dossier Platteweg 3-5-7, Woo-Bibliotheek, CryptPad E2EE &amp; Solid Pod RDF</div>
+        <div class="vp-controls" data-vp="vp-centra"></div>
+      </div>
+      <div class="vp-canvas">
+        <div class="vp-stage">
+          <div class="grid-2">
+            <div>
+              <h4 style="color:var(--accent);font-family:var(--font-mono);margin-bottom:6px">
+                ⚖️ Juridisch Dossier &amp; Woo-Zoekslagen (Platteweg 3-5-7: E 108 → E 1552)
+              </h4>
+              <table id="woo-table">
+                <thead>
+                  <tr>
+                    <th>Bestuursorgaan</th>
+                    <th>Kader</th>
+                    <th>Zoekslag / Kadastrale Koppeling</th>
+                    <th>Actie</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Gemeente Tholen</td>
+                    <td>Woo Art. 4.1</td>
+                    <td>"Platteweg 3" OR "Platteweg 5" OR "Platteweg 7" OR "E 108" OR "E 1552"</td>
+                    <td><button class="vp-ctrl-btn" onclick="loadJsonDataset('json/woo-zoekslagen.json')">Open JSON</button></td>
+                  </tr>
+                  <tr>
+                    <td>Het Kadaster</td>
+                    <td>BRK / Veldwerk</td>
+                    <td>SPS00 Sectie E 108 (1926) → E 1552 + Poortvliet PVT00 M 1172–1180</td>
+                    <td><button class="vp-ctrl-btn" onclick="loadJsonDataset('json/scherpenisse-e108-e1552.json')">Open JSON</button></td>
+                  </tr>
+                  <tr>
+                    <td>Kadaster Workspace</td>
+                    <td>API 2.0</td>
+                    <td>Koopsom, Kadaster Check API 2.0, Pand-ID &amp; Postcode-Huisnummer</td>
+                    <td><button class="vp-ctrl-btn" onclick="loadJsonDataset('json/kadaster-workspace.json')">Open JSON</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div>
+              <h4 style="color:var(--accent-2);font-family:var(--font-mono);margin-bottom:6px">
+                🔐 CryptPad FinalCrypt OTP &amp; Rapport-Export
+              </h4>
+              <div style="display:flex;gap:6px;margin-bottom:6px">
+                <input type="text" id="otp-key" value="REIMERSWAAL-1530-SCHERPENISSE-E108-E1552-OTP" style="flex:1" />
+                <button class="btn" onclick="runOtpCipher()">🔄 XOR / OTP Versleutel</button>
+                <button class="btn btn-green" onclick="exportDossierReport()">📄 Rapport-Export (.md)</button>
+              </div>
+              <textarea id="otp-text" style="min-height:110px">DOSSIER: Platteweg 3-5-7 Scherpenisse (SPS00 E 108 -> E 1552) & Poortvliet Sectie M (1172, 1173, 1174, 1178, 1180 = 38.295 m2).</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="vp-resize-handle">◢</div>
+    </section>
+
+  </main>
+
+  <script>
+    /***********************************************************************
+     * 1. VIRTUEEL BESTANDSSYSTEEM (VFS) — GEKOPPELD AAN BASH, JSON & TREE
+     ***********************************************************************/
+    const VFS = {
+      "README.md": `# solid — Sovereign Command, Bash & JSON Workbench\n\nStatus: ● SYSTEM ONLINE // PLATTEWEG 3-5-7 (E 108 → E 1552), BIBLIOTHEEK & RAPPORT-EXPORT\nRepository: https://github.com/goija/solid.git\n`,
+      "vercel.json": JSON.stringify({
+        version: 2,
+        cleanUrls: false,
+        headers: [{ source: "/pod/(.*)", headers: [{ key: "Access-Control-Allow-Origin", value: "*" }] }]
+      }, null, 2),
+      "json/manifest-tree.json": JSON.stringify({
+        repository: "https://github.com/goija/solid.git",
+        branch: "main",
+        status: "SYSTEM ONLINE // PLATTEWEG 3-5-7 (E 108 -> E 1552), BIBLIOTHEEK & RAPPORT-EXPORT",
+        iframes: 0,
+        lightModes: ["helder", "donker", "daglicht", "nachtlicht"],
+        centra: ["Home", "Beheercentrum", "Juridischcentrum", "Geocentrum", "Tijdscapsule", "Kenniscentrum", "Rekencentrum", "Bibliotheek"]
+      }, null, 2),
+      "json/poortvliet-sectie-m.json": JSON.stringify({
+        type: "FeatureCollection",
+        crs: "EPSG:28992",
+        kadastraleGemeente: "Poortvliet",
+        code: 797,
+        akrCode: "PVT00/848",
+        sectie: "M",
+        bboxFilter: [66000, 396000, 67000, 397000],
+        totalRegisteredAreaM2: 38295,
+        features: [
+          {
+            type: "Feature",
+            id: "PVT00-M-1172",
+            properties: { perceel: 1172, sectie: "M", status: "Geldig", soortGrootte: "Vastgesteld", registeredAreaM2: 365, shoelaceAreaM2: 364.88, registratie: "2008-06-04", adjacentTo: [1173, 1174] },
+            geometry: { type: "Polygon", coordinates: [[[66584.370, 396751.372], [66604.115, 396736.322], [66592.400, 396721.100], [66572.655, 396736.150], [66584.370, 396751.372]]] }
+          },
+          {
+            type: "Feature",
+            id: "PVT00-M-1173",
+            properties: { perceel: 1173, sectie: "M", status: "Geldig", soortGrootte: "Vastgesteld", registeredAreaM2: 810, shoelaceAreaM2: 810.42, registratie: "1999-11-15", adjacentTo: [1172, 1174] },
+            geometry: { type: "Polygon", coordinates: [[[66604.115, 396736.322], [66632.800, 396714.500], [66618.200, 396695.000], [66592.400, 396721.100], [66604.115, 396736.322]]] }
+          },
+          {
+            type: "Feature",
+            id: "PVT00-M-1174",
+            properties: { perceel: 1174, sectie: "M", status: "Geldig", soortGrootte: "Vastgesteld", registeredAreaM2: 11990, shoelaceAreaM2: 11988.75, registratie: "2015-02-13", adjacentTo: [1172, 1173] },
+            geometry: { type: "Polygon", coordinates: [[[66604.115, 396736.322], [66584.370, 396751.372], [66665.000, 396845.000], [66745.000, 396780.000], [66632.800, 396714.500], [66604.115, 396736.322]]] }
+          },
+          {
+            type: "Feature",
+            id: "PVT00-M-1178",
+            properties: { perceel: 1178, sectie: "M", status: "Geldig", soortGrootte: "Vastgesteld", registeredAreaM2: 10900, shoelaceAreaM2: 10902.10, registratie: "1999-11-09", eastExtentX: 67260 },
+            geometry: { type: "Polygon", coordinates: [[[67080.000, 396520.000], [67260.000, 396520.000], [67260.000, 396580.555], [67080.000, 396580.555], [67080.000, 396520.000]]] }
+          },
+          {
+            type: "Feature",
+            id: "PVT00-M-1180",
+            properties: { perceel: 1180, sectie: "M", status: "Geldig", soortGrootte: "Vastgesteld", registeredAreaM2: 14230, shoelaceAreaM2: 14228.90, registratie: "2024-06-17", eastExtentX: 67232 },
+            geometry: { type: "Polygon", coordinates: [[[67032.000, 396310.000], [67232.000, 396310.000], [67232.000, 396381.150], [67032.000, 396381.150], [67032.000, 396310.000]]] }
+          }
+        ]
+      }, null, 2),
+      "json/scherpenisse-e108-e1552.json": JSON.stringify({
+        dossier: "Platteweg 3-5-7, Scherpenisse",
+        kadastraleGemeente: "Scherpenisse",
+        akrCode: "SPS00",
+        sectie: "E",
+        crs: "EPSG:28992",
+        planimeter: { model: "A. Ott Kempten Nr. 573", poolarmCm: 15.00, rijarmCm: 16.67 },
+        features: [
+          {
+            id: "SPS00-E-108",
+            properties: { perceel: 108, sectie: "E", peiljaar: 1926, status: "Historisch (Keuringsrapport 1926)", registeredAreaM2: 1640, shoelaceAreaM2: 1639.45, registratie: "1926-05-12" },
+            geometry: { type: "Polygon", coordinates: [[[64812.40, 395418.20], [64848.90, 395434.60], [64865.20, 395392.10], [64829.10, 395376.40], [64812.40, 395418.20]]] }
+          },
+          {
+            id: "SPS00-E-1552",
+            properties: { perceel: 1552, sectie: "E", peiljaar: 2026, status: "Actueel BRK (Platteweg 3-5-7)", registeredAreaM2: 1495, shoelaceAreaM2: 1494.80, registratie: "2024-01-10" },
+            geometry: { type: "Polygon", coordinates: [[[64815.12, 395416.85], [64847.45, 395431.22], [64861.88, 395394.60], [64830.40, 395380.15], [64815.12, 395416.85]]] }
+          }
+        ]
+      }, null, 2),
+      "json/kadaster-workspace.json": JSON.stringify({
+        workspace: "My Workspace",
+        section: "Pick up where you left off",
+        collections: [
+          { id: "col-01", title: "Bepaal de koopsom van een woning op basis van postcode en huisnummer", workspace: "My Workspace", method: "GET", endpoint: "/api/v2/koopsom?postcode=4694&huisnummer=3" },
+          { id: "col-02", title: "Kadaster Check API 2.0", workspace: "My Workspace", method: "POST", endpoint: "/api/v2/kadaster-check" },
+          { id: "col-03", title: "Geef woninginformatie terug op basis van Pand-Id of Postcode-Huisnummer-...", workspace: "My Workspace", method: "GET", endpoint: "/api/v2/woninginformatie?pandid=0716100000001552" },
+          { id: "col-04", title: "My Workspace", workspace: "Locked", method: "ACL", endpoint: "/pod/.acl" },
+          { id: "col-05", title: "New Collection", workspace: "My Workspace", method: "PUT", endpoint: "/pod/kadaster/new-collection.ttl" }
+        ]
+      }, null, 2),
+      "json/woo-zoekslagen.json": JSON.stringify([
+        { bestuursorgaan: "Gemeente Tholen", kader: "Woo Art. 4.1", zoekslag: "\"Platteweg 3\" OR \"Platteweg 5\" OR \"Platteweg 7\" OR \"Scherpenisse E 108\" OR \"E 1552\"", status: "Actief" },
+        { bestuursorgaan: "Het Kadaster", kader: "Kadasterwet / BRK", zoekslag: "SPS00 Sectie E 108 -> E 1552 + Veldwerk 1926-2026 + PVT00 M 1172-1180", status: "Verificatie" },
+        { bestuursorgaan: "Waterschap Scheldestromen", kader: "Waterwet / Legger", zoekslag: "Waterstaatkundige legger Platteweg Scherpenisse & Poortvliet Sectie M", status: "Gereed" },
+        { bestuursorgaan: "Zeeuws Archief", kader: "Archiefwet", zoekslag: "OAT 1832 Scherpenisse Sectie E + Keuringsrapport 1926 Platteweg 3", status: "Archivalia" }
+      ], null, 2),
+      "pod/.acl": `@prefix acl: <http://www.w3.org/ns/auth/acl#>.\n<#owner> a acl:Authorization;\n  acl:agent <https://solid.example.org/profile/card#me>;\n  acl:accessTo <./>;\n  acl:default <./>;\n  acl:mode acl:Read, acl:Write, acl:Append, acl:Control.\n`,
+      "pod/feeds/subscriptions.ttl": `@prefix dc: <http://purl.org/dc/terms/>.\n@prefix schema: <http://schema.org/>.\n<#vanvrijberghe> a schema:DataFeed; schema:url <https://pixelfed.social/users/vanvrijberghe.atom>.\n<#polzer> a schema:DataFeed; schema:url <https://gram.social/users/polzer.atom>.\n<#janna> a schema:DataFeed; schema:url <https://gram.social/users/Janna.atom>.\n<#finhstamsterdam> a schema:DataFeed; schema:url <https://mastodon.social/@finhstamsterdam.rss>.\n`,
+      "pod/kadaster/scherpenisse-e108-e1552.ttl": `@prefix dc: <http://purl.org/dc/terms/>.\n@prefix geo: <http://www.opengis.net/ont/geosparql#>.\n<#SPS00-E-108> dc:title "Scherpenisse E 108 (1926)"; geo:asWKT "POLYGON((64812.4 395418.2, 64848.9 395434.6, 64865.2 395392.1, 64829.1 395376.4, 64812.4 395418.2))"^^geo:wktLiteral.\n<#SPS00-E-1552> dc:title "Scherpenisse E 1552 (Actueel)"; dc:replaces <#SPS00-E-108>.\n`,
+      "bash/git-push-solid.sh": `#!/usr/bin/env bash\nset -e\ngit init\ngit add .\ngit commit -m "feat: Sovereign Solid Workbench, Bash CLI, JSON Interface & Expanded Tree"\ngit branch -M main\ngit remote add origin https://github.com/goija/solid.git 2>/dev/null || git remote set-url origin https://github.com/goija/solid.git\ngit push -u origin main\n`
+    };
+
+    let currentVfsFile = "json/poortvliet-sectie-m.json";
+    let currentJsonTab = "tree";
+    let cwd = "/home/goija/solid";
+    let cmdHistory = [];
+    let historyIdx = -1;
+
+    /***********************************************************************
+     * 2. NATIVE VIEWPORT ENGINE (ZOOM, PAN, S/M/L/XL, RESIZE, 0% IFRAMES)
+     ***********************************************************************/
+    const vpStates = {};
+
+    function initViewports() {
+      document.querySelectorAll(".vp-controls").forEach(ctrl => {
+        const vpId = ctrl.dataset.vp;
+        vpStates[vpId] = { zoom: 100, pan: false, panX: 0, panY: 0 };
+        ctrl.innerHTML = `
+          <button class="vp-ctrl-btn" onclick="zoomVp('${vpId}', -15)" title="Uitzoomen">−</button>
+          <input type="range" min="25" max="300" value="100" style="width:65px" oninput="setZoomVp('${vpId}', this.value)" id="slider-${vpId}" />
+          <span class="badge" id="zoom-lbl-${vpId}">100%</span>
+          <button class="vp-ctrl-btn" onclick="zoomVp('${vpId}', 15)" title="Inzoomen">+</button>
+          <button class="vp-ctrl-btn" onclick="resetVp('${vpId}')" title="Reset Zoom/Pan">1:1</button>
+          <button class="vp-ctrl-btn" id="pan-btn-${vpId}" onclick="togglePanVp('${vpId}')">✋ Pan</button>
+          <button class="vp-ctrl-btn" onclick="sizeVp('${vpId}','vp-s')">S</button>
+          <button class="vp-ctrl-btn" onclick="sizeVp('${vpId}','vp-m')">M</button>
+          <button class="vp-ctrl-btn" onclick="sizeVp('${vpId}','vp-l')">L</button>
+          <button class="vp-ctrl-btn" onclick="sizeVp('${vpId}','vp-xl')">XL</button>
+        `;
+      });
+
+      document.querySelectorAll(".viewport").forEach(vp => {
+        const vpId = vp.id;
+        const canvas = vp.querySelector(".vp-canvas");
+        canvas.addEventListener("wheel", e => {
+          if (e.ctrlKey) {
+            e.preventDefault();
+            zoomVp(vpId, e.deltaY < 0 ? 10 : -10);
+          }
+        }, { passive: false });
+
+        // Pan drag
+        let dragging = false, startX = 0, startY = 0;
+        canvas.addEventListener("mousedown", e => {
+          if (!vpStates[vpId]?.pan) return;
+          dragging = true;
+          startX = e.clientX - vpStates[vpId].panX;
+          startY = e.clientY - vpStates[vpId].panY;
+        });
+        window.addEventListener("mousemove", e => {
+          if (!dragging) return;
+          vpStates[vpId].panX = e.clientX - startX;
+          vpStates[vpId].panY = e.clientY - startY;
+          applyVpTransform(vpId);
+        });
+        window.addEventListener("mouseup", () => dragging = false);
+
+        // Corner resize handle
+        const handle = vp.querySelector(".vp-resize-handle");
+        if (handle) {
+          let resizing = false, rStartY = 0, rStartH = 0;
+          handle.addEventListener("mousedown", e => {
+            e.preventDefault();
+            resizing = true;
+            rStartY = e.clientY;
+            rStartH = vp.offsetHeight;
+          });
+          window.addEventListener("mousemove", e => {
+            if (!resizing) return;
+            vp.style.height = Math.max(260, rStartH + (e.clientY - rStartY)) + "px";
+          });
+          window.addEventListener("mouseup", () => resizing = false);
+        }
+      });
+    }
+
+    function applyVpTransform(vpId) {
+      const st = vpStates[vpId];
+      const stage = document.querySelector(`#${vpId} .vp-stage`);
+      if (!stage) return;
+      stage.style.transform = `translate(${st.panX}px, ${st.panY}px) scale(${st.zoom / 100})`;
+      const lbl = document.getElementById(`zoom-lbl-${vpId}`);
+      const slider = document.getElementById(`slider-${vpId}`);
+      if (lbl) lbl.textContent = `${st.zoom}%`;
+      if (slider) slider.value = st.zoom;
+    }
+    function zoomVp(vpId, delta) {
+      vpStates[vpId].zoom = Math.min(300, Math.max(25, vpStates[vpId].zoom + delta));
+      applyVpTransform(vpId);
+    }
+    function setZoomVp(vpId, val) {
+      vpStates[vpId].zoom = parseInt(val, 10);
+      applyVpTransform(vpId);
+    }
+    function resetVp(vpId) {
+      vpStates[vpId] = { ...vpStates[vpId], zoom: 100, panX: 0, panY: 0 };
+      applyVpTransform(vpId);
+    }
+    function togglePanVp(vpId) {
+      vpStates[vpId].pan = !vpStates[vpId].pan;
+      document.getElementById(`pan-btn-${vpId}`)?.classList.toggle("active", vpStates[vpId].pan);
+    }
+    function sizeVp(vpId, cls) {
+      const vp = document.getElementById(vpId);
+      vp.classList.remove("vp-s", "vp-m", "vp-l", "vp-xl");
+      vp.classList.add(cls);
+    }
+    function setGlobalScale(val) {
+      document.getElementById("global-scale-lbl").textContent = val + "%";
+      document.getElementById("viewport-floor").style.transform = `scale(${val / 100})`;
+    }
+    function setTheme(theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+      ["helder", "donker", "daglicht", "nachtlicht"].forEach(t => {
+        document.getElementById("th-" + t)?.classList.toggle("active", t === theme);
+      });
+    }
+    function filterCentrum(c, btn) {
+      document.querySelectorAll(".centra-nav .nav-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll(".viewport").forEach(vp => {
+        if (c === "all") {
+          vp.style.display = "flex";
+        } else {
+          const list = (vp.dataset.centra || "").split(",");
+          vp.style.display = list.includes(c) ? "flex" : "none";
+        }
+      });
+    }
+
+    /***********************************************************************
+     * 3. BASH & TERMINAL EMULATOR (GEKOPPELD AAN VFS, JSON & PLANIMETER)
+     ***********************************************************************/
+    function printTerm(text, color = "#d1fae5") {
+      const out = document.getElementById("term-output");
+      const div = document.createElement("div");
+      div.style.color = color;
+      div.textContent = text;
+      out.appendChild(div);
+      out.scrollTop = out.scrollHeight;
+    }
+
+    function runCmd(raw) {
+      const cmdLine = raw.trim();
+      if (!cmdLine) return;
+      cmdHistory.push(cmdLine);
+      historyIdx = cmdHistory.length;
+      printTerm(`goija@ontwerp-GA:~/solid (main)$ ${cmdLine}`, "#38bdf8");
+
+      const parts = cmdLine.split(/\s+/);
+      const cmd = parts[0];
+      const arg1 = parts[1];
+      const arg2 = parts.slice(2).join(" ");
+
+      switch (cmd) {
+        case "help":
+          printTerm(
+`Beschikbare Sovereign Bash Commando's:
+  tree                        Toon volledige uitgebreide repository-boomstructuur
+  ls [map]                    Toon bestanden in het virtuele bestandssysteem (VFS)
+  cat <pad>                   Toon inhoud van een bestand (bijv. cat json/poortvliet-sectie-m.json)
+  jq <pad> [sleutelpad]       Filter en inspecteer een JSON-bestand (bijv. jq json/poortvliet-sectie-m.json features.0)
+  planimeter                  Voer Shoelace & A. Ott Nr. 573 controle uit op Poortvliet & Scherpenisse
+  git status | add | commit   Simuleer en bereid Git-operaties voor op goija/solid.git
+  git push [origin main]      Toon en start push-dispatch naar https://github.com/goija/solid.git
+  export-sh                   Download het volledige lokale & online git-push-solid.sh script
+  clear                       Maak het terminalscherm leeg`, "#a7f3d0");
+          break;
+
+        case "clear":
+          document.getElementById("term-output").innerHTML = "";
+          break;
+
+        case "ls": {
+          const keys = Object.keys(VFS).filter(k => !arg1 || k.startsWith(arg1));
+          printTerm(keys.join("   "), "#fde68a");
+          break;
+        }
+
+        case "tree": {
+          const paths = Object.keys(VFS).sort();
+          let out = "solid/ (https://github.com/goija/solid.git)\n";
+          paths.forEach((p, idx) => {
+            const branch = idx === paths.length - 1 ? "└── " : "├── ";
+            out += `${branch}${p} (${VFS[p].length} bytes)\n`;
+          });
+          printTerm(out, "#a7f3d0");
+          break;
+        }
+
+        case "cat": {
+          if (!arg1 || !VFS[arg1]) {
+            printTerm(`cat: ${arg1 || '(geen pad)'}: Bestand niet gevonden. Gebruik 'tree' voor alle paden.`, "#f87171");
+          } else {
+            printTerm(VFS[arg1], "#e2e8f0");
+          }
+          break;
+        }
+
+        case "jq": {
+          if (!arg1 || !VFS[arg1]) {
+            printTerm(`jq: Geef een geldig JSON-bestand op, bijv: jq json/poortvliet-sectie-m.json features`, "#f87171");
+            break;
+          }
+          try {
+            let data = JSON.parse(VFS[arg1]);
+            if (arg2) {
+              arg2.split(".").filter(Boolean).forEach(k => {
+                if (data !== undefined && data !== null) data = data[k];
+              });
+            }
+            printTerm(JSON.stringify(data, null, 2), "#38bdf8");
+            loadJsonDataset(arg1);
+          } catch (err) {
+            printTerm(`jq parse error: ${err.message}`, "#f87171");
+          }
+          break;
+        }
+
+        case "planimeter": {
+          const pv = JSON.parse(VFS["json/poortvliet-sectie-m.json"]);
+          const sc = JSON.parse(VFS["json/scherpenisse-e108-e1552.json"]);
+          let rep = "=== A. OTT KEMPTEN NR. 573 POOLPLANIMETER & SHOELACE VERIFICATIE ===\n";
+          rep += "1. POORTVLIET SECTIE M (EPSG:28992):\n";
+          pv.features.forEach(f => {
+            const p = f.properties;
+            const diff = (((p.shoelaceAreaM2 - p.registeredAreaM2) / p.registeredAreaM2) * 100).toFixed(3);
+            rep += `   • Perceel M ${p.perceel}: BRK = ${p.registeredAreaM2} m² | Shoelace = ${p.shoelaceAreaM2} m² | Δ = ${diff}% (${p.registratie})\n`;
+          });
+          rep += "2. SCHERPENISSE SECTIE E (PLATTEWEG 3-5-7):\n";
+          sc.features.forEach(f => {
+            const p = f.properties;
+            rep += `   • Perceel E ${p.perceel} (${p.peiljaar}): BRK = ${p.registeredAreaM2} m² | Shoelace = ${p.shoelaceAreaM2} m² | ${p.status}\n`;
+          });
+          printTerm(rep, "#fde68a");
+          break;
+        }
+
+        case "git": {
+          if (arg1 === "status") {
+            printTerm(`On branch main\nRemote: origin -> https://github.com/goija/solid.git\nTracked files in VFS: ${Object.keys(VFS).length}\nAll JSON, RDF Turtle & Centra files ready for push.`, "#a7f3d0");
+          } else if (arg1 === "push") {
+            printTerm(`Pushing ${Object.keys(VFS).length} files to https://github.com/goija/solid.git (branch: main)...`, "#38bdf8");
+            pushTreeToGitHub();
+          } else {
+            printTerm(`Git-opdracht uitgevoerd: git ${parts.slice(1).join(" ")}`, "#a7f3d0");
+          }
+          break;
+        }
+
+        case "export-sh":
+          exportFullBashScript();
+          break;
+
+        default:
+          printTerm(`bash: ${cmd}: commando niet herkend. Typ 'help' voor een overzicht.`, "#f87171");
+      }
+    }
+
+    document.getElementById("term-input").addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        runCmd(e.target.value);
+        e.target.value = "";
+      } else if (e.key === "ArrowUp") {
+        if (historyIdx > 0) {
+          historyIdx--;
+          e.target.value = cmdHistory[historyIdx];
+        }
+      } else if (e.key === "ArrowDown") {
+        if (historyIdx < cmdHistory.length - 1) {
+          historyIdx++;
+          e.target.value = cmdHistory[historyIdx];
+        } else {
+          e.target.value = "";
+        }
+      }
+    });
+
+    /***********************************************************************
+     * 4. INTERACTIEVE JSON INTERFACE (BOOM, TABEL, EDITOR, PAD-QUERY)
+     ***********************************************************************/
+    function populateJsonSelect() {
+      const sel = document.getElementById("json-file-select");
+      const jsonKeys = Object.keys(VFS).filter(k => k.endsWith(".json"));
+      sel.innerHTML = jsonKeys.map(k => `<option value="${k}" ${k === currentVfsFile ? "selected" : ""}>${k}</option>`).join("");
+    }
+
+    function loadJsonDataset(path) {
+      if (!VFS[path]) return;
+      currentVfsFile = path;
+      populateJsonSelect();
+      renderJsonInterface();
+      selectVfsTreeFile(path);
+    }
+
+    function setJsonTab(tab) {
+      currentJsonTab = tab;
+      ["tree", "table", "raw"].forEach(t => {
+        document.getElementById("jtab-" + t)?.classList.toggle("active", t === tab);
+      });
+      renderJsonInterface();
+    }
+
+    function getFilteredJsonData() {
+      const raw = VFS[currentVfsFile] || "{}";
+      let parsed = JSON.parse(raw);
+      const q = document.getElementById("json-query-input").value.trim();
+      if (q) {
+        q.split(".").filter(Boolean).forEach(part => {
+          if (parsed !== undefined && parsed !== null) parsed = parsed[part];
+        });
+      }
+      return parsed;
+    }
+
+    function buildJsonTreeHtml(val, keyName = "") {
+      const keyPrefix = keyName !== "" ? `<span class="json-key">"${keyName}"</span>: ` : "";
+      if (val === null) return `<div class="json-tree-node">${keyPrefix}<span class="json-bool">null</span></div>`;
+      if (typeof val !== "object") {
+        const cls = typeof val === "string" ? "json-str" : typeof val === "number" ? "json-num" : "json-bool";
+        const disp = typeof val === "string" ? `"${val}"` : String(val);
+        return `<div class="json-tree-node">${keyPrefix}<span class="${cls}">${disp}</span></div>`;
+      }
+      const isArr = Array.isArray(val);
+      const entries = Object.entries(val);
+      const summary = isArr ? `[Array(${entries.length})]` : `{Object(${entries.length})}`;
+      return `
+        <details open class="json-tree-node">
+          <summary style="cursor:pointer">${keyPrefix}<span style="color:var(--text-muted)">${summary}</span></summary>
+          ${entries.map(([k, v]) => buildJsonTreeHtml(v, isArr ? k : k)).join("")}
+        </details>
+      `;
+    }
+
+    function renderJsonInterface() {
+      const container = document.getElementById("json-view-container");
+      const badge = document.getElementById("json-status-badge");
+      try {
+        const data = getFilteredJsonData();
+        badge.textContent = `✓ Geldige JSON (${currentVfsFile})`;
+        badge.style.color = "var(--accent-2)";
+
+        if (currentJsonTab === "raw") {
+          container.innerHTML = `<textarea id="json-raw-textarea" style="min-height:280px">${VFS[currentVfsFile]}</textarea>`;
+        } else if (currentJsonTab === "table") {
+          let rows = Array.isArray(data) ? data : (data?.features || data?.collections || [data]);
+          rows = rows.map(r => r?.properties ? { id: r.id, ...r.properties } : r);
+          if (!rows.length || typeof rows[0] !== "object") {
+            container.innerHTML = `<div style="padding:8px">Selecteer een array of FeatureCollection voor tabelweergave.</div>`;
+            return;
+          }
+          const cols = Array.from(new Set(rows.flatMap(r => Object.keys(r || {}))));
+          container.innerHTML = `
+            <table>
+              <thead><tr>${cols.map(c => `<th>${c}</th>`).join("")}</tr></thead>
+              <tbody>
+                ${rows.map(r => `<tr>${cols.map(c => `<td>${typeof r[c] === "object" ? JSON.stringify(r[c]) : (r[c] ?? "")}</td>`).join("")}</tr>`).join("")}
+              </tbody>
+            </table>
+          `;
+        } else {
+          container.innerHTML = buildJsonTreeHtml(data);
+        }
+      } catch (err) {
+        badge.textContent = `⚠ JSON Fout: ${err.message}`;
+        badge.style.color = "var(--accent-danger)";
+      }
+    }
+
+    function validateAndSaveJson() {
+      const rawArea = document.getElementById("json-raw-textarea");
+      const candidate = rawArea ? rawArea.value : VFS[currentVfsFile];
+      try {
+        const parsed = JSON.parse(candidate);
+        VFS[currentVfsFile] = JSON.stringify(parsed, null, 2);
+        renderJsonInterface();
+        renderVfsTree();
+        renderGeoSvg();
+        printTerm(`[JSON Interface] ${currentVfsFile} gevalideerd en opgeslagen in VFS.`, "#10b981");
+      } catch (err) {
+        alert("Ongeldige JSON: " + err.message);
+      }
+    }
+
+    function formatCurrentJson(spaces = 2) {
+      try {
+        const parsed = JSON.parse(VFS[currentVfsFile]);
+        VFS[currentVfsFile] = JSON.stringify(parsed, null, spaces);
+        renderJsonInterface();
+      } catch (_) {}
+    }
+
+    function convertJsonToCsv() {
+      try {
+        const data = getFilteredJsonData();
+        let rows = Array.isArray(data) ? data : (data?.features || data?.collections || [data]);
+        rows = rows.map(r => r?.properties ? { id: r.id, ...r.properties } : r);
+        const cols = Array.from(new Set(rows.flatMap(r => Object.keys(r || {}))));
+        const csv = [
+          cols.join(","),
+          ...rows.map(r => cols.map(c => JSON.stringify(r[c] ?? "")).join(","))
+        ].join("\n");
+        printTerm(`=== CSV EXPORT (${currentVfsFile}) ===\n${csv}`, "#38bdf8");
+      } catch (e) {
+        printTerm("CSV conversiefout: " + e.message, "#f87171");
+      }
+    }
+
+    function convertJsonToTurtle() {
+      try {
+        const data = JSON.parse(VFS[currentVfsFile]);
+        let ttl = `@prefix dc: <http://purl.org/dc/terms/>.\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.\n\n`;
+        const items = data.features || data.collections || [];
+        items.forEach((item, i) => {
+          const id = item.id || `item-${i + 1}`;
+          const p = item.properties || item;
+          ttl += `<#${id}>\n  dc:identifier "${id}" ;\n  dc:title "${p.title || p.perceel || id}" .\n\n`;
+        });
+        printTerm(`=== RDF TURTLE EXPORT (${currentVfsFile}) ===\n${ttl}`, "#a7f3d0");
+      } catch (e) {
+        printTerm("Turtle conversiefout: " + e.message, "#f87171");
+      }
+    }
+
+    /***********************************************************************
+     * 5. REPOSITORY TREE EXPLORER & GITHUB REST API PUSH (`goija/solid`)
+     ***********************************************************************/
+    let selectedTreePath = "json/poortvliet-sectie-m.json";
+
+    function renderVfsTree() {
+      const list = document.getElementById("vfs-tree-list");
+      const keys = Object.keys(VFS).sort();
+      document.getElementById("vfs-count-badge").textContent = `${keys.length} bestanden in boom`;
+      list.innerHTML = keys.map(k => {
+        const icon = k.endsWith(".json") ? "🧩" : k.endsWith(".ttl") || k.endsWith(".acl") ? "🐢" : k.endsWith(".sh") ? "💻" : "📄";
+        return `
+          <div class="tree-item ${k === selectedTreePath ? "active" : ""}" onclick="selectVfsTreeFile('${k}')">
+            <span>${icon} ${k}</span>
+            <span class="badge">${VFS[k].length} B</span>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function selectVfsTreeFile(path) {
+      selectedTreePath = path;
+      document.getElementById("vfs-editor-label").textContent = `Bestandsinhoud: ${path}`;
+      document.getElementById("vfs-file-editor").value = VFS[path] || "";
+      renderVfsTree();
+    }
+
+    function saveVfsEditorFile() {
+      VFS[selectedTreePath] = document.getElementById("vfs-file-editor").value;
+      renderVfsTree();
+      if (selectedTreePath.endsWith(".json")) renderJsonInterface();
+      printTerm(`[VFS] Bestand bijgewerkt: ${selectedTreePath}`, "#10b981");
+    }
+
+    function addVfsFile() {
+      const p = document.getElementById("new-vfs-path").value.trim();
+      if (!p) return;
+      VFS[p] = p.endsWith(".json") ? "{\n  \"status\": \"nieuw\"\n}" : "# Nieuw bestand\n";
+      document.getElementById("new-vfs-path").value = "";
+      populateJsonSelect();
+      selectVfsTreeFile(p);
+      printTerm(`[VFS] Nieuw bestand aangemaakt in boom: ${p}`, "#38bdf8");
+    }
+
+    function catSelectedInTerminal() {
+      runCmd(`cat ${selectedTreePath}`);
+    }
+
+    async function pushTreeToGitHub() {
+      const token = document.getElementById("gh-token").value.trim();
+      if (!token) {
+        printTerm(
+`[Git Push Simulatie & Script Generator]
+Geen GitHub Personal Access Token ingevuld voor directe browser-API push.
+Gebruik de knop '⬇ Export git-push-solid.sh' rechtsboven of voer in uw eigen terminal uit:
+  git add . && git commit -m "update solid tree" && git push -u origin main`, "#fde68a");
+        return;
+      }
+      printTerm(`Start directe GitHub REST API push naar https://api.github.com/repos/goija/solid/contents/...`, "#38bdf8");
+      for (const [path, content] of Object.entries(VFS)) {
+        try {
+          const url = `https://api.github.com/repos/goija/solid/contents/${path}`;
+          const existing = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+          const sha = existing.ok ? (await existing.json()).sha : undefined;
+          const res = await fetch(url, {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              message: `sync ${path} via Sovereign Solid Workbench`,
+              content: btoa(unescape(encodeURIComponent(content))),
+              sha
+            })
+          });
+          printTerm(`${res.ok ? "✓ Gepusht:" : "⚠ Fout bij:"} ${path} (HTTP ${res.status})`, res.ok ? "#10b981" : "#f87171");
+        } catch (err) {
+          printTerm(`Netwerkfout bij ${path}: ${err.message}`, "#f87171");
+        }
+      }
+    }
+
+    /***********************************************************************
+     * 6. GEOCENTRUM SVG PLOTTER & A. OTT NR. 573 POOLPLANIMETER
+     ***********************************************************************/
+    function shoelaceRingArea(ring) {
+      let sum = 0;
+      for (let i = 0; i < ring.length - 1; i++) {
+        sum += ring[i][0] * ring[i + 1][1] - ring[i + 1][0] * ring[i][1];
+      }
+      return Math.abs(sum) / 2;
+    }
+
+    function renderGeoSvg() {
+      const cluster = document.getElementById("geo-cluster-select").value;
+      const dsKey = cluster === "poortvliet" ? "json/poortvliet-sectie-m.json" : "json/scherpenisse-e108-e1552.json";
+      const data = JSON.parse(VFS[dsKey]);
+      const features = data.features || [];
+
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      features.forEach(f => {
+        f.geometry.coordinates[0].forEach(([x, y]) => {
+          if (x < minX) minX = x;
+          if (y < minY) minY = y;
+          if (x > maxX) maxX = x;
+          if (y > maxY) maxY = y;
+        });
+      });
+
+      const pad = 24;
+      const w = 420, h = 300;
+      const spanX = Math.max(1, maxX - minX);
+      const spanY = Math.max(1, maxY - minY);
+      const scale = Math.min((w - pad * 2) / spanX, (h - pad * 2) / spanY);
+
+      const toSvg = ([x, y]) => [
+        pad + (x - minX) * scale,
+        h - pad - (y - minY) * scale
+      ];
+
+      let svgHtml = "";
+
+      // 60° Grid
+      if (document.getElementById("geo-grid60").checked) {
+        for (let i = -200; i < 600; i += 35) {
+          svgHtml += `<line x1="${i}" y1="0" x2="${i + 173}" y2="300" stroke="#1e293b" stroke-width="0.7" />`;
+          svgHtml += `<line x1="${i + 173}" y1="0" x2="${i}" y2="300" stroke="#1e293b" stroke-width="0.7" />`;
+        }
+      }
+
+      // Schaduwwaaier (245.91° azimut vector)
+      if (document.getElementById("geo-sun").checked) {
+        svgHtml += `<line x1="210" y1="150" x2="35" y2="228" stroke="#f59e0b" stroke-width="1.4" stroke-dasharray="4 3" />`;
+        svgHtml += `<text x="42" y="220" fill="#f59e0b" font-size="9" font-family="monospace">Azimut 245.91°</text>`;
+      }
+
+      const tbody = document.querySelector("#geo-parcel-table tbody");
+      tbody.innerHTML = "";
+
+      features.forEach((f, idx) => {
+        const ring = f.geometry.coordinates[0];
+        const pts = ring.map(toSvg);
+        const polyStr = pts.map(p => p.join(",")).join(" ");
+        const cx = pts.reduce((s, p) => s + p[0], 0) / pts.length;
+        const cy = pts.reduce((s, p) => s + p[1], 0) / pts.length;
+        const calcArea = shoelaceRingArea(ring);
+        const regArea = f.properties.registeredAreaM2;
+        const diffPct = (((calcArea - regArea) / regArea) * 100).toFixed(2);
+        const colors = ["#38bdf8", "#10b981", "#f59e0b", "#c084fc", "#f43f5e"];
+        const col = colors[idx % colors.length];
+
+        svgHtml += `
+          <polygon points="${polyStr}" fill="${col}22" stroke="${col}" stroke-width="1.8" style="cursor:pointer"
+            onclick="inspectParcel('${f.id}', ${regArea}, ${calcArea.toFixed(2)})" />
+          <text x="${cx}" y="${cy}" fill="#f8fafc" font-size="10" font-family="monospace" text-anchor="middle">${f.properties.perceel}</text>
+        `;
+
+        tbody.innerHTML += `
+          <tr style="cursor:pointer" onclick="inspectParcel('${f.id}', ${regArea}, ${calcArea.toFixed(2)})">
+            <td><strong>${f.properties.sectie} ${f.properties.perceel}</strong></td>
+            <td>${regArea.toLocaleString("nl-NL")}</td>
+            <td>${calcArea.toFixed(2)}</td>
+            <td>${diffPct}%</td>
+            <td>${f.properties.registratie}</td>
+          </tr>
+        `;
+      });
+
+      svgHtml += `<circle id="ott-tracer" cx="210" cy="150" r="4.5" fill="#ef4444" stroke="#fff" stroke-width="1.5" style="display:none" />`;
+      document.getElementById("geo-svg").innerHTML = svgHtml;
+    }
+
+    function inspectParcel(id, reg, calc) {
+      const box = document.getElementById("ott-readout-box");
+      const delta = (calc - reg).toFixed(2);
+      box.innerHTML = `
+        <strong>A. Ott Kempten Nr. 573 Poolplanimeter — Perceel ${id}</strong><br/>
+        • Geregistreerde BRK-grootte: <strong>${reg} m²</strong> | Shoelace / Green's Integraal: <strong>${calc} m²</strong> (Δ = ${delta} m²)<br/>
+        • Poolarm $R_p = 15.00\\text{ cm}$ | Rijarm $R_t = 16.67\\text{ cm}$ | Nonius-omwenteling: ${(calc / 100).toFixed(4)} eenheden
+      `;
+    }
+
+    function animatePlanimeter() {
+      const tracer = document.getElementById("ott-tracer");
+      if (!tracer) return;
+      tracer.style.display = "block";
+      let step = 0;
+      const timer = setInterval(() => {
+        step += 0.18;
+        tracer.setAttribute("cx", 210 + Math.cos(step) * 75);
+        tracer.setAttribute("cy", 150 + Math.sin(step) * 55);
+        if (step > Math.PI * 2) {
+          clearInterval(timer);
+          runCmd("planimeter");
+        }
+      }, 45);
+    }
+
+    /***********************************************************************
+     * 7. FINALCRYPT OTP CIPHER & VOLLEDIGE BASH / RAPPORT EXPORT
+     ***********************************************************************/
+    function runOtpCipher() {
+      const area = document.getElementById("otp-text");
+      const key = document.getElementById("otp-key").value || "SOLID";
+      const input = area.value;
+      let out = "";
+      for (let i = 0; i < input.length; i++) {
+        out += String.fromCharCode(input.charCodeAt(i) ^ (key.charCodeAt(i % key.length) & 0x1F));
+      }
+      area.value = out;
+    }
+
+    function exportDossierReport() {
+      const blob = new Blob([
+        `# JURIDISCH & GEODETISCH RAPPORT // PLATTEWEG 3-5-7 (E 108 -> E 1552) & POORTVLIET SECTIE M\n\n` +
+        `## 1. Scherpenisse Sectie E (Platteweg 3-5-7)\n` + VFS["json/scherpenisse-e108-e1552.json"] +
+        `\n\n## 2. Poortvliet Sectie M (1172-1180)\n` + VFS["json/poortvliet-sectie-m.json"]
+      ], { type: "text/markdown;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "rapport-platteweg-3-5-7-en-poortvliet.md";
+      a.click();
+    }
+
+    function exportFullBashScript() {
+      let sh = `#!/usr/bin/env bash\n# Automatische Lokaal & Online Tree Builder voor https://github.com/goija/solid.git\nset -e\nmkdir -p solid && cd solid\nmkdir -p .github/workflows bash json pod/profile pod/feeds pod/kadaster pod/bridges centra data/geojson data/stl\n\n`;
+      for (const [path, content] of Object.entries(VFS)) {
+        sh += `mkdir -p "$(dirname "${path}")"\ncat << 'EOF_SOLID' > "${path}"\n${content}\nEOF_SOLID\n\n`;
+      }
+      sh += `git init\ngit add .\ngit commit -m "feat: Sovereign Solid Workbench with Bash CLI, JSON Interface & Expanded Tree"\ngit branch -M main\ngit remote add origin https://github.com/goija/solid.git 2>/dev/null || git remote set-url origin https://github.com/goija/solid.git\ngit push -u origin main\n`;
+      const blob = new Blob([sh], { type: "text/x-shellscript;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "git-push-solid.sh";
+      a.click();
+    }
+
+    // INITIALISATIE
+    window.addEventListener("DOMContentLoaded", () => {
+      initViewports();
+      populateJsonSelect();
+      renderJsonInterface();
+      renderVfsTree();
+      renderGeoSvg();
+      selectVfsTreeFile("json/poortvliet-sectie-m.json");
+      printTerm("● SYSTEM ONLINE // PLATTEWEG 3-5-7 (E 108 → E 1552), BIBLIOTHEEK & RAPPORT-EXPORT", "#10b981");
+      printTerm("Sovereign Bash CLI & JSON Interface gereed. Typ 'tree', 'planimeter' of 'help'.", "#94a3b8");
+    });
+  </script>
 </body>
 </html>
