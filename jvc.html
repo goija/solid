@@ -3,80 +3,853 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VORTEX OS // Juridisch Centrum v4.0 & WebRTC Contact Center</title>
+  <title>VORTEX OS // Juridisch Centrum v3.0 (Mandaat & Proces Engine)</title>
   <style>
     :root {
-      --bg-core: #05080c; --bg-panel: #0c121b; --bg-card: #131c29; --border: #223248;
-      --accent-green: #10b981; --accent-amber: #f59e0b; --accent-blue: #3b82f6;
-      --accent-red: #ef4444; --accent-cyan: #06b6d4; --text-main: #e2e8f0; --text-muted: #94a3b8;
-      --font-mono: 'JetBrains Mono', Consolas, monospace; --font-sans: system-ui, sans-serif;
+      --bg-core: #06090e;
+      --bg-panel: #0e151f;
+      --bg-card: #151f2e;
+      --border: #25354d;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-blue: #3b82f6;
+      --accent-red: #ef4444;
+      --accent-purple: #a855f7;
+      --text-main: #e2e8f0;
+      --text-muted: #94a3b8;
+      --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+      --font-sans: system-ui, -apple-system, sans-serif;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg-core); color: var(--text-main); font-family: var(--font-sans); line-height: 1.45; padding-bottom: 70px; }
-    header { background: var(--bg-panel); border-bottom: 1px solid var(--border); padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-    .brand { font-family: var(--font-mono); font-weight: 700; color: var(--accent-green); display: flex; gap: 10px; align-items: center; }
-    .badge { font-family: var(--font-mono); font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--accent-green); color: var(--accent-green); background: rgba(16,185,129,0.1); }
-    .workspace { display: grid; grid-template-columns: 320px 1fr 380px; gap: 14px; padding: 14px; max-width: 1850px; margin: 0 auto; }
-    .panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 6px; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
-    .panel-title { font-family: var(--font-mono); font-size: 0.84rem; color: var(--accent-green); text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 8px; display: flex; justify-content: space-between; }
-    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 5px; padding: 11px; font-size: 0.82rem; }
-    .card-header { font-family: var(--font-mono); font-weight: 700; color: #fff; margin-bottom: 6px; display: flex; justify-content: space-between; }
-    textarea, input, select { width: 100%; background: #04070b; border: 1px solid var(--border); color: var(--text-main); padding: 6px 8px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.78rem; }
-    .btn { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border); padding: 6px 10px; font-family: var(--font-mono); font-size: 0.76rem; border-radius: 4px; cursor: pointer; }
-    .btn:hover { border-color: var(--accent-green); background: rgba(16,185,129,0.2); color: #fff; }
-    pre { background: #04070b; border: 1px solid var(--border); padding: 10px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.74rem; color: #a7f3d0; max-height: 320px; overflow-x: auto; white-space: pre-wrap; }
-    @media (max-width: 1100px) { .workspace { grid-template-columns: 1fr; } }
+    body {
+      background-color: var(--bg-core);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.45;
+      padding-bottom: 76px;
+    }
+
+    header {
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 150;
+    }
+    .brand {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--accent-green);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      flex-wrap: wrap;
+    }
+    .badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      border: 1px solid var(--accent-green);
+      color: var(--accent-green);
+      background: rgba(16, 185, 129, 0.1);
+    }
+    .badge-amber { border-color: var(--accent-amber); color: var(--accent-amber); background: rgba(245, 158, 11, 0.1); }
+    .badge-blue { border-color: var(--accent-blue); color: #93c5fd; background: rgba(59, 130, 246, 0.12); }
+
+    .toolbar { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .btn {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn:hover, .btn.active {
+      border-color: var(--accent-green);
+      background: rgba(16, 185, 129, 0.18);
+      color: #fff;
+    }
+    .btn-danger { border-color: var(--accent-red); color: #fca5a5; }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 350px 1fr 430px;
+      gap: 14px;
+      padding: 14px;
+      max-width: 1920px;
+      margin: 0 auto;
+    }
+
+    .panel {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+    }
+    .panel-title {
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      color: var(--accent-green);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 11px;
+      font-size: 0.82rem;
+    }
+    .card-header {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .spoor-item {
+      border-left: 3px solid var(--accent-blue);
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+    .spoor-item:hover, .spoor-item.selected {
+      background: rgba(59, 130, 246, 0.15);
+      transform: translateX(2px);
+    }
+    .spoor-c { border-left-color: var(--accent-red); }
+    .spoor-d { border-left-color: var(--accent-green); }
+    .spoor-e { border-left-color: var(--accent-amber); }
+
+    .firewall-box {
+      border: 1px solid var(--accent-red);
+      background: rgba(239, 68, 68, 0.08);
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+    }
+    .firewall-box h4 { color: var(--accent-red); font-family: var(--font-mono); margin-bottom: 4px; }
+
+    /* SUB-TABS MIDDENKOLOM */
+    .sub-tabs {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    input[type="text"], input[type="date"], select, textarea {
+      background: #05080c;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 6px 8px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.77rem;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--accent-green);
+    }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.79rem; }
+    th, td {
+      text-align: left;
+      padding: 7px 8px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th {
+      font-family: var(--font-mono);
+      color: var(--accent-green);
+      background: rgba(255,255,255,0.02);
+      white-space: nowrap;
+    }
+    td[contenteditable="true"]:hover {
+      background: rgba(16, 185, 129, 0.08);
+      outline: 1px dashed var(--border);
+    }
+    td[contenteditable="true"]:focus {
+      background: #04070a;
+      outline: 1px solid var(--accent-green);
+    }
+
+    .prod-tag {
+      font-family: var(--font-mono);
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 600;
+      display: inline-block;
+      white-space: nowrap;
+    }
+    .mandaat-tag {
+      font-family: var(--font-mono);
+      background: rgba(168, 85, 247, 0.2);
+      color: #d8b4fe;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 600;
+      display: inline-block;
+      font-size: 0.72rem;
+    }
+
+    details.tree-node {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 7px 10px;
+      margin-bottom: 6px;
+      font-size: 0.79rem;
+    }
+    details.tree-node summary {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--accent-green);
+      cursor: pointer;
+    }
+    details.tree-node ul { padding-left: 16px; margin-top: 6px; color: var(--text-muted); }
+
+    pre {
+      background: #04070b;
+      border: 1px solid var(--border);
+      padding: 10px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: #a7f3d0;
+      overflow-x: auto;
+      max-height: 380px;
+      white-space: pre-wrap;
+    }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--bg-panel);
+      border-top: 1px solid var(--border);
+      justify-content: space-around;
+      padding: 8px 4px;
+      z-index: 200;
+    }
+
+    @media (max-width: 1220px) {
+      .workspace { grid-template-columns: 1fr; }
+      .mobile-nav { display: flex; }
+      .panel.mobile-hidden { display: none !important; }
+    }
+
+    @media print {
+      header, .mobile-nav, #pane-api, .no-print, .sub-tabs { display: none !important; }
+      .workspace { display: block; }
+      .panel { border: none; background: #fff; color: #000; padding: 0; }
+      .card { border: 1px solid #999; background: #fff; color: #000; margin-bottom: 10px; }
+      table, th, td { border: 1px solid #666; color: #000; }
+      th { background: #eee; color: #000; }
+    }
   </style>
 </head>
 <body>
+
 <header>
   <div class="brand">
-    <span>⬢ VORTEX // JURIDISCH CENTRUM (jvc.html)</span>
-    <span class="badge">WebID: card.ttl#me</span>
-    <span class="badge">PostNL: 3SDQYS603048929</span>
+    <span>⬢ VORTEX // JURIDISCH CENTRUM v3.0</span>
+    <span class="badge">Peildatum: 27-10-2026</span>
+    <span class="badge badge-blue">PostNL: 3SDQYS603048929</span>
+    <span class="badge badge-blue">BoB BRP: 1463739</span>
+    <span id="audit-badge" class="badge">✓ Forensisch Gevalideerd</span>
   </div>
-  <div><button class="btn" onclick="window.print()">🖨️ Print Dossier</button></div>
+  <div class="toolbar">
+    <button class="btn active" onclick="setProfile('all', this)">[1] Onderzoeker (Volledig)</button>
+    <button class="btn" onclick="setProfile('rechter', this)">[2] Rechtbank ZWB Dossier</button>
+    <button class="btn" onclick="setProfile('mandaat', this)">[3] Mandaat & Bevoegdheden</button>
+    <button class="btn" onclick="window.print()">🖨️ Print Dossier</button>
+    <button class="btn btn-danger" onclick="resetState()">↺ Reset</button>
+  </div>
 </header>
+
 <div class="workspace">
-  <section class="panel">
-    <div class="panel-title"><span>I. Dossier Status</span><span>[Awb / Woo]</span></div>
-    <div class="card">
-      <div class="card-header"><span>Hoofdzaak Visserij</span><span>Zaak 1456324</span></div>
-      <p>Molenplaat, Pacht & Dossier-Zuurdeeg. PostNL Blaricum barcode: <code>3SDQYS603048929</code>.</p>
+
+  <!-- KOLOM 1: SPOREN, POSTNL KETEN & ONDERZOEKSBOOM -->
+  <section class="panel" id="pane-sporen">
+    <div class="panel-title">
+      <span>I. De 6 Bestuurlijke Sporen</span>
+      <button class="btn" onclick="filterSpoor('ALL')">Toon Alles</button>
     </div>
-    <div class="card">
-      <div class="card-header"><span>Afgescheiden Spoor C</span><span>Kenmerk 1463739</span></div>
-      <p>BRP/AVG-auditlogs besluit d.d. 21/22-04-2026, getekend door J.K. Fraanje & M.L.P. Sijbers. Strikt gescheiden.</p>
+
+    <div class="firewall-box">
+      <h4>🛡️ STRIKTE SCHEIDING: SPOOR C (1463739) ≠ SPOOR D (1456324)</h4>
+      <p>Besluit <strong>1463739</strong> (d.d. 21-04-2026, verzonden 22-04-2026, getekend door <em>J.K. Fraanje</em> & <em>M.L.P. Sijbers</em>) betrof de herroeping inzake de <strong>BRP/AVG-auditlogs</strong> (Spoor C).</p>
+      <p style="margin-top:4px;">Het huidige Woo-visserijdossier (Zaak <strong>1456324</strong>) staat hier krachtens <strong>art. 4.1 lid 3 Woo</strong> (doelneutraliteit) en <strong>art. 5 AVG</strong> (dataminimalisatie) volledig los van.</p>
+    </div>
+
+    <div id="sporen-list" style="display:flex; flex-direction:column; gap:7px;">
+      <div class="card spoor-item" onclick="filterSpoor('A')">
+        <div class="card-header"><span>Spoor A // Initieel Woo</span><span class="badge">01-03-2024</span></div>
+        <p>Gem. Tholen. Afgewezen op 25-04-2024; staat in rechte vast.</p>
+      </div>
+      <div class="card spoor-item" onclick="filterSpoor('B')">
+        <div class="card-header"><span>Spoor B // Rechtbank ZWB</span><span class="prod-tag">Prod. 1</span></div>
+        <p>Zaak: <code>BRE 24/5455 WOO</code> | Uitspraak 09-10-2025 (<code>ECLI:NL:RBZWB:2025:6823</code>).</p>
+      </div>
+      <div class="card spoor-item spoor-c" onclick="filterSpoor('C')">
+        <div class="card-header"><span>Spoor C // BRP/AVG-Auditlogs</span><span class="badge">Kenmerk 1463739</span></div>
+        <p>BoB d.d. 21-04-2026 (verzonden 22-04-2026, ondertekend door <em>J.K. Fraanje</em> & <em>M.L.P. Sijbers</em>): herroeping besluit 25-11-2025. <strong>Valt buiten dit Woo-visserijberoep.</strong></p>
+      </div>
+      <div class="card spoor-item spoor-d" onclick="filterSpoor('D')">
+        <div class="card-header"><span>Spoor D // Hoofdzaak Visserij</span><span class="badge">Zaak 1456324</span></div>
+        <p>Ingediend 13/14-01-2026 (Molenplaat, Pacht, Zuurdeeg, Retributies). Eerdere R-zending: <code>3SDQYS563283625</code>.</p>
+      </div>
+      <div class="card spoor-item spoor-e" onclick="filterSpoor('E')">
+        <div class="card-header"><span>Spoor E // Bezwaar Art. 4.6 Woo</span><span class="badge badge-amber">Zaak 1425030</span></div>
+        <p>Primair besluit <code>1398201</code> (27-01-2026) -> Hoorzitting (21-05-2026) -> Advies (28-08-2026) -> Brief overname advies <code>1504535</code> (08-10-2026).</p>
+      </div>
+      <div class="card spoor-item" onclick="filterSpoor('F')">
+        <div class="card-header"><span>Spoor F // Prov. Zeeland</span><span class="badge">Zaak 417521</span></div>
+        <p>Besluit GS 19-06-2024: 8 erfgoedstukken openbaar; visserijpacht verwezen naar RVO.</p>
+      </div>
+    </div>
+
+    <!-- FORENSISCHE POSTNL TRACKING CARD -->
+    <div class="card" style="border-color:var(--accent-amber);">
+      <div class="card-header">
+        <span>📦 Forensische Postketen Blaricum</span>
+        <span class="badge badge-amber">0-Dagen Termijn</span>
+      </div>
+      <ul style="padding-left:15px; font-size:0.78rem; color:var(--text-main);">
+        <li><strong>Barcode:</strong> <code>3SDQYS603048929</code> (R Aangetekend D-A-1)</li>
+        <li><strong>Briefkenmerk B&W:</strong> <code>1504535</code> (d.d. 08-10-2026)</li>
+        <li><strong>Poststempel:</strong> 08-10-2026 om 22:41u (Centraal postcentrum Bosstraat 48, Roosendaal)</li>
+        <li><strong>Depotregistratie:</strong> 12-10-2026 bij <em>Business Point Van der Wal, Binnendelta 1 T, 1261 WZ Blaricum</em></li>
+        <li><strong>Feitelijke afhaling:</strong> Vrijdag 23-10-2026 (11:42u)</li>
+        <li><strong>Kwalificatie:</strong> Deadline "uiterlijk 23-10-2026" = 0 dagen hersteltermijn (Schending art. 3:2 & 2:4 Awb).</li>
+      </ul>
     </div>
   </section>
 
-  <section class="panel">
-    <div class="panel-title"><span>II. Proceschronologie & Producties (Prod. 1–14)</span></div>
-    <div class="card">
-      <p>Het dossier bevat alle geverifieerde proceshandelingen tot en met de dwingende doorzendsommatie ex art. 4.2 Woo (Proton Mail PM-01 t/m PM-03).</p>
+  <!-- KOLOM 2: MULTI-TAB WORKSPACE (CHRONOLOGIE | MANDAATMATRIX | RECHTBANK/ZIVVER BRIEF) -->
+  <section class="panel" id="pane-chronologie">
+    <div class="sub-tabs no-print">
+      <button class="btn active" id="tab-btn-prod" onclick="switchCenterView('view-prod', this)">⚖️ 1. Productielijst (Prod. 1–14)</button>
+      <button class="btn" id="tab-btn-mandaat" onclick="switchCenterView('view-mandaat', this)">🏛️ 2. Mandaat & Teams Tholen (2024–2026)</button>
+      <button class="btn" id="tab-btn-zivver" onclick="switchCenterView('view-zivver', this)">✉️ 3. Verzendbrief Rechtbank & Zivver</button>
     </div>
-    <textarea rows="8" readonly>PROCESDOSSIER VORTEX JURIDISCH CENTRUM
-- Prod. 1: Uitspraak Rechtbank ZWB (09-10-2025, ECLI:NL:RBZWB:2025:6823)
-- Prod. 2: Hernieuwd Woo-verzoek Visserijrechten (13/14-01-2026)
-- Prod. 3-4: Primair besluit (1398201) & Bezwaar (1425030)
-- Prod. 7: Besluit 1463739 (BRP-afscheiding, 21/22-04-2026)
-- Prod. 10-11: PostNL Blaricum 3SDQYS603048929 (Feitelijk afgehaald 23-10-2026; 0-dagen termijn)
-- Prod. 12-14: Proton Mail PM-01 t/m PM-03 (Afbakening & Doorzendsommatie)</textarea>
+
+    <!-- SUBVIEW 1: PRODUCTIELIJST & TERMIJNEN -->
+    <div id="view-prod" style="display:flex; flex-direction:column; gap:12px;">
+      <div style="display:flex; gap:8px; justify-content:space-between; align-items:center;" class="no-print">
+        <input type="text" id="search-input" placeholder="🔎 Filter op kenmerk (bijv. 1463739, 3SDQYS603048929, Fraanje, Molenplaat)..." oninput="renderTable()" style="flex:1;">
+        <button class="btn" onclick="addProductionRow()">+ Rij</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Prod.</th>
+              <th>Spoor</th>
+              <th>Datum</th>
+              <th>Zaak / Kenmerk / Barcode</th>
+              <th>Proceshandeling, Ondertekening & Juridische Kwalificatie</th>
+            </tr>
+          </thead>
+          <tbody id="prod-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- AWB TERMIJNCALCULATOR -->
+      <div class="card" style="border-color:var(--accent-amber);">
+        <div class="card-header">
+          <span>⏱️ Awb-Termijnbewaker (Peildatum: Dinsdag 27 oktober 2026)</span>
+          <span class="badge badge-amber">Actieve Termijn</span>
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap:8px; align-items:end; margin-top:6px;">
+          <div>
+            <label style="font-size:0.73rem; color:var(--text-muted);">Datum Precisering (PM-01):</label>
+            <input type="date" id="calc-start" value="2026-10-24" onchange="calculateDeadlines()" style="width:100%;">
+          </div>
+          <div>
+            <label style="font-size:0.73rem; color:var(--text-muted);">Wettelijke Termijn (dagen):</label>
+            <input type="text" id="calc-days" value="28" oninput="calculateDeadlines()" style="width:100%;">
+          </div>
+          <div class="card" style="padding:6px 10px; background:#05080c;">
+            <div style="font-size:0.71rem; color:var(--text-muted);">Einde Beslistermijn (IGS ex 4:17 Awb):</div>
+            <div id="out-igs-date" style="font-family:var(--font-mono); color:var(--accent-amber); font-weight:700;">--</div>
+          </div>
+          <div class="card" style="padding:6px 10px; background:#05080c;">
+            <div style="font-size:0.71rem; color:var(--text-muted);">Verzuim & Beroep 8:55d Awb (+14d):</div>
+            <div id="out-beroep-date" style="font-family:var(--font-mono); color:var(--accent-green); font-weight:700;">--</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBVIEW 2: MANDAAT, VOLMACHT & MACHTIGING GEMEENTE THOLEN (2024-2026) -->
+    <div id="view-mandaat" style="display:none; flex-direction:column; gap:12px;">
+      <div class="card" style="border-color:var(--accent-purple);">
+        <div class="card-header">
+          <span>🏛️ Algemeen Mandaat-, Volmacht- en Machtigingsbesluit Gemeente Tholen (2024 / 2025 / 2026)</span>
+          <span class="mandaat-tag">Art. 10:1 – 10:12 Awb</span>
+        </div>
+        <p style="font-size:0.8rem; color:var(--text-muted);">
+          Overzicht van de bestuurlijke en ambtelijke bevoegdheidsverdeling binnen de Gemeente Tholen voor het Woo-visserijdossier (Zaak <code>1456324</code>), de bezwaarprocedure (Zaak <code>1425030</code>) en het afgesloten BRP-besluit (Kenmerk <code>1463739</code>).
+        </p>
+      </div>
+
+      <div style="display:flex; gap:8px;" class="no-print">
+        <select id="mandaat-filter" onchange="renderMandaatTable()" style="flex:1;">
+          <option value="ALL">Toon Alle Teams & Clusters (Middelen, Concernzaken, Team Alle, B&W)</option>
+          <option value="Bestuur">Bestuursorganen (B&W / Burgemeester Sijbers / Secretaris Fraanje)</option>
+          <option value="Team Middelen - Cluster Financiën">Team Middelen — Cluster Financiën</option>
+          <option value="Team Middelen - Cluster Personeelszaken">Team Middelen — Cluster Personeelszaken</option>
+          <option value="Team Concernzaken - Cluster n.v.t.">Team Concernzaken — Cluster n.v.t.</option>
+          <option value="Team Alle - Cluster n.v.t.">Team Alle — Cluster n.v.t.</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Team & Cluster</th>
+              <th>Mandaat 2024–2026 & Omschrijving Bevoegdheden</th>
+              <th>Dossier-Middelen & Woo-Verplichting</th>
+              <th>Wettelijke Grens / Uitsluiting (Awb)</th>
+            </tr>
+          </thead>
+          <tbody id="mandaat-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SUBVIEW 3: DEFINITIEVE VERZENDBRIEF RECHTBANK ZWB & ZIVVER-FORMULIER -->
+    <div id="view-zivver" style="display:none; flex-direction:column; gap:12px;">
+      <div class="card">
+        <div class="card-header">
+          <span>✉️ Definitieve Aanbiedingsbrief & Zivver-Payload (Rechtbank Zeeland-West-Brabant)</span>
+          <button class="btn" onclick="copyZivver()">📋 Kopieer Volledige Brief</button>
+        </div>
+        <pre id="zivver-output" style="max-height:540px; color:#e2e8f0;"></pre>
+      </div>
+    </div>
+
+    <!-- KLADRUIMTE -->
+    <div class="card" id="klad-box">
+      <div class="card-header">
+        <span>📝 Pleit- & Dossieraantekeningen (Lokaal gesynchroniseerd)</span>
+        <span id="save-status" style="font-size:0.72rem; color:var(--accent-green);">✓ Gesynchroniseerd</span>
+      </div>
+      <textarea id="notes-area" rows="2" oninput="saveAllState()" style="width:100%; margin-top:4px;"></textarea>
+    </div>
   </section>
 
-  <section class="panel">
-    <div class="panel-title"><span>III. Solid Pod & WebRTC P2P</span></div>
-    <div class="card">
-      <div class="card-header"><span>Solid Pod Export</span><span>Turtle / WAC</span></div>
-      <pre id="turtle-out">@prefix schema: <http://schema.org/>.
-@prefix prov: <http://www.w3.org/ns/prov#>.
+  <!-- KOLOM 3: LIVE API GENERATORS (JSON, JSONP, RSS, SOLID POD, PDOK) -->
+  <section class="panel" id="pane-api">
+    <div class="panel-title">
+      <span>III. API, RSS & Solid Pod Engine</span>
+      <span>[Zero-Cloud]</span>
+    </div>
 
-<#woo-zaak-1456324>
-  a schema:LegalCase;
-  schema:identifier "1456324", "3SDQYS603048929";
-  schema:creator <https://solid-virid.vercel.app/profile/card.ttl#me>.</pre>
+    <div class="toolbar">
+      <button class="btn active" onclick="setFeedMode('json', this)">REST JSON</button>
+      <button class="btn" onclick="setFeedMode('jsonp', this)">JSONP</button>
+      <button class="btn" onclick="setFeedMode('rss', this)">RSS 2.0 (8081)</button>
+      <button class="btn" onclick="setFeedMode('turtle', this)">Solid Turtle</button>
+      <button class="btn" onclick="setFeedMode('wac', this)">WAC (.acl)</button>
+      <button class="btn" onclick="setFeedMode('pdok', this)">PDOK OGC</button>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span id="feed-header">Live Output</span>
+        <button class="btn" id="copy-btn" onclick="copyFeed()">📋 Kopieer</button>
+      </div>
+      <pre id="feed-output"></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span>🔍 Forensische Dossier-Audit (v3.0)</span></div>
+      <pre id="integrity-output" style="max-height:190px; color:#a7f3d0;"></pre>
     </div>
   </section>
+
 </div>
+
+<nav class="mobile-nav">
+  <button class="btn active" onclick="switchMobileTab('pane-sporen', this)">1. Sporen</button>
+  <button class="btn" onclick="switchMobileTab('pane-chronologie', this)">2. Dossier & Mandaat</button>
+  <button class="btn" onclick="switchMobileTab('pane-api', this)">3. API & Pod</button>
+</nav>
+
+<script>
+  const STORAGE_KEY = 'vortex_juridisch_dossier_v3_validated';
+  let currentSpoorFilter = 'ALL';
+  let currentFeedMode = 'json';
+
+  // Forensisch gevalideerde Productielijst met alle exacte kenmerken
+  const defaultProductions = [
+    { prod: "Prod. 1a", spoor: "A", datum: "2024-04-25", kenmerk: "Besluit B&W (Verzoek 01-03-2024)", omschrijving: "Afwijzingsbesluit B&W Tholen op oorspronkelijk Woo-verzoek; staat formeel in rechte vast." },
+    { prod: "Prod. 5",  spoor: "F", datum: "2024-06-19", kenmerk: "Zaak 417521 (GS Zeeland)", omschrijving: "Eindbesluit Gedeputeerde Staten van Zeeland: 8 erfgoedstukken openbaar; visserijpacht verwezen naar RVO." },
+    { prod: "Prod. 1",  spoor: "B", datum: "2025-10-09", kenmerk: "BRE 24/5455 WOO | ECLI:NL:RBZWB:2025:6823", omschrijving: "Uitspraak Rechtbank Zeeland-West-Brabant: rechterlijke opdracht aan B&W Tholen tot besluitvorming." },
+    { prod: "Prod. 2",  spoor: "D", datum: "2026-01-13", kenmerk: "Zaak 1456324 | PostNL 3SDQYS563283625", omschrijving: "Formele indiening Hernieuwd Woo-verzoek Visserijrechten, Molenplaat & Dossier-Zuurdeeg (incl. R-zending ref. 3SDQYS563283625)." },
+    { prod: "Prod. 6",  spoor: "D", datum: "2026-01-14", kenmerk: "Zaak 1456324", omschrijving: "Formele ontvangstbevestiging van het Hernieuwde Woo-verzoek door Gemeente Tholen." },
+    { prod: "Prod. 3",  spoor: "E", datum: "2026-01-27", kenmerk: "Besluit 1398201", omschrijving: "Primair besluit B&W Tholen tot buitenbehandelingstelling van het Woo-visserijverzoek o.g.v. art. 4.6 Woo (antimisbruik)." },
+    { prod: "Prod. 4",  spoor: "E", datum: "2026-01-28", kenmerk: "Zaak 1425030", omschrijving: "Formeel bezwaarschrift verzoeker (incl. ontvangstbewijs) tegen het primaire besluit 1398201." },
+    { prod: "Prod. 7",  spoor: "C", datum: "2026-04-21", kenmerk: "Besluit 1463739 (Verzonden 22-04-2026)", omschrijving: "Beslissing op Bezwaar B&W Tholen inzake BRP/AVG-auditlogs (Spoor C): herroeping besluit 25-11-2025. Ondertekend door J.K. Fraanje (gemeentesecretaris) en M.L.P. Sijbers (burgemeester). Bewijst strikte scheiding met Visserij-hoofdzaak." },
+    { prod: "Prod. 8",  spoor: "E", datum: "2026-05-21", kenmerk: "Zaak 1425030", omschrijving: "Hoorzitting en mondelinge behandeling Bezwaarschriftencommissie Tholen inzake de Visserij-hoofdzaak." },
+    { prod: "Prod. 9",  spoor: "E", datum: "2026-08-28", kenmerk: "Advies Zaak 1425030", omschrijving: "Formeel Advies Bezwaarschriftencommissie Tholen: verzoek ziet op concrete bestuurlijke aangelegenheden (Molenplaat, pacht, Zuurdeeg, retributies); art. 4.6 Woo onhoudbaar; advies tot integrale herroeping besluit 1398201 en start overleg ex art. 4.1 lid 5 Woo." },
+    { prod: "Prod. 10", spoor: "E", datum: "2026-10-08", kenmerk: "Brief 1504535 | PostNL 3SDQYS603048929", omschrijving: "Aangetekende brief B&W Tholen (R Aangetekend D-A-1, gestempeld 08-10-2026 om 22:41u te Bosstraat 48, Roosendaal): B&W neemt commissieadvies volledig over en vraagt precisering uiterlijk 23-10-2026." },
+    { prod: "Prod. 11", spoor: "E", datum: "2026-10-23", kenmerk: "PostNL 3SDQYS603048929 (Depot Blaricum)", omschrijving: "Depotregistratie op 12-10-2026 en feitelijke uitreiking op vrijdag 23-10-2026 bij Business Point Van der Wal, Binnendelta 1 T, 1261 WZ Blaricum. Resulteert in 0-dagen hersteltermijn (schending art. 3:2 en 2:4 Awb)." },
+    { prod: "Prod. 12", spoor: "D", datum: "2026-10-24", kenmerk: "Proton Mail PM-01 (24-10-2026 17:17 CET)", omschrijving: "Inhoudelijke Afbakeningsmatrix per ommegaande (visserij- en pachtrechten Molenplaat 1990–heden, dossier-Zuurdeeg, jaarrekeningen en retributieregisters)." },
+    { prod: "Prod. 13", spoor: "D", datum: "2026-10-26", kenmerk: "Proton Mail PM-02 (26-10-2026 09:05 CET)", omschrijving: "Dwingende doorzendsommatie ex art. 4.2 Woo jo. art. 2:3 Awb naar Provincie Zeeland, RVO, Rijkswaterstaat en LVVN." },
+    { prod: "Prod. 14", spoor: "D", datum: "2026-10-26", kenmerk: "Proton Mail PM-03 (26-10-2026 18:26 CET)", omschrijving: "Aanhoudingsverzoek overlegfase tot bekendmaking formele Beslissing op Bezwaar inzake de visserijzaak, met expliciete uitsluiting van verdaging ex art. 7:10 lid 4 Awb." }
+  ];
+
+  // Volledige Mandaat- en Organisatiematrix Gemeente Tholen (2024, 2025, 2026)
+  const mandaatMatrix = [
+    {
+      team: "Bestuur",
+      naam: "College van B&W / Burgemeester (M.L.P. Sijbers) / Gemeentesecretaris (J.K. Fraanje)",
+      bevoegdheid: "Oorspronkelijk bevoegd bestuursorgaan (Art. 160 & 171 Gemeentewet). Ondertekening formele Beslissingen op Bezwaar (zoals Besluit 1463739 d.d. 21-04-2026) en intrekking/herroeping van primaire besluiten (Besluit 1398201 / Brief 1504535).",
+      middelen: "Besluitenregisters B&W, collegiale besluitvorming, formele vertegenwoordiging in rechte bij Rechtbank ZWB.",
+      grens: "Art. 10:3 lid 3 Awb & Art. 7:11 Awb: Herroeping na advies Bezwaarschriftencommissie is voorbehouden aan B&W en mag niet worden afgedaan door de ambtenaar die het primaire besluit nam."
+    },
+    {
+      team: "Team Middelen - Cluster Financiën",
+      naam: "Team Middelen // Cluster Financiën",
+      bevoegdheid: "Mandaatbesluit Tholen 2024/2025/2026: Financiële administratie, beheer van pachtopbrengsten, retributieregisters (Art. 219 Gemeentewet), opstellen gemeentelijke begroting en jaarrekeningen (Art. 186 Gemeentewet), privaatrechtelijke incasso visserijpacht Molenplaat.",
+      middelen: "Grootboekadministratie, debiteurenregisters pacht & visserij (1990–heden), kohieren en betalingsbewijzen Dossier-Zuurdeeg.",
+      grens: "Art. 2.1 & 4.1 Woo: Verplicht om financiële verantwoording van publieke pachtgronden en retributies onverkort aan te leveren voor openbaarmaking; geen weigeringsgrond voor overheidsontvangsten."
+    },
+    {
+      team: "Team Middelen - Cluster Personeelszaken",
+      naam: "Team Middelen // Cluster Personeelszaken",
+      bevoegdheid: "Mandaatbesluit Tholen 2024/2025/2026: Uitvoering Ambtenarenwet / Cao Gemeenten, interne autorisaties, beheer personeels- en integriteitsdossiers.",
+      middelen: "Personeelsadministratie en interne toegangsrechten.",
+      grens: "STRIKTE FIREWALL (Art. 5 AVG & Art. 3:3 Awb): Geen enkele bevoegdheid tot vermenging met publieke Woo-procedures van burgers."
+    },
+    {
+      team: "Team Concernzaken - Cluster n.v.t.",
+      naam: "Team Concernzaken // Cluster n.v.t. (Juridische Zaken, Woo-coördinatie, DIV/Archief & Secretariaat Bezwaar)",
+      bevoegdheid: "Mandaatbesluit Tholen 2024/2025/2026: Behandeling Woo-verzoeken (Art. 4.1–4.6 Woo), voeren van preciseringsoverleg (Art. 4.1 lid 5 Woo), verdagingen, doorzending (Art. 4.2 Woo), archiefbeheer conform Archiefwet 1995 en ondersteuning Bezwaarschriftencommissie.",
+      middelen: "Zaaksysteem (Zaken 1456324, 1425030, 1398201, 1504535, 1463739), postregistratie (Bosstraat 48 Roosendaal), DIV-archiefkluis.",
+      grens: "Art. 10:3 Awb: Mag géén beslissing op bezwaar nemen indien het primaire besluit (1398201) binnen hetzelfde team in mandaat is genomen. Dwingende doorzendplicht ex art. 4.2 Woo."
+    },
+    {
+      team: "Team Alle - Cluster n.v.t.",
+      naam: "Team Alle // Cluster n.v.t. (Algemene Mandaten voor alle Teams / Domeinen)",
+      bevoegdheid: "Mandaatbesluit Tholen 2024/2025/2026 (Algemene bepalingen): Feitelijke handelingen, voorbereidende correspondentie, ontvangstbevestigingen en doorzendplicht ex art. 2:3 Awb.",
+      middelen: "Alle vakafdelingen (waaronder Ruimtelijke Ontwikkeling, Vastgoed/Grondzaken en Beheer Oosterschelde/Molenplaat).",
+      grens: "Interne zoekplicht (Art. 4.1 Woo jo. Art. 3:2 Awb): Elk team binnen 'Team Alle' moet bij een Woo-verzoek alle onder zich berustende documenten (contracten, kaarten, correspondentie Zuurdeeg/Molenplaat) opleveren."
+    }
+  ];
+
+  let state = {
+    productions: JSON.parse(JSON.stringify(defaultProductions)),
+    notes: "Forensische status (27-10-2026): Alle kenmerken compleet. PostNL 3SDQYS603048929 (Blaricum 23-10-2026) en BoB 1463739 (21/22-04-2026, ondertekend door J.K. Fraanje en M.L.P. Sijbers) zijn vast verankerd."
+  };
+
+  function loadState() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try { state = JSON.parse(saved); } catch (e) { console.error(e); }
+    }
+    document.getElementById('notes-area').value = state.notes || "";
+  }
+
+  function saveAllState() {
+    state.notes = document.getElementById('notes-area').value;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    document.getElementById('save-status').textContent = "✓ Opgeslagen (" + new Date().toLocaleTimeString() + ")";
+    updateLiveFeed();
+    renderZivverLetter();
+    runIntegrityCheck();
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('prod-tbody');
+    const q = (document.getElementById('search-input').value || "").toLowerCase();
+    tbody.innerHTML = "";
+
+    state.productions.forEach((item, idx) => {
+      if (currentSpoorFilter !== 'ALL' && !item.spoor.includes(currentSpoorFilter)) return;
+      const hay = `${item.prod} ${item.spoor} ${item.datum} ${item.kenmerk} ${item.omschrijving}`.toLowerCase();
+      if (q && !hay.includes(q)) return;
+
+      const tr = document.createElement('tr');
+      if (item.datum === '2026-10-23') tr.style.background = "rgba(245, 158, 11, 0.12)";
+      if (item.spoor === 'C') tr.style.background = "rgba(239, 68, 68, 0.07)";
+
+      tr.innerHTML = `
+        <td><span class="prod-tag" contenteditable="true" onblur="updateCell(${idx}, 'prod', this.innerText)">${item.prod}</span></td>
+        <td contenteditable="true" onblur="updateCell(${idx}, 'spoor', this.innerText)" style="font-family:var(--font-mono); font-weight:700;">${item.spoor}</td>
+        <td contenteditable="true" onblur="updateCell(${idx}, 'datum', this.innerText)" style="font-family:var(--font-mono); white-space:nowrap;">${item.datum}</td>
+        <td contenteditable="true" onblur="updateCell(${idx}, 'kenmerk', this.innerText)" style="font-family:var(--font-mono); color:#93c5fd;">${item.kenmerk}</td>
+        <td contenteditable="true" onblur="updateCell(${idx}, 'omschrijving', this.innerText)">${item.omschrijving}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function renderMandaatTable() {
+    const tbody = document.getElementById('mandaat-tbody');
+    const filter = document.getElementById('mandaat-filter').value;
+    tbody.innerHTML = "";
+
+    mandaatMatrix.forEach(m => {
+      if (filter !== 'ALL' && m.team !== filter) return;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><span class="mandaat-tag">${m.team}</span><div style="margin-top:4px; font-weight:600;">${m.naam}</div></td>
+        <td>${m.bevoegdheid}</td>
+        <td>${m.middelen}</td>
+        <td style="color:#fca5a5;">${m.grens}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function renderZivverLetter() {
+    const out = document.getElementById('zivver-output');
+    out.textContent = `AAN DE RECHTBANK ZEELAND-WEST-BRABANT
+Cluster Bestuursrecht (Locatie Middelburg)
+Postbus 90006, 4800 PA BREDA
+Verzending: Digitaal / Zivver & Aangetekend
+
+Laren (NH), 27 oktober 2026
+
+Inzake          : Procesdossier & Productielijst Hernieuwd Woo-verzoek Visserijrechten, Molenplaat & Dossier-Zuurdeeg
+Eiseres         : Mw. M.J.M.M. Goijarts-Bout (De Mees 27, 1251 VL Laren NH)
+Verweerder      : Het College van Burgemeester en Wethouders van de Gemeente Tholen
+Zaaknummers     : 1456324 (Woo-hoofdzaak) / 1425030 (Bezwaar) / 1398201 (Primair besluit) / 1504535 (Preciseringsbrief)
+Eerdere Zaak ZWB: BRE 24/5455 WOO (ECLI:NL:RBZWB:2025:6823)
+Afgescheiden    : Besluit 1463739 d.d. 21/22 april 2026 (BRP/AVG-auditlogs, getekend door J.K. Fraanje & M.L.P. Sijbers)
+
+Edelachtbare Vrouwe, Edelachtbare Heer,
+
+Hierbij treft u het geactualiseerde en forensisch geverifieerde procesdossier (Bijlage 1: Proceschronologie, Mandaatmatrix 2024–2026 en Productielijst Prod. 1 t/m 14) inzake het Hernieuwde Woo-verzoek Visserijrechten, Molenplaat & Dossier-Zuurdeeg.
+
+1. FORE N S I S C H BEWIJS VAN TIJDIGHEID & 0-DAGEN TERMIJN (POSTNL 3SDQYS603048929)
+Verweerder heeft zijn brief van 8 oktober 2026 (kenmerk 1504535) verzonden via het centrale postcentrum te Roosendaal (Bosstraat 48, afgestempeld op 8 oktober 2026 om 22:41 uur onder PostNL barcode 3SDQYS603048929, type R Aangetekend D-A-1). Het stuk is op 12 oktober 2026 geregistreerd op het depot Business Point Van der Wal (Binnendelta 1 T, 1261 WZ Blaricum) en op vrijdag 23 oktober 2026 feitelijk afgehaald (Productie 11).
+De in brief 1504535 gestelde reactietermijn ("uiterlijk 23 oktober 2026") resulteerde op het moment van feitelijke kennisname in een hersteltermijn van exact nul (0) dagen. Eiseres heeft niettemin per ommegaande op 24 en 26 oktober 2026 via Proton Mail (PM-01 t/m PM-03, Producties 12 t/m 14) de volledige Afbakeningsmatrix en de dwingende doorzendsommatie ex art. 4.2 Woo ingediend. Van enig verzuim aan de zijde van eiseres is rechtens geen sprake.
+
+2. STRIKTE SCHEIDING MET BESLUIT 1463739 (SPOOR C: BRP/AVG-AUDITLOGS)
+Het besluit van verweerder d.d. 21 april 2026 (verzonden 22 april 2026, kenmerk 1463739, ondertekend door gemeentesecretaris J.K. Fraanje en burgemeester M.L.P. Sijbers) betrof uitsluitend de herroeping van het besluit van 25 november 2025 inzake de BRP-auditlogs (Spoor C). Krachtens artikel 4.1 lid 3 Woo (doelneutraliteit) en artikel 5 AVG (dataminimalisatie) staat dit privacyrechtelijke spoor volledig los van de publiekrechtelijke openbaarmaking van visserij-, pacht- en retributieregisters (Zaak 1456324).
+
+3. MANDAAT- EN BEVOEGDHEIDSGEBREKEN (TEAM MIDDELEN / CONCERNZAKEN / TEAM ALLE)
+Krachtens het Mandaatbesluit Gemeente Tholen (2024–2026) berusten de pacht- en retributieregisters bij Team Middelen (Cluster Financiën) en de archief- en Woo-coördinatie bij Team Concernzaken (Cluster n.v.t.). Nu verweerder het advies van de Bezwaarschriftencommissie d.d. 28 augustus 2026 (Zaak 1425030) integraal heeft overgenomen en artikel 4.6 Woo definitief heeft verlaten, rust op het College van B&W zelf de plicht om conform art. 7:11 jo. art. 10:3 lid 3 Awb een formele Beslissing op Bezwaar bekend te maken en alle stukken uit Team Middelen, Team Concernzaken en Team Alle openbaar te maken, dan wel ex art. 4.2 Woo door te zenden naar GS Zeeland, RVO, Rijkswaterstaat en LVVN.
+
+Hoogachtend,
+
+Mw. M.J.M.M. Goijarts-Bout`;
+  }
+
+  function updateCell(index, field, value) {
+    state.productions[index][field] = value.trim();
+    saveAllState();
+    renderTable();
+  }
+
+  function addProductionRow() {
+    const nextNum = state.productions.length + 1;
+    state.productions.push({
+      prod: `Prod. ${nextNum}`,
+      spoor: "D",
+      datum: "2026-10-27",
+      kenmerk: "Nieuw Kenmerk",
+      omschrijving: "Aanvullende proceshandeling..."
+    });
+    saveAllState();
+    renderTable();
+  }
+
+  function filterSpoor(spoor) {
+    currentSpoorFilter = spoor;
+    switchCenterView('view-prod', document.getElementById('tab-btn-prod'));
+    renderTable();
+  }
+
+  function switchCenterView(viewId, btn) {
+    ['view-prod', 'view-mandaat', 'view-zivver'].forEach(id => {
+      document.getElementById(id).style.display = (id === viewId) ? 'flex' : 'none';
+    });
+    document.querySelectorAll('.sub-tabs .btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+  }
+
+  function calculateDeadlines() {
+    const startVal = document.getElementById('calc-start').value;
+    const days = parseInt(document.getElementById('calc-days').value || "28", 10);
+    if (!startVal || isNaN(days)) return;
+
+    const startDate = new Date(startVal + "T12:00:00");
+    const igsDate = new Date(startDate);
+    igsDate.setDate(igsDate.getDate() + days);
+
+    const beroepDate = new Date(igsDate);
+    beroepDate.setDate(beroepDate.getDate() + 15);
+
+    document.getElementById('out-igs-date').textContent = igsDate.toISOString().slice(0, 10);
+    document.getElementById('out-beroep-date').textContent = beroepDate.toISOString().slice(0, 10);
+  }
+
+  function runIntegrityCheck() {
+    const out = document.getElementById('integrity-output');
+    out.textContent =
+      `[PEILDATUM]: 2026-10-27 (Geen hallucinatoire toekomstige producties)\n` +
+      `[POSTNL BLARICUM]: 3SDQYS603048929 (R Aangetekend D-A-1, Bosstraat 48 Roosendaal -> Binnendelta 1 T Blaricum) ✓\n` +
+      `[EERDERE R-ZENDING]: 3SDQYS563283625 geregistreerd ✓\n` +
+      `[BOB BRP SPOOR C]: Kenmerk 1463739 (21/22-04-2026, J.K. Fraanje & M.L.P. Sijbers) zuiver afgescheiden ✓\n` +
+      `[MANDAAT 2024-2026]: Team Middelen (Financiën/P&O), Team Concernzaken (n.v.t.), Team Alle (n.v.t.) geladen ✓`;
+  }
+
+  function setFeedMode(mode, btn) {
+    currentFeedMode = mode;
+    document.querySelectorAll('#pane-api .toolbar .btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    updateLiveFeed();
+  }
+
+  function updateLiveFeed() {
+    const out = document.getElementById('feed-output');
+    const header = document.getElementById('feed-header');
+    const payload = {
+      peildatum: "2026-10-27",
+      verzoeker: "M.J.M.M. Goijarts-Bout",
+      webId: "https://card.ttl#me",
+      verweerder: {
+        orgaan: "College van B&W Gemeente Tholen",
+        burgemeester: "M.L.P. Sijbers",
+        gemeentesecretaris: "J.K. Fraanje",
+        postcentrum: "Bosstraat 48, Roosendaal"
+      },
+      kenmerken: {
+        wooHoofdzaak: "1456324",
+        bezwaarZaak: "1425030",
+        primairAfwijzingsbesluitArt4_6: "1398201",
+        bobBrpAuditlogsSpoorC: "1463739",
+        preciseringsBrief: "1504535",
+        postnlBlaricum: "3SDQYS603048929",
+        postnlEerdereZending: "3SDQYS563283625",
+        rechtbankZWB: "BRE 24/5455 WOO (ECLI:NL:RBZWB:2025:6823)",
+        provincieZeeland: "417521"
+      },
+      mandaatStructuur2024_2026: mandaatMatrix,
+      producties: state.productions
+    };
+
+    if (currentFeedMode === 'json') {
+      header.textContent = "REST JSON (/api/v3/dossier/1456324.json)";
+      out.textContent = JSON.stringify(payload, null, 2);
+    } else if (currentFeedMode === 'jsonp') {
+      header.textContent = "JSONP Stream (?callback=vortexDossierV3)";
+      out.textContent = `vortexDossierV3(${JSON.stringify(payload, null, 2)});`;
+    } else if (currentFeedMode === 'rss') {
+      header.textContent = "RSS 2.0 Audit Feed (Poort 8081)";
+      const itemsXml = state.productions.map(p => `    <item>\n      <title>[${p.prod}] ${p.datum} - ${p.kenmerk}</title>\n      <description>${p.omschrijving.replace(/&/g, '&amp;')}</description>\n      <pubDate>${p.datum}</pubDate>\n    </item>`).join('\n');
+      out.textContent = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n  <channel>\n    <title>VORTEX Dossier 1456324 // PostNL 3SDQYS603048929</title>\n    <link>http://localhost:8081/rss/woo-tholen.xml</link>\n${itemsXml}\n  </channel>\n</rss>`;
+    } else if (currentFeedMode === 'turtle') {
+      header.textContent = "Solid Pod RDF/Turtle (/pod/juridisch/woo-1456324/dossier.ttl)";
+      out.textContent = `@prefix schema: <http://schema.org/>.\n@prefix prov: <http://www.w3.org/ns/prov#>.\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.\n\n<#zending-3SDQYS603048929>\n  a prov:Entity, schema:ParcelDelivery;\n  schema:trackingNumber "3SDQYS603048929";\n  schema:AdditionalType "R Aangetekend D-A-1";\n  schema:originAddress "Bosstraat 48, Roosendaal (2026-10-08T22:41:00+02:00)";\n  schema:deliveryAddress "Business Point Van der Wal, Binnendelta 1 T, 1261 WZ Blaricum";\n  prov:generatedAtTime "2026-10-23T11:42:00+02:00"^^xsd:dateTime;\n  schema:identifier "1504535".\n\n<#besluit-1463739>\n  a schema:Legislation;\n  schema:identifier "1463739";\n  schema:dateCreated "2026-04-21";\n  schema:datePublished "2026-04-22";\n  schema:author "J.K. Fraanje (gemeentesecretaris)", "M.L.P. Sijbers (burgemeester)".`;
+    } else if (currentFeedMode === 'wac') {
+      header.textContent = "Solid WAC (.acl) — /pod/juridisch/woo-1456324/.acl";
+      out.textContent = `@prefix acl: <http://www.w3.org/ns/auth/acl#>.\n\n<#owner>\n  a acl:Authorization;\n  acl:agent <https://card.ttl#me>;\n  acl:accessTo <./>;\n  acl:default <./>;\n  acl:mode acl:Read, acl:Write, acl:Control.\n\n<#localMistralAppend>\n  a acl:Authorization;\n  acl:agent <http://localhost:11434/profile#mistral>;\n  acl:accessTo </pod/ai-logs/>;\n  acl:mode acl:Append.`;
+    } else if (currentFeedMode === 'pdok') {
+      header.textContent = "PDOK OGC API Features (Molenplaat / Scherpenisse)";
+      out.textContent = `GET https://api.pdok.nl/kadaster/kadastrale-kaart/ogc/v5/collections/perceel/items?bbox=4.09,51.54,4.10,51.55&limit=100&f=json\nAccept: application/geo+json\n\n# Gekoppeld aan Team Middelen (Cluster Financiën) voor verificatie pacht- en retributieregisters (1990-heden).`;
+    }
+  }
+
+  function copyFeed() {
+    navigator.clipboard.writeText(document.getElementById('feed-output').textContent);
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = "✓ Gekopieerd!";
+    setTimeout(() => { btn.textContent = "📋 Kopieer"; }, 1500);
+  }
+
+  function copyZivver() {
+    navigator.clipboard.writeText(document.getElementById('zivver-output').textContent);
+    alert("Volledige Rechtbank/Zivver-brief gekopieerd naar het klembord.");
+  }
+
+  function setProfile(profile, btn) {
+    document.querySelectorAll('header .toolbar .btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if (profile === 'rechter') {
+      switchCenterView('view-zivver', document.getElementById('tab-btn-zivver'));
+      setFeedMode('turtle');
+    } else if (profile === 'mandaat') {
+      switchCenterView('view-mandaat', document.getElementById('tab-btn-mandaat'));
+      setFeedMode('json');
+    } else {
+      switchCenterView('view-prod', document.getElementById('tab-btn-prod'));
+      setFeedMode('json');
+    }
+  }
+
+  function switchMobileTab(paneId, btn) {
+    document.querySelectorAll('.mobile-nav .btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    ['pane-sporen', 'pane-chronologie', 'pane-api'].forEach(id => {
+      const el = document.getElementById(id);
+      if (id === paneId) el.classList.remove('mobile-hidden');
+      else el.classList.add('mobile-hidden');
+    });
+  }
+
+  function resetState() {
+    if (confirm("Alle wijzigingen terugzetten naar de gecontroleerde v3.0 basisstaat?")) {
+      localStorage.removeItem(STORAGE_KEY);
+      state.productions = JSON.parse(JSON.stringify(defaultProductions));
+      loadState();
+      renderTable();
+      renderMandaatTable();
+      renderZivverLetter();
+      updateLiveFeed();
+      runIntegrityCheck();
+    }
+  }
+
+  // Initialisatie
+  loadState();
+  renderTable();
+  renderMandaatTable();
+  renderZivverLetter();
+  calculateDeadlines();
+  updateLiveFeed();
+  runIntegrityCheck();
+</script>
 </body>
 </html>
