@@ -13,10 +13,3 @@
     acl:accessTo <https://solid-virid.vercel.app/pod/ai-logs/>;
     acl:default <https://solid-virid.vercel.app/pod/ai-logs/>;
     acl:mode acl:Append.
-
-<#localAnalyticsReadOnly>
-    a acl:Authorization;
-    acl:agent <https://solid-virid.vercel.app/profile/card.ttl#analytics>;
-    acl:accessTo <https://solid-virid.vercel.app/pod/ai-logs/>;
-    acl:default <https://solid-virid.vercel.app/pod/ai-logs/>;
-    acl:mode acl:Read.
