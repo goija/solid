@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VORTEX OS // Juridisch Centrum v4.0 & WebRTC Contact Center</title>
+  <style>
+    :root {
+      --bg-core: #05080c; --bg-panel: #0c121b; --bg-card: #131c29; --border: #223248;
+      --accent-green: #10b981; --accent-amber: #f59e0b; --accent-blue: #3b82f6;
+      --accent-red: #ef4444; --accent-cyan: #06b6d4; --text-main: #e2e8f0; --text-muted: #94a3b8;
+      --font-mono: 'JetBrains Mono', Consolas, monospace; --font-sans: system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg-core); color: var(--text-main); font-family: var(--font-sans); line-height: 1.45; padding-bottom: 70px; }
+    header { background: var(--bg-panel); border-bottom: 1px solid var(--border); padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+    .brand { font-family: var(--font-mono); font-weight: 700; color: var(--accent-green); display: flex; gap: 10px; align-items: center; }
+    .badge { font-family: var(--font-mono); font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--accent-green); color: var(--accent-green); background: rgba(16,185,129,0.1); }
+    .workspace { display: grid; grid-template-columns: 320px 1fr 380px; gap: 14px; padding: 14px; max-width: 1850px; margin: 0 auto; }
+    .panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 6px; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+    .panel-title { font-family: var(--font-mono); font-size: 0.84rem; color: var(--accent-green); text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 8px; display: flex; justify-content: space-between; }
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 5px; padding: 11px; font-size: 0.82rem; }
+    .card-header { font-family: var(--font-mono); font-weight: 700; color: #fff; margin-bottom: 6px; display: flex; justify-content: space-between; }
+    textarea, input, select { width: 100%; background: #04070b; border: 1px solid var(--border); color: var(--text-main); padding: 6px 8px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.78rem; }
+    .btn { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border); padding: 6px 10px; font-family: var(--font-mono); font-size: 0.76rem; border-radius: 4px; cursor: pointer; }
+    .btn:hover { border-color: var(--accent-green); background: rgba(16,185,129,0.2); color: #fff; }
+    pre { background: #04070b; border: 1px solid var(--border); padding: 10px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.74rem; color: #a7f3d0; max-height: 320px; overflow-x: auto; white-space: pre-wrap; }
+    @media (max-width: 1100px) { .workspace { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <span>⬢ VORTEX // JURIDISCH CENTRUM (jvc.html)</span>
+    <span class="badge">WebID: card.ttl#me</span>
+    <span class="badge">PostNL: 3SDQYS603048929</span>
+  </div>
+  <div><button class="btn" onclick="window.print()">🖨️ Print Dossier</button></div>
+</header>
+<div class="workspace">
+  <section class="panel">
+    <div class="panel-title"><span>I. Dossier Status</span><span>[Awb / Woo]</span></div>
+    <div class="card">
+      <div class="card-header"><span>Hoofdzaak Visserij</span><span>Zaak 1456324</span></div>
+      <p>Molenplaat, Pacht & Dossier-Zuurdeeg. PostNL Blaricum barcode: <code>3SDQYS603048929</code>.</p>
+    </div>
+    <div class="card">
+      <div class="card-header"><span>Afgescheiden Spoor C</span><span>Kenmerk 1463739</span></div>
+      <p>BRP/AVG-auditlogs besluit d.d. 21/22-04-2026, getekend door J.K. Fraanje & M.L.P. Sijbers. Strikt gescheiden.</p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-title"><span>II. Proceschronologie & Producties (Prod. 1–14)</span></div>
+    <div class="card">
+      <p>Het dossier bevat alle geverifieerde proceshandelingen tot en met de dwingende doorzendsommatie ex art. 4.2 Woo (Proton Mail PM-01 t/m PM-03).</p>
+    </div>
+    <textarea rows="8" readonly>PROCESDOSSIER VORTEX JURIDISCH CENTRUM
+- Prod. 1: Uitspraak Rechtbank ZWB (09-10-2025, ECLI:NL:RBZWB:2025:6823)
+- Prod. 2: Hernieuwd Woo-verzoek Visserijrechten (13/14-01-2026)
+- Prod. 3-4: Primair besluit (1398201) & Bezwaar (1425030)
+- Prod. 7: Besluit 1463739 (BRP-afscheiding, 21/22-04-2026)
+- Prod. 10-11: PostNL Blaricum 3SDQYS603048929 (Feitelijk afgehaald 23-10-2026; 0-dagen termijn)
+- Prod. 12-14: Proton Mail PM-01 t/m PM-03 (Afbakening & Doorzendsommatie)</textarea>
+  </section>
+
+  <section class="panel">
+    <div class="panel-title"><span>III. Solid Pod & WebRTC P2P</span></div>
+    <div class="card">
+      <div class="card-header"><span>Solid Pod Export</span><span>Turtle / WAC</span></div>
+      <pre id="turtle-out">@prefix schema: <http://schema.org/>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+
+<#woo-zaak-1456324>
+  a schema:LegalCase;
+  schema:identifier "1456324", "3SDQYS603048929";
+  schema:creator <https://solid-virid.vercel.app/profile/card.ttl#me>.</pre>
+    </div>
+  </section>
+</div>
+</body>
+</html>
